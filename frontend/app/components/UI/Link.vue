@@ -7,8 +7,8 @@
     const isBlank = computed(() => to[0] == '|')
     const isModal = computed(() => to[0] == '#')
     const link = computed(() => {
-        if (isBlank) return to.slice(1)
-        else if (isModal) return
+        if (isBlank.value) return to.slice(1)
+        else if (isModal.value) return
         else return to
     })
     const modalName = computed(() => {
@@ -20,16 +20,18 @@
 </script>
 
 <template>
-    <NuxtLink v-if="!isModal" :to="link" :target="isBlank ? '_blank' : null">
+    <NuxtLink
+        v-if="!isModal"
+        :to="link"
+        class="link"
+        :target="isBlank ? '_blank' : null"
+    >
         <slot></slot>
     </NuxtLink>
-    <span v-else @click="openModal">
+    <span v-else class="link" @click="openModal">
         <slot></slot>
     </span>
 </template>
 
 <style lang="scss" scoped>
-    span {
-        cursor: pointer;
-    }
 </style>

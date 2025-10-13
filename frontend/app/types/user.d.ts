@@ -3,9 +3,7 @@ export {}
 declare global {
     interface IUser {
         id: number
-        isSuperuser: bolean
-        isStaff: bolean
-        isActive: bolean
         email: string
+        role: 'chief' | 'admin' | 'root' | 'missionary'
     }
 }

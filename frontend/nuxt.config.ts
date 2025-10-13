@@ -1,6 +1,3 @@
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import path from 'path'
-
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
@@ -12,7 +9,6 @@ export default defineNuxtConfig({
         'nuxt-icons',
         'vue-yandex-maps/nuxt',
     ],
-    // plugins: [{ src: '~/plugins/svg-sprite.client', mode: 'client' }],
     css: [
         '~/assets/scss/reset.scss',
         '~/assets/scss/utils.scss',
@@ -27,30 +23,6 @@ export default defineNuxtConfig({
                 },
             },
         },
-        // plugins: [
-        //     createSvgIconsPlugin({
-        //         iconDirs: [path.resolve(process.cwd(), 'assets/icons')],
-        //         symbolId: '[name]',
-        //         customDomId: 'svg-icons-dom',
-        //         inject: 'body-last',
-        //         svgoOptions: {
-        //             plugins: [
-        //                 {
-        //                     name: 'removeAttrs',
-        //                     params: {
-        //                         attrs: ['fill', 'stroke', 'style'],
-        //                     },
-        //                 },
-        //                 {
-        //                     name: 'removeDimensions',
-        //                 },
-        //                 {
-        //                     name: 'removeStyleElement',
-        //                 },
-        //             ],
-        //         },
-        //     }),
-        // ],
     },
     yandexMaps: {
         apikey: '22fbcff0-4420-4a20-81bc-789cab1db7aa',

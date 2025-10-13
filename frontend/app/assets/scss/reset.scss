@@ -1,7 +1,7 @@
 body {
     font-family: var(--font-main);
     color: #000;
-    line-height: 125%;
+    line-height: 130%;
 }
 
 * {
@@ -41,6 +41,7 @@ button {
     cursor: pointer;
     background: transparent;
     border: none;
+    user-select: none;
 }
 
 a {

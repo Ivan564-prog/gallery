@@ -1,35 +1,61 @@
 @use '~/assets/scss/runtime/functions' as *;
 
 @mixin h0 {
-    font-size: clampFluid(54);
+    font-size: clampFluid(32, 54);
     line-height: 125%;
     color: currentColor;
 }
 
 @mixin h1 {
-    font-size: clampFluid(34);
-    line-height: 125%;
+    font-size: clampFluid(21, 42);
+    line-height: 120%;
     color: currentColor;
 }
+
 @mixin h2 {
-    font-size: 30px;
-    line-height: 125%;
+    font-size: clampFluid(21, 32);
+    line-height: 130%;
     color: currentColor;
 }
+
 @mixin h3 {
-    font-size: 28px;
-    line-height: 125%;
+    font-size: clampFluid(18, 28);
+    line-height: 130%;
     color: currentColor;
 }
-@mixin h4 {
-    font-size: 21px;
-    line-height: 125%;
-    color: currentColor;
-}
+
 @mixin p1 {
-    font-size: 18px;
-    line-height: 125%;
+    font-size: clampFluid(16, 24);
+    line-height: 135%;
     color: currentColor;
+}
+
+@mixin p1-bold {
+    font-weight: 500;
+    line-height: 130%;
+    @include p1;
+}
+
+@mixin p2 {
+    font-size: clampFluid(14, 20);
+    line-height: 130%;
+    color: currentColor;
+}
+
+@mixin p2-bold {
+    font-weight: 500;
+    @include p2;
+}
+
+@mixin p3 {
+    font-size: clampFluid(14, 18);
+    line-height: 130%;
+    color: currentColor;
+}
+
+@mixin p4 {
+    font-size: clampFluid(14, 16);
+    line-height: 130%;
 }
 
 $laptop: 1280;

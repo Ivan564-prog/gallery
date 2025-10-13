@@ -1,6 +1,18 @@
 $main-clr: #f00;
+$tr: .3s;
 :root {
-    --font-main: 'Roboto';
+    --black: #1b1c1e;
+	--gray-01: #424554;
+	--gray-02: #5f6377;
+	--gray-03: #9095ac;
+	--gray-04: #d3d7ea;
+	--gray-05: #e8ecf3;
+	--gray-06: #f5f7fa;
+	--white: #fff;
+	--color: #9b2d30;
+	--color-hover: #B8373B;
+
+    --font-main: 'Golos Text';
 
     --container-width: 1700px;
     --container-padding-x: 20px;
