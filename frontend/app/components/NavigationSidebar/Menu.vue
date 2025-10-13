@@ -48,7 +48,11 @@
     .navigation-menu {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         gap: clampFluid(17);
+        @include mobile {
+            flex-direction: row;
+        }
     }
 
     .menu-item {
@@ -58,6 +62,11 @@
         align-items: center;
         gap: clampFluid(20);
         padding: clampFluid(11) clampFluid(40);
+        @include mobile {
+            flex-direction: column;
+            gap: 6px;
+            padding: 9px 0 6px;
+        }
         &::before {
             content: "";
             position: absolute;
@@ -68,6 +77,12 @@
             background-color: var(--color);
             opacity: 0;
             transition: $tr;
+            @include mobile {
+                top: auto;
+                bottom: 0;
+                width: 100%;
+                height: 3px;
+            }
         }
         &--active {
             &:before {
@@ -91,6 +106,12 @@
         &__title {
             color: var(--gray-02);
             transition: $tr;
+            @include tablet {
+                font-size: 0;
+            }
+            @include mobile {
+                font-size: 10px;
+            }
         }
         &__count {
             display: flex;
@@ -103,6 +124,11 @@
             border-radius: 100%;
             background-color: var(--color);
             color: var(--white);
+            @include tablet {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
         }
     }
 </style>

@@ -10,6 +10,7 @@ export const useRootSettingsStore = defineStore('rootSettings', () => {
     setRootSettings()
     return {
         setRootSettings,
+        pageTitle,
         settings,
     }
 })

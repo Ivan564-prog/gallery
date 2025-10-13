@@ -23,6 +23,12 @@
         max-width: 1920px;
         overflow: clip;
         margin: 0 auto;
+        @include tablet {
+            grid-template-columns: 77px 1fr;
+        }
+        @include mobile {
+            grid-template-columns: 1fr;
+        }
     }
 
     .main {

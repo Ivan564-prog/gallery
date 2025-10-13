@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <NuxtImg :src="src" :alt="alt" />
+    <NuxtImg :src="src || '/images/placeholder.jpg'" :alt="alt" />
 </template>
 
 <style lang="scss" scoped></style>

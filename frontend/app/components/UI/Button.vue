@@ -85,8 +85,16 @@
             }
         }
         &__text {
-            color: var(--black);
+            color: var(--font-color);
             transition: $tr;
+            &--size {
+                &-default {
+                    @include p2-bold;
+                }
+                &-big {
+                    @include p1-bold;
+                }
+            }
         }
     }
 </style>

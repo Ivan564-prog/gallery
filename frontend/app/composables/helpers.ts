@@ -11,3 +11,11 @@ export const setSeoMeta = (obj: ISeoObject) => {
         console.error('Объект не подходит для сео представления')
     }
 }
+
+export const setPageTitle = (title: string) => {
+    const settingsStore = useRootSettingsStore()
+    settingsStore.pageTitle = title
+    useSeoMeta({
+        title,
+    })
+}
