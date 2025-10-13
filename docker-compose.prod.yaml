@@ -1,0 +1,131 @@
+version: "3.8"
+services:
+
+  postgres:
+    image: git.docker-sandbox.place-start.ru/placestart/postgres:16
+    environment:
+      POSTGRES_USER: ${PG_USERNAME:-pg_user}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-pg_password}
+      POSTGRES_DB: ${PG_DATABASE:-pg_database}
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+
+  django:
+    image: git.docker-sandbox.place-start.ru/placestart/${PROJECT_NAME:-changeme}-backend:${BUILD_TAG:-latest}
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/prod/backend.Dockerfile
+    environment:
+      PG_USERNAME: ${PG_USERNAME:-pg_user}
+      PG_PASSWORD: ${PG_PASSWORD:-pg_password}
+      PG_DATABASE: ${PG_DATABASE:-pg_database}
+      PG_HOST: 'postgres'
+      HOST: ${FQDN:-changeme.docker-sandbox.place-start.ru}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - media:/app/media
+      - static:/app/static
+    depends_on:
+      - postgres
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+
+  adminer:
+    image: adminer
+    depends_on:
+     - postgres
+    networks:
+     - internal
+    deploy:
+     replicas: 1
+     update_config:
+        parallelism: 1
+        delay: 5s
+
+  nuxt:
+    image: git.docker-sandbox.place-start.ru/placestart/${PROJECT_NAME:-changeme}-frontend:${BUILD_TAG:-latest}
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/prod/frontend.Dockerfile
+    environment:
+      HOST: ${FQDN:-changeme.docker-sandbox.place-start.ru}
+    depends_on:
+      - django
+    volumes:
+      - static:/app/static
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+
+  nginx:
+    image: git.docker-sandbox.place-start.ru/placestart/nginx:1.21.6-alpine
+    volumes:
+      - media:/app/media
+      - static:/app/static
+    configs:
+      - source: nginx-config
+        target: /etc/nginx/conf.d/default.conf
+    depends_on:
+      - nuxt
+      - django
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+        ingress.host:  ${FQDN:-changeme.docker-sandbox.place-start.ru}
+        ingress.ssl: enable
+        ingress.ssl_redirect: enable
+        ingress.virtual_proto: http
+        ingress.port: 80
+    networks:
+      - internal
+      - ingress
+
+networks:
+  internal:
+    driver: overlay
+  ingress:
+    name: ingress-routing
+    external: true
+
+configs:
+  nginx-config:
+    name: ${PROJECT_NAME:-changeme}-nginx-${BUILD_TAG:-default}
+    external: true
+
+volumes:
+  postgres_db:
+    driver: glusterfs
+    driver_opts:
+      servers: docker-sandbox.place-start.ru,gluster-1.docker.place-start.ru,devtools-1.tar.place-start.ru
+    name: ${PROJECT_NAME:-changeme}/postgres_db
+  static:
+    driver: glusterfs
+    driver_opts:
+      servers: docker-sandbox.place-start.ru,gluster-1.docker.place-start.ru,devtools-1.tar.place-start.ru
+    name: ${PROJECT_NAME:-changeme}/static
+  media:
+    driver: glusterfs
+    driver_opts:
+      servers: docker-sandbox.place-start.ru,gluster-1.docker.place-start.ru,devtools-1.tar.place-start.ru
+    name: ${PROJECT_NAME:-changeme}/media
+

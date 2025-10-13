@@ -1,0 +1,39 @@
+.container {
+    max-width: calc(var(--container-width) + var(--container-padding-x) * 2);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--container-padding-x);
+}
+
+.desktop-hidden {
+    @include tablet-gt {
+        display: none !important;
+    }
+}
+
+.mobile-hidden {
+    @include tablet {
+        display: none !important;
+    }
+}
+
+// text
+.h0 {
+    @include h0;
+}
+
+.h1 {
+    @include h1;
+}
+
+.h2 {
+    @include h2;
+}
+
+.h3 {
+    @include h3;
+}
+
+.p1 {
+    @include p1;
+}

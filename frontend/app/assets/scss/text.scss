@@ -1,0 +1,40 @@
+.text-content {
+    p {
+        @include p1;
+        margin-bottom: 1em;
+    }
+    h1 {
+        @include h1;
+        margin-bottom: 0.8em;
+    }
+    h2 {
+        @include h2;
+        margin-bottom: 0.8em;
+    }
+    h3 {
+        @include h3;
+        margin-bottom: 0.8em;
+    }
+    h4 {
+        @include h4;
+        margin-bottom: 0.8em;
+    }
+    ul {
+        li {
+            @include p1;
+        }
+    }
+    ol {
+        li {
+            @include p1;
+        }
+    }
+    table {
+        th {
+        }
+        tr {
+        }
+    }
+    img {
+    }
+}

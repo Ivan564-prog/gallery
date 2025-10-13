@@ -1,0 +1,71 @@
+# .gitea/workflows/deploy.yaml 
+name: django-core deploy
+on:
+  push:
+    branches:
+      - main
+env:
+  FQDN: ${{ vars.FQDN }}
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  BUILD_TAG: 'build-${{ github.run_number }}'
+  PG_USERNAME: ${{ vars.PROJECT_NAME }}
+  PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+  PG_DATABASE: ${{ vars.PROJECT_NAME }}
+  SMTP_USER: ${{  secrets.SMTP_USER  }}
+  SMTP_PASSWORD: ${{  secrets.SMTP_PASSWORD  }}
+
+jobs:
+  build and push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: docker registry login
+      run: docker login -u=${{ secrets.REGISTRY_GITEA_LOGIN_PACKAGE }} -p=${{ secrets.REGISTRY_GITEA_PASS_PACKAGE }} ${{ vars.DOCKER_REGISTRY }}
+
+    - name: Build backend Docker image
+      run: docker build . --file dockerfiles/prod/backend.Dockerfile --tag ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-backend:${BUILD_TAG}
+   
+    - name: Build frontend Docker image
+      run: docker build --build-arg HOST=${FQDN} . --file dockerfiles/prod/frontend.Dockerfile --tag ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-frontend:${BUILD_TAG}
+  
+    - name: docker push backend image
+      run: docker push ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-backend:${BUILD_TAG}
+
+    - name: docker push frontend image
+      run: docker push ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-frontend:${BUILD_TAG}
+
+    - name: docker tag frontend as latest
+      run: docker tag ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-frontend:${BUILD_TAG} ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-frontend:latest
+
+    - name: docker tag backend as latest
+      run: docker tag ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-backend:${BUILD_TAG} ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-backend:latest
+
+    - name: docker push backend image latest
+      run: docker push ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-backend:latest
+
+    - name: docker push frontend image latest
+      run: docker push ${{ vars.DOCKER_REGISTRY }}${PROJECT_NAME}-frontend:latest
+
+    - name: docker relogin into readonly
+      run: docker logout; docker login -u=${{ secrets.REGISTRY_GITEA_LOGIN_READ }} -p=${{ secrets.REGISTRY_GITEA_PASS_READ }} ${{ vars.DOCKER_REGISTRY }}
+
+    - name: docker config create
+      run: |
+        docker config ls | grep -q ${PROJECT_NAME}-nginx-${BUILD_TAG} \
+        || docker config create ${PROJECT_NAME}-nginx-${BUILD_TAG} ./configs/nginx-default-prod.conf   
+
+    - name: deploy to docker stack
+      run: |
+        docker stack deploy -c docker-compose.prod.yaml ${PROJECT_NAME} --with-registry-auth
+        docker logout                
+
+    - name: cleanup
+      run: |
+        CONFIGS_TO_DELETE=$(docker config ls --format {{.Name}} | grep ${PROJECT_NAME} | grep -v ${BUILD_TAG}) \
+        && docker config rm $CONFIGS_TO_DELETE \
+        || echo "No configs to clear"   
+                 
+
+

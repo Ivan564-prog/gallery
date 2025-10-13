@@ -1,0 +1,33 @@
+{
+  "name": "nuxt-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write \"{app,components,composables,layouts,pages,plugins,stores,utils,assets}/**/*.{js,ts,vue,scss}\" nuxt.config.ts"
+  },
+  "dependencies": {
+    "@fancyapps/ui": "^6.0.27",
+    "@nuxt/eslint": "^1.9.0",
+    "@nuxt/image": "^1.11.0",
+    "@nuxtjs/seo": "^3.1.0",
+    "@nuxtjs/sitemap": "^7.4.3",
+    "@pinia/nuxt": "^0.11.2",
+    "eslint": "^9.34.0",
+    "nuxt": "^4.1.0",
+    "nuxt-icons": "^4.0.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.20",
+    "vue-router": "^4.5.1",
+    "vue-yandex-maps": "^2.2.1"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2",
+    "sass-embedded": "^1.92.0",
+    "vite-plugin-svg-icons": "^2.0.1"
+  }
+}

@@ -1,0 +1,7 @@
+{% for key, value in object.get_email_params.items %}
+    {% if value %}
+        <p>
+            {{ key }}: {{ value }}
+        </p>
+    {% endif %}
+{% endfor %}

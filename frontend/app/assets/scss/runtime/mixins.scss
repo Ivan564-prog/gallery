@@ -1,0 +1,90 @@
+@use '~/assets/scss/runtime/functions' as *;
+
+@mixin h0 {
+    font-size: clampFluid(54);
+    line-height: 125%;
+    color: currentColor;
+}
+
+@mixin h1 {
+    font-size: clampFluid(34);
+    line-height: 125%;
+    color: currentColor;
+}
+@mixin h2 {
+    font-size: 30px;
+    line-height: 125%;
+    color: currentColor;
+}
+@mixin h3 {
+    font-size: 28px;
+    line-height: 125%;
+    color: currentColor;
+}
+@mixin h4 {
+    font-size: 21px;
+    line-height: 125%;
+    color: currentColor;
+}
+@mixin p1 {
+    font-size: 18px;
+    line-height: 125%;
+    color: currentColor;
+}
+
+$laptop: 1280;
+$tablet: 1024;
+$mobile: 768;
+
+@mixin laptop {
+    @media (max-width: #{$laptop}px) {
+        @content;
+    }
+}
+
+@mixin laptop-gt {
+    @media (min-width: #{$laptop}px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: #{$tablet}px) {
+        @content;
+    }
+}
+
+@mixin tablet-gt {
+    @media (min-width: #{$tablet}px) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media (max-width: #{$mobile}px) {
+        @content;
+    }
+}
+
+@mixin mobile-gt {
+    @media (min-width: #{$mobile}px) {
+        @content;
+    }
+}
+
+@mixin hover {
+    & {
+        cursor: pointer;
+        @media (hover: hover) {
+            &:hover {
+                @content;
+            }
+        }
+
+        @media (hover: none), (hover: on-demand) {
+            &:active {
+                @content;
+            }
+        }
+    }
+}
