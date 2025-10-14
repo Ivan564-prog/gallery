@@ -66,7 +66,7 @@ class DiaryImage(models.Model):
     
 
 class Comment(TimestampModelMixin, models.Model):
-    author = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='comments', verbose_name='Автор')
+    author = models.ForeignKey('users.User', verbose_name='Автор', on_delete=models.CASCADE, related_name='comments')
     diary = models.ForeignKey(Diary, verbose_name='Дневник', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(verbose_name='Текст')
 
@@ -75,5 +75,5 @@ class Comment(TimestampModelMixin, models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return f'Комментарий к ${self.diary.title} от ${self.}'
+        return f'Комментарий к ${self.diary.title} от ${self.author.email}'
     
