@@ -15,9 +15,13 @@
             <button class="library-card__button">
                 <NuxtIcon class="library-card__button-icon" name="favorite" />
             </button>
-            <button class="library-card__button">
+            <a 
+                download
+                class="library-card__button" 
+                :href="content.file?.replace('http', 'https')"
+            >
                 <NuxtIcon class="library-card__button-icon" name="download" />
-            </button>
+            </a>
         </div>
         <UIImage 
             class="library-card__image"
@@ -50,7 +54,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            translate: 0 -25%;
+            translate: 0 -55%;
             display: inline-block;
             padding: clampFluid(2) clampFluid(10);
             color: var(--white);
