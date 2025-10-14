@@ -18,7 +18,7 @@
             <a 
                 download
                 class="library-card__button" 
-                :href="content.file || ''" 
+                :href="content.file?.replace('http', 'https')"
             >
                 <NuxtIcon class="library-card__button-icon" name="download" />
             </a>

@@ -18,7 +18,7 @@
             </label>
             <label class="library-head__filter library-filter">
                 <span class="library-filter__text p2 p2--bold">Сохраненные</span>
-                <NuxtIcon class="library-filter__icon" name="favorite-2" filled />
+                <NuxtIcon class="library-filter__icon" name="favorite-2" />
                 <input 
                     class="library-filter__radio" 
                     name="library-type"
@@ -65,7 +65,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: clampFluid(10);
         padding: clampFluid(20);
         height: clampFluid(59);
         background-color: var(--gray-05);
@@ -75,6 +74,9 @@
             color: var(--white);
             background-color: var(--color-hover);
             border-color: var(--color-hover);
+            #{$this}__icon {
+                color: var(--white);
+            }
         }
         &:has(#{$this}__radio:checked) {
             color: var(--black);
@@ -84,6 +86,7 @@
         }
         &__icon {
             color: var(--color);
+            transition: $tr;
         }
         &__radio {
             display: none;
