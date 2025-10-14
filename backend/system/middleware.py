@@ -70,4 +70,7 @@ class HostOverrideMiddleware:
             request.META['HTTP_X_FORWARDED_HOST'] = request.META["HOST"]
         except KeyError:
             request.META['HTTP_X_FORWARDED_HOST'] = request.META["HTTP_HOST"]
+
+        # request.META['X-Forwarded-Proto'] = ''
+        request.META['wsgi.url_scheme'] = 'https'
         return self.get_response(request)

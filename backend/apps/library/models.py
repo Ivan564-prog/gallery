@@ -55,3 +55,6 @@ class Book(TimestampModelMixin, models.Model):
     @property
     def is_new(self):
         return (self.published_at + timedelta(days=14)) > timezone.now() if self.published_at else False
+    
+    def get_similar(self):
+        return self.type.books.filter(status='published').exclude(pk=self.pk)
