@@ -71,7 +71,14 @@
         background-color: var(--gray-05);
         border: 2px solid var(--gray-05);
         transition: $tr;
+        @include hover {
+            color: var(--white);
+            background-color: var(--color-hover);
+            border-color: var(--color-hover);
+        }
         &:has(#{$this}__radio:checked) {
+            color: var(--black);
+            pointer-events: none;
             background-color: transparent;
             border-color: var(--color);
         }

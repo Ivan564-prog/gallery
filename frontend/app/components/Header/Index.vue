@@ -20,8 +20,10 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        padding: clampFluid(20) clampFluid(40) clampFluid(20) clampFluid(60);
+        height: clampFluid(90);
+        padding: 0 clampFluid(40) 0 clampFluid(60);
         box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.05);
+        background-color: var(--white);
         @include tablet {
             padding: 15px 40px;
         }
@@ -31,6 +33,7 @@
         &__logo-icon {
             width: 50px;
             height: 50px;
+            color: var(--black);
         }
    }
 </style>

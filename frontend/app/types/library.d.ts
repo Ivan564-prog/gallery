@@ -14,6 +14,7 @@ declare global {
         shortDescription: string | null
         image: string
         isNew: boolean
+        file: string | null
     }
 
     interface IBookDetail extends IBook {
