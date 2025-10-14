@@ -54,4 +54,4 @@ class Book(TimestampModelMixin, models.Model):
     
     @property
     def is_new(self):
-        return (self.published_at + timedelta(days=14)) > timezone.now()
+        return (self.published_at + timedelta(days=14)) > timezone.now() if self.published_at else False

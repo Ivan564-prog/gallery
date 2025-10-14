@@ -10,6 +10,7 @@ class BookTypeSerializer(serializers.ModelSerializer):
 
 
 class BookListSerializer(serializers.ModelSerializer):
+    is_new = serializers.ReadOnlyField()
 
     class Meta:
         model = models.Book
@@ -17,7 +18,6 @@ class BookListSerializer(serializers.ModelSerializer):
             'description',
             'file',
             'type',
-            'is_new',
         )
 
 
