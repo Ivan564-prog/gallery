@@ -31,6 +31,10 @@ export default defineNuxtConfig({
         domains: [<string>process.env.HOST],
         format: ['webp'],
     },
+    site: {
+        url: 'https://' + process.env.HOST,
+        name: 'Миссионерский портал',
+    },
     sitemap: {
         sources: [
             'https://' + <string>process.env.HOST + '/api/v1/pages/sitemap/',

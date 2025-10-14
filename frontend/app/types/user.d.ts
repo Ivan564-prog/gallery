@@ -5,5 +5,6 @@ declare global {
         id: number
         email: string
         role: 'chief' | 'admin' | 'root' | 'missionary'
+        image: string | null
     }
 }

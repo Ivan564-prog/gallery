@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-    const PAGE_TITLE = 'Библиотека'
-    setPageTitle(PAGE_TITLE)
+    
 </script>
 
 <template>
-    <LibraryBase />
+    <LayerBase>
+        <NuxtPage />
+    </LayerBase>
 </template>
 
 <style lang="scss" scoped>

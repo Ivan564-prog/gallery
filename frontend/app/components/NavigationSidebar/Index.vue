@@ -35,6 +35,7 @@
             width: clampFluid(80);
             height: auto;
             aspect-ratio: 1;
+            color: var(--black);
             @include tablet {
                 width: 50px;
             }
