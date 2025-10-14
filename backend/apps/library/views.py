@@ -5,6 +5,7 @@ from . import models, serializers
 class BookModelViewSet(BaseModelViewSet):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
+    lookup_field = 'pk'
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
@@ -14,7 +15,7 @@ class BookModelViewSet(BaseModelViewSet):
         book_type_id = self.request.GET.get('book_type')
         if book_type_id:
             queryset = queryset.filter(type__id=book_type_id)
-        return queryset
+        return queryset.order_by('-published_at')
     
     def perform_destroy(self, instance):
         instance.status = 'deleted'
