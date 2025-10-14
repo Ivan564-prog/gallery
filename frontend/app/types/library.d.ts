@@ -14,6 +14,7 @@ declare global {
         shortDescription: string | null
         image: string
         isNew: boolean
+        onWishlist: boolean
         file: string | null
     }
 
