@@ -1,9 +1,31 @@
-from django.contrib import admin
-from django.urls import path
-from . import models
 import time
+from . import models
+from django.contrib import admin
+from django.urls import path, reverse
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django_apscheduler.models import DjangoJob, DjangoJobExecution
+
+
+admin.site.unregister(DjangoJob)
+@admin.register(models.DjangoJobProxy)
+class DjangoJobAdmin(admin.ModelAdmin):
+
+    def has_module_permission(self, request):
+        return request.user.is_authenticated and request.user.task_permission
+    
+    def has_add_permission(self, request):
+        return False
+
+
+admin.site.unregister(DjangoJobExecution)
+@admin.register(models.DjangoJobExecutionProxy)
+class DjangoJobExecutionAdmin(admin.ModelAdmin):
+
+    def has_module_permission(self, request):
+        return request.user.is_authenticated and request.user.task_permission
+    
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(models.Task)
@@ -12,8 +34,8 @@ class TaskAdmin(admin.ModelAdmin):
     
     readonly_fields = (
         'func_name',
-        'args',
-        'kwargs',
+        'func_args',
+        'func_kwargs',
         'result',
         'status',
         'pid',
@@ -21,6 +43,7 @@ class TaskAdmin(admin.ModelAdmin):
         'created_at',
         'closed_at',
     )
+    fields = readonly_fields
 
     def has_module_permission(self, request):
         return request.user.is_authenticated and request.user.task_permission

@@ -3,21 +3,11 @@ from solo.models import SingletonModel
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from admin_interface.models import Theme
+from core.models import TimestampModelMixin
+from core.logger import logger
 
 
-class SocialNetworkSettings(models.Model):
-    vk_link = models.CharField(
-        verbose_name='Ссылка на ВКонтакте', max_length=255, null=True, blank=True)
-    tg_link = models.CharField(
-        verbose_name='Ссылка на Телеграм', max_length=255, null=True, blank=True)
-    wa_link = models.CharField(
-        verbose_name='Ссылка на WhatsApp', max_length=255, null=True, blank=True)
-    
-    class Meta:
-        abstract = True
-
-
-class RootSettings(SocialNetworkSettings, SingletonModel):
+class RootSettings(TimestampModelMixin, SingletonModel):
     address = models.CharField(
         verbose_name='Адрес', max_length=255, null=True)
     phone = models.CharField(
@@ -26,6 +16,10 @@ class RootSettings(SocialNetworkSettings, SingletonModel):
         verbose_name='Почта', max_length=255, null=True)
     company_name = models.CharField(
         verbose_name='Имя компании')
+    logo = models.ImageField(
+        verbose_name='Логотип', upload_to='images/settings/', null=True)
+    favicon = models.ImageField(
+        verbose_name='Фавикон', upload_to='images/settings/', null=True)
 
     scripts = models.TextField(
         verbose_name='Скрипты', null=True, blank=True)
@@ -45,9 +39,10 @@ class RootSettings(SocialNetworkSettings, SingletonModel):
         return cls.objects.get()
 
 
-
 @receiver(post_migrate)
 def set_django_admin_settings(sender, **kwargs):
+    if sender.name != 'apps.config':
+        return
     theme = Theme.objects.get_active()
     theme.show_inlines_as_tabs = True
     theme.save()

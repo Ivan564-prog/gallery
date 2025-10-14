@@ -10,22 +10,31 @@ class UserForm(forms.ModelForm):
         model = models.User
         fields = '__all__'
 
+    
+@admin.register(models.Invite)
+class InviteAdmin(admin.ModelAdmin):
+    pass
+
 
 @admin.register(models.User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'is_active', 'is_staff', 'is_superuser',)
     form = UserForm
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                'is_active', 'is_staff', 'is_superuser',
-                'email',
-                'new_password',
-            ),
-        }),
-    )
     
+    def get_fieldsets(self, request, obj=None):
+        none_fields = (
+            ['is_active'],
+            'is_staff', 'is_superuser',
+            'email',
+            'diocese',
+            'new_password',)
+        if request.user.is_authenticated and request.user.task_permission:
+            none_fields[0].append('task_permission')
+        return (
+            (None, {
+                'fields': none_fields,
+            }),
+        )
     def save_model(self, request, obj, form, change):
         password = request.POST.get('new_password')
         if password:

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from . import models
-import re
 from core.logger import logger
 from core.serializers import EmailSerializerValidator
 from django.contrib.auth import authenticate
@@ -73,6 +72,7 @@ class UserPasswordSerializer(serializers.Serializer):
 
 
 class UserSerializer(UserPasswordSerializer, EmailSerializerValidator, serializers.ModelSerializer):
+    status = serializers.ReadOnlyField()
     
     class Meta:
         model = models.User
