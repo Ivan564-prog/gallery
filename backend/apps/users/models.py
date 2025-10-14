@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.template.loader import render_to_string
+from apps.wishlist.models import BookWishlist
 from datetime import timedelta
 from core.models import TimestampModelMixin
 from core.logger import logger
@@ -118,7 +119,10 @@ class User(
 
     def __str__(self):
         return self.email
-    
+
+    def get_book_wishlist(self):
+        return self.wishlist.get_or_create(user=self)[0]
+
     @classmethod
     def has_user(cls, username_field):
         return cls.objects.filter(is_active=True).filter(**{cls.USERNAME_FIELD: username_field.lower()})

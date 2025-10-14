@@ -11,17 +11,19 @@ class BookWishlist(models.Model):
 
     class Meta:
 
-        verbose_name = ''
-        verbose_name_plural = ''
+        verbose_name = 'Список понравившихся книг'
+        verbose_name_plural = 'Списоки понравившихся книг'
 
     def __str__(self):
-        return self.title
+        return f'Список понравившихся книг {self.user.email}'
     
     def toggle_book(self, book_id):
         if self.books.filter(id=book_id).exists():
             self.books.set(self.books.exclude(pk=book_id))
+            return False
         else:
             self.books.add(Book.objects.get(pk=book_id))
+            return True
     
     def get_book_ids(self):
         return self.books.values_list('id', flat=True)
