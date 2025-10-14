@@ -8,15 +8,6 @@ class DomainViewSet(BaseModelViewSet):
     serializer_class = serializers.DomainSerializer
 
 
-class IndexSettingsViewSet(BaseModelViewSet):
-    queryset = models.IndexSettings.objects.all()
-    serializer_class = serializers.IndexSettingsSerializer
-
-    def list(self, request):
-        return Response(self.serializer_class(
-            models.IndexSettings.get_settings(), context={'request': request}).data)
-
-
 class RootSettingsViewSet(BaseModelViewSet):
     queryset = models.RootSettings.objects.all()
     serializer_class = serializers.RootSettingsSerializer

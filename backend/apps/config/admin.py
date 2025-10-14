@@ -5,28 +5,34 @@ from solo.admin import SingletonModelAdmin
 
 @admin.register(models.RootSettings)
 class RootSettingsAdmin(SingletonModelAdmin):
-    pass
-
-
-@admin.register(models.IndexSettings)
-class IndexSettingsAdmin(SingletonModelAdmin):
-    fields = (
-        'content',
-        'meta_title',
-        'meta_description',
+    
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('address', 'email'),
+                ('phone', 'company_name'),
+                ('logo', 'favicon'),
+                'scripts',
+                'robots',
+            ),
+        }),
+        ('Социальные сети', {
+            'fields': (
+                'vk_link',
+                'rt_link',
+                'mx_link',
+                'yt_link',
+                'tg_link',
+                'wa_link',
+                'dz_link',
+                'ok_link',
+            ),
+        }),
     )
-
-
-# Раскоментить при настройке интеграции
-# @admin.register(models.Bot)
-# class BotAdmin(SingletonModelAdmin):
-#     pass
-
-
-# Раскоментить при использовании доменов
-# @admin.register(models.Domain)
-# class DomainAdmin(admin.ModelAdmin):
-#     pass
+    exclude = (
+        'created_at',
+        'updated_at',
+    )
 
 
 # Скрытие из админки стандартных моделей

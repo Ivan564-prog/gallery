@@ -14,8 +14,9 @@ ALLOWED_HOSTS = [
 ]
 
 #CORS settings
-
 CORS_ALLOWED_ORIGINS = [
+    'https://localhost',
+    'https://localhost:3000',
     'http://localhost',
     f"https://{HOST}",
     f"http://{HOST}",
@@ -46,26 +47,24 @@ INSTALLED_APPS = [
     'adminsortable2',
     'streamfield',
     'tinymce',
+    'mptt',
+    'django_apscheduler',
 
-    'apps.apiship',
-    'apps.carts',
-    'apps.catalog',
     'apps.config',
-    'apps.content',
-    'apps.feedback',
-    'apps.orders',
+    'apps.diaries',
+    'apps.local_hierarchy',
+    'apps.notification',
     'apps.task_manager',
-    'apps.pages',
+    'apps.library',
     'apps.users',
     'apps.wishlist',
 ]
 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 15
+
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
-
-ADMIN_INTERFACE = {
-    'TABS': True,  # Устанавливаем значение по умолчанию для "Вставки как вкладки"
-}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -86,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
     'system.middleware.HostOverrideMiddleware',

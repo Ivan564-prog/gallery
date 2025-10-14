@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework.status import HTTP_404_NOT_FOUND
 from django.contrib.auth import authenticate, login, logout
+from apps.local_hierarchy.models import Diocese
 from core.logger import logger
-from apps.orders.serializers import OrderSerializer
 
 
 class UserViewSet(ViewSet):
@@ -27,12 +27,26 @@ class UserViewSet(ViewSet):
         return Response(serializer.data)
     
     @action(methods=['POST'], detail=False)
+    def invite(self, request):
+        role_map = {
+            'chief': 'missionary',
+            'admin': 'chief',
+            'root': 'admin',
+        }
+        models.Invite.objects.create(
+            invite_by=request.user,
+            email=request.data.get('email'),
+            diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
+            role=role_map[request.user.status],
+        )
+        return Response(status=201)
+    
+    @action(methods=['POST'], detail=False)
     def register(self, request):
         self.queryset.filter(**{'is_active': False, self.username_field: request.data[self.username_field].lower()}).delete()
         serializer = serializers.RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
-        object.send_activation_code(request)
         return Response(self.serializer_class(object, context={'request': request}).data)
         
     @action(methods=['POST'], detail=False)
@@ -72,17 +86,3 @@ class UserViewSet(ViewSet):
         user.set_password(data['password1'])
         user.save()
         return Response()
-    
-    @action(methods=['GET'], detail=False)
-    def activation(self, request):
-        serializers.ActivationSerializer(data=request.GET, context={'request': request}).is_valid(raise_exception=True)
-        models.User.objects.filter(id=request.GET['id']).update(is_active=True)
-        return Response({
-            'success': True,
-            'message': 'Аккаунт успешно активирован'
-        })
-    
-    @action(methods=['GET'], detail=False, url_path='orders')
-    def get_orders(self, request):
-        if request.user.is_authenticated:
-            return Response(OrderSerializer(request.user.orders.all().order_by('-created_at'), many=True).data)

@@ -25,8 +25,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         module = options['module']
         func_name = options['func_name']
-        # func_args = json.loads(options['func_args'])
-        # func_kwargs = json.loads(options['func_kwargs'])
         
         task = Task.objects.create(
             func_name=f'{module}|{func_name}',
@@ -36,8 +34,8 @@ class Command(BaseCommand):
         )
         try:
             # getattr(importlib.import_module(module), func_name)(*func_args, **func_kwargs)
-            task.start()
-
+            
+            task.result = task.start()
             task.status = Task.SUCCESS
         except Exception as e:
             task.status = Task.ERROR

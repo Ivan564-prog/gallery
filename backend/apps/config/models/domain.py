@@ -1,7 +1,8 @@
 from django.db import models
+from core.models import TimestampModelMixin
 
 
-class Domain(models.Model):
+class Domain(TimestampModelMixin, models.Model):
     is_active = models.BooleanField(verbose_name='Активность', default=True)
     slug = models.CharField(verbose_name='Слаг', unique=True, blank=True, default='')
     name = models.CharField(verbose_name='Имя')

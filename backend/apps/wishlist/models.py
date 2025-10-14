@@ -1,51 +1,27 @@
 from django.db import models
-from django.utils.functional import cached_property
-from core.models import UniversalUserMixin
-from apps.catalog.models import Product
+from apps.library.models import Book
 
 
-class Wishlist(UniversalUserMixin, models.Model):
-    """ Модель корзины пользователя """
-    SESSION_KEY = 'wishlist_pk'
-    created_at = models.DateTimeField(
-        verbose_name='Дата создания', auto_now_add=True)
+class BookWishlist(models.Model):
+
+    user = models.ForeignKey(
+        'users.User', verbose_name='Пользователь', related_name='wishlist', on_delete=models.CASCADE)
+    books = models.ManyToManyField(
+        'library.Book', verbose_name='Книги', blank=True)
 
     class Meta:
-        verbose_name = "Избранные товары"
-        verbose_name_plural = "Избранные товары пользователей"
+
+        verbose_name = ''
+        verbose_name_plural = ''
 
     def __str__(self):
-        return f'Избранные пользователя {self.user}' if self.user_id \
-                else f'Избранные неавторизованного пользователя ID:{self.pk}'
+        return self.title
     
-    @cached_property
-    def products(self):
-        return Product.objects.active().filter(wishlist_items__in=self.items.all())
-
-    def toggle(self, product, **kwargs):
-        """ Добавление товара в избранные """
-        try:
-            item = WishlistItem.objects.get(wishlist=self, product=product)
-            self.remove(item)
-        except WishlistItem.DoesNotExist:
-            item = WishlistItem.objects.create(wishlist=self, product=product)
-
-    def clear(self):
-        """ Очистка """
-        self.items.all().delete()
-
-
-class WishlistItem(models.Model):
-    wishlist = models.ForeignKey(
-        Wishlist, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(
-        Product, verbose_name='Товар', on_delete=models.CASCADE,
-        related_name='wishlist_items')
-
-    class Meta:
-        verbose_name = "Элемент избранных товаров"
-        verbose_name_plural = "Элементы избранных товаров"
-        ordering = ('-id',)
-
-    def __str__(self):
-        return f'Элемент корзины {self.id} {self.product.title}'
+    def toggle_book(self, book_id):
+        if self.books.filter(id=book_id).exists():
+            self.books.set(self.books.exclude(pk=book_id))
+        else:
+            self.books.add(Book.objects.get(pk=book_id))
+    
+    def get_book_ids(self):
+        return self.books.values_list('id', flat=True)
