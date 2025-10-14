@@ -18,7 +18,7 @@
             <a 
                 download
                 class="library-card__button" 
-                :href="content.file?.replace('http', 'https')"
+                :href="content.file || ''"
             >
                 <NuxtIcon class="library-card__button-icon" name="download" />
             </a>
@@ -39,16 +39,16 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        &:has(#{$this}__link:hover) {
-            & + #{$this}__title {
-                color: var(--color);
-            }
-        }
         &__link {
             position: absolute;
             z-index: 1;
             inset: 0;
             cursor: pointer;
+            @include hover {
+                & + #{$this}__title {
+                    color: var(--color);
+                }
+            }
         }
         &__new-banner {
             position: absolute;

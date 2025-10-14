@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     const userStore = useUserStore()
     const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
+    const bookType = defineModel<number>()
 </script>
 
 <template>
@@ -9,11 +10,11 @@
             <label class="library-head__filter library-filter">
                 <span class="library-filter__text p2 p2--bold">Все материалы</span>
                 <input 
-                    checked
                     class="library-filter__radio" 
                     name="library-type"
                     type="radio"
-                    :value="null"
+                    :value="undefined"
+                    v-model="bookType"
                 />
             </label>
             <label class="library-head__filter library-filter">
@@ -23,7 +24,8 @@
                     class="library-filter__radio" 
                     name="library-type"
                     type="radio"
-                    :value="null"
+                    :value="-1"
+                    v-model="bookType"
                 />
             </label>
             <label 
@@ -37,6 +39,7 @@
                     name="library-type"
                     type="radio"
                     :value="type.id"
+                    v-model="bookType"
                 />
             </label>
         </div>
@@ -83,6 +86,9 @@
             pointer-events: none;
             background-color: transparent;
             border-color: var(--color);
+            #{$this}__icon {
+                color: var(--color);
+            }
         }
         &__icon {
             color: var(--color);
