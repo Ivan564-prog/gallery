@@ -42,7 +42,7 @@
                 class="account-link account-link--personal-account"
                 to="/account"
             >
-                <UIImage class="account-link__image" />
+                <UIImage class="account-link__image" :src="userStore.userData?.image" />
             </UILink>
         </div>
     </nav>

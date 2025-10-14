@@ -3,9 +3,9 @@
 </script>
 
 <template>
-    <div class="wrapper">
-        <NavigationSidebar class="wrapper__navigation-sidebar" />
-        <div class="wrapper__content">
+    <div class="page-wrapper">
+        <NavigationSidebar class="page-wrapper__navigation-sidebar" />
+        <div class="page-wrapper__content">
             <Header />
             <main class="main">
                 <slot></slot>
@@ -15,14 +15,11 @@
 </template>
 
 <style lang="scss" scoped>
-    .wrapper {
+    .page-wrapper {
         display: grid;
         grid-template-columns: clampFluid(313) 1fr;
         width: 100%;
-        height: 100dvh;
-        max-width: 1920px;
-        overflow: clip;
-        margin: 0 auto;
+        height: 100%;
         @include tablet {
             grid-template-columns: 77px 1fr;
         }
@@ -32,6 +29,7 @@
     }
 
     .main {
+        padding: clampFluid(30) clampFluid(40) clampFluid(30) clampFluid(60);
         flex: 0 1 auto;
     }
 </style>

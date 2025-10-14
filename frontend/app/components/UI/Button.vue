@@ -2,12 +2,12 @@
     const { 
         to, 
         widthMode = 'auto',
-        variant = 'default',
+        colorVariant = 'default',
         fontSize = 'default',
     } = defineProps<{
         to?: string
         widthMode?: 'full' | 'auto'
-        variant?: 'default' | 'gray' | 'empty-red' | 'empty-black'
+        colorVariant?: 'default' | 'gray' | 'empty-red' | 'empty-black'
         fontSize?: 'default' | 'big'
     }>()
 
@@ -25,7 +25,7 @@
         :to="to" 
         :class="`
             ui-button--width-${widthMode} 
-            ui-button--variant-${variant} 
+            ui-button--colorVariant-${colorVariant} 
         `"
     >
         <span 
@@ -55,14 +55,14 @@
             }
         }
         &--width {
-            &--full {
+            &-full {
                 width: 100%;
             }
-            &--auto {
+            &-auto {
                 width: fit-content;
             }
         }
-        &--variant {
+        &--colorVariant {
             &-default {
                 --background-color: var(--color);
                 --border-color: var(--color);

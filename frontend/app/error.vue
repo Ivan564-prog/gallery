@@ -5,15 +5,17 @@
 </script>
 
 <template>
-    <LayerBase>
-        <div class="not-found">
-            {{ error.statusCode }}
-            <br />
-            {{ error.message }}
-            {{ error.cause }}
-            {{ error }}
-        </div>
-    </LayerBase>
+    <div class="root-wrapper">
+        <LayerBase>
+            <div class="not-found">
+                {{ error.statusCode }}
+                <br />
+                {{ error.message }}
+                {{ error.cause }}
+                {{ error }}
+            </div>
+        </LayerBase>
+    </div>
 </template>
 
 <style lang="scss" scoped>

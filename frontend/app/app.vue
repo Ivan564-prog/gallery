@@ -1,9 +1,11 @@
 <script lang="ts" setup></script>
 
 <template>
-    <LayerBase>
-        <NuxtPage />
-    </LayerBase>
+    <div class="root-wrapper">
+        <NuxtLayout />
+    </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+    
+</style>

@@ -37,6 +37,10 @@ ul {
     }
 }
 
+label {
+    cursor: pointer;
+}
+
 table {
     border-collapse: collapse;
 }
@@ -71,4 +75,12 @@ img {
         width: 100% !important;
         height: 100% !important;
     }
+}
+
+.root-wrapper {
+    width: 100%;
+    height: 100dvh;
+    max-width: 1920px;
+    overflow: clip;
+    margin: 0 auto;
 }

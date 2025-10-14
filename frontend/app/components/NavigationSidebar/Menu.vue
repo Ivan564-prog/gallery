@@ -34,7 +34,7 @@
             :key="item.id"
             :to="item.link"
             :class="{
-                'menu-item--active': route.fullPath === item.link,
+                'menu-item--active': route.path === item.link,
             }"
         >
             <NuxtIcon class="menu-item__icon" :name="item.icon"/>

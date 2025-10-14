@@ -1,0 +1,91 @@
+<script lang="ts" setup>
+    defineProps<{
+        content: IBook
+    }>()
+</script>
+
+<template>
+    <div class="library-card">
+        <UILink 
+            class="library-card__link" 
+            :to="`#book-${content.id}`"
+        />
+        <p class="library-card__new-banner p3">новинка</p>
+        <div class="library-card__panel">
+            <button class="library-card__button">
+                <NuxtIcon class="library-card__button-icon" name="favorite" />
+            </button>
+            <button class="library-card__button">
+                <NuxtIcon class="library-card__button-icon" name="download" />
+            </button>
+        </div>
+        <UIImage 
+            class="library-card__image"
+            :src="content.image" 
+            :alt="content.title"
+        />
+        <p class="library-card__title p2 p2--bold">{{ content.title }}</p>
+        <p class="library-card__short-description p3">{{ content.shortDescription }}</p>
+    </div>
+</template>
+
+<style lang="scss" scoped>
+    .library-card {
+        $this: &;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        &:has(#{$this}__link:hover) {
+            & + #{$this}__title {
+                color: var(--color);
+            }
+        }
+        &__link {
+            position: absolute;
+            z-index: 1;
+            inset: 0;
+            cursor: pointer;
+        }
+        &__new-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            translate: 0 -25%;
+            display: inline-block;
+            padding: clampFluid(2) clampFluid(10);
+            color: var(--white);
+            background-color: var(--color);
+        }
+        &__panel {
+            position: absolute;
+            z-index: 2;
+            top: clampFluid(15);
+            right: clampFluid(15);
+            display: flex;
+            gap: clampFluid(10);
+        }
+        &__button {
+            background-color: var(--white);
+        }
+        &__button-icon {
+            color: var(--black);
+            transition: $tr;
+            @include hover {
+                color: var(--color);
+            }
+        }
+        &__image {
+            width: 100%;
+            height: auto;
+        }
+        &__title {
+            margin: clampFluid(10) 0 clampFluid(6);
+            @include tablet {
+                margin: 6px 0 4px;
+            }
+        }
+        &__short-description {
+            opacity: .6;
+        }
+    }
+</style>
