@@ -6,7 +6,10 @@ class BookTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.BookType
-        fields = '__all__'
+        exclude = (
+            'updated_at',
+            'created_at',
+        )
 
 
 class BookListSerializer(serializers.ModelSerializer):
@@ -18,6 +21,9 @@ class BookListSerializer(serializers.ModelSerializer):
         exclude = (
             'description',
             'type',
+            'updated_at',
+            'created_at',
+            'published_at',
         )
     
     def __init__(self, *args, **kwargs):
@@ -31,6 +37,7 @@ class BookListSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     type = BookTypeSerializer()
+    similar = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Book
@@ -40,3 +47,6 @@ class BookSerializer(serializers.ModelSerializer):
     def many_init(cls, *args, **kwargs):
         kwargs['child'] = BookListSerializer(*args, **kwargs)
         return serializers.ListSerializer(*args, **kwargs)
+    
+    def get_similar(self, instance):
+        return BookListSerializer(instance.get_similar(), many=True, context=self.context).data
