@@ -15,10 +15,6 @@
         @include h3;
         margin-bottom: 0.8em;
     }
-    h4 {
-        @include h4;
-        margin-bottom: 0.8em;
-    }
     ul {
         li {
             @include p1;

@@ -1,9 +1,18 @@
 @font-face {
-    font-family: 'Roboto';
-    src:
-        url('/fonts/Roboto/Roboto.woff2') format('woff2'),
-        url('/fonts/Roboto/Roboto.woff') format('woff');
-    font-weight: 400;
+    font-family: 'Golos Text';
+    src: url('/fonts/Golos/GolosText-Medium.woff2') format('woff2'),
+        url('/fonts/Golos/GolosText-Medium.woff') format('woff');
+    font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
+
+@font-face {
+    font-family: 'Golos Text';
+    src: url('/fonts/Golos/GolosText-Regular.woff2') format('woff2'),
+        url('/fonts/Golos/GolosText-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

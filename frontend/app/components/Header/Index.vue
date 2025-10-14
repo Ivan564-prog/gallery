@@ -1,46 +1,36 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+    const settingsStore = useRootSettingsStore()
+</script>
 
 <template>
     <header class="header">
-        <div class="header__top">Header-top hider</div>
-        <div class="header__bottom">Header-bottom follower</div>
+        <div class="header__content">
+            <UILink class="header__logo desktop-hidden" to="/">
+                <NuxtIcon class="header__logo-icon" name="logo" />
+            </UILink>
+            <h1 class="header__title h1">{{ settingsStore.pageTitle }}</h1>
+        </div>
+        <HeaderAccountLinks class="header__account-links" />
     </header>
 </template>
 
 <style lang="scss" scoped>
-    .header {
-        border: 1px solid #000;
-        height: 120px;
-        position: sticky;
-        top: -36px;
-        background-color: #fff;
-        z-index: 10;
-        &__top {
-            height: 30%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+   .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: clampFluid(20) clampFluid(40) clampFluid(20) clampFluid(60);
+        box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.05);
+        @include tablet {
+            padding: 15px 40px;
         }
-        &__bottom {
-            height: 70%;
-            border-top: 1px solid #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        @include mobile {
+            padding: 15px 20px;
         }
-    }
-    .logo {
-        color: #6abd13;
-        width: fit-content;
-        rotate: -30deg;
-        translate: -110px 40px;
-        padding: 5px 20px;
-        margin-bottom: 30px;
-        font-family: Great Vibes;
-        position: absolute;
-        top: 30%;
-        left: 100px;
-        font-size: 34px;
-        font-weight: 600;
-    }
+        &__logo-icon {
+            width: 50px;
+            height: 50px;
+        }
+   }
 </style>

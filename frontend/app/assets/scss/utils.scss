@@ -36,4 +36,22 @@
 
 .p1 {
     @include p1;
+    &--bold {
+        @include p1-bold;
+    }
+}
+
+.p2 {
+    @include p2;
+    &--bold {
+        @include p2-bold;
+    }
+}
+
+.p3 {
+    @include p3;
+}
+
+.p4 {
+    @include p4;
 }
