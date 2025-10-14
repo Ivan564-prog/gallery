@@ -15,6 +15,9 @@ class BookModelViewSet(BaseModelViewSet):
         book_type_id = self.request.GET.get('book_type')
         if book_type_id:
             queryset = queryset.filter(type__id=book_type_id)
+        if self.request.GET.get('in_wishlist', None):
+            wish_pks = self.request.user.get_book_wishlist().get_book_ids()
+            queryset = queryset.filter(pk__in=wish_pks)
         return queryset.order_by('-published_at')
     
     def perform_destroy(self, instance):
