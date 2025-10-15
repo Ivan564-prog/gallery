@@ -1,7 +1,20 @@
 <script lang="ts" setup>
-    defineProps<{
+    const {
+        content,
+    } = defineProps<{
         content: IBook
     }>()
+    const inWishlist = ref<boolean>(content.onWishlist)
+
+    const toggleWishlist = async () => {
+        try {
+            inWishlist.value = await request<boolean>('/api/v1/wishlist/book/', 'POST', {
+                bookId: content.id
+            })
+        } catch {
+
+        }
+    }
 </script>
 
 <template>
@@ -12,8 +25,11 @@
         />
         <p class="library-card__new-banner p3">новинка</p>
         <div class="library-card__panel">
-            <button class="library-card__button">
-                <NuxtIcon class="library-card__button-icon" name="favorite" />
+            <button class="library-card__button" @click="toggleWishlist">
+                <NuxtIcon 
+                    class="library-card__button-icon" 
+                    :name="inWishlist ? 'favorite-2' : 'favorite'" 
+                />
             </button>
             <a 
                 download
