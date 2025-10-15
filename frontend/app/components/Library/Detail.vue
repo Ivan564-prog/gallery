@@ -6,6 +6,11 @@
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const formattedDate = computed(() => {
+        if (!detailInfo.value?.publishedAt) return
+        const date = new Date(detailInfo.value?.publishedAt)
+        return `${date.getDay()} ${monthByNum(date.getMonth())} ${date.getFullYear}`
+    })
     const setDetailInfo = async () => {
         if (modalStore.optionalData.bookId)
             detailInfo.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
@@ -20,7 +25,7 @@
             <div class="book-detail-head">
                 <div class="book-detail-head__content">
                     <h2 class="book-detail-head__title h2">{{ detailInfo?.title }}</h2>
-                    <div class="book-detail-head__info">{{ `${detailInfo?.published} / ${detailInfo?.type}` }}</div>
+                    <p class="book-detail-head__info p2">{{ `${formattedDate} / ${detailInfo?.type.title}` }}</p>
                 </div>
                 <button class="book-detail-head__button">
                     <NuxtIcon class="book-detail-head__button-icon" name="favorite" />
@@ -34,6 +39,7 @@
                     <UIButton 
                         download
                         class="book-detail-main__button"
+                        color-variant="empty-red"
                         :to="detailInfo?.file"
                     >
                         Скачать pdf
@@ -84,6 +90,9 @@
             flex-direction: column;
             align-items: flex-start;
             gap: clampFluid(30);
+        }
+        &__image {
+            height: auto;
         }
     }
 </style>
