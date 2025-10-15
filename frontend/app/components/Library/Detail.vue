@@ -9,7 +9,7 @@
     const formattedDate = computed(() => {
         if (!detailInfo.value?.publishedAt) return
         const date = new Date(detailInfo.value?.publishedAt)
-        return `${date.getDay()} ${monthByNum(date.getMonth())} ${date.getFullYear}`
+        return `${date.getDay()} ${monthByNum(date.getMonth())} ${date.getFullYear()}`
     })
     const setDetailInfo = async () => {
         if (modalStore.optionalData.bookId)
@@ -34,23 +34,35 @@
         </template>
         <template v-slot:main>
             <div class="book-detail-main">
-                <div class="book-detail-main__content">
-                    <div class="book-detail-main__text text-content" v-html="detailInfo?.description"></div>
-                    <UIButton 
-                        download
-                        class="book-detail-main__button"
-                        color-variant="empty-red"
-                        :to="detailInfo?.file"
-                    >
-                        Скачать pdf
-                    </UIButton>
-                    <p class="book-detail-main__text p2">Дорогие читатели, если вы хотите задать вопросы о книге или получить ее в бумажном виде — пишите нам на почту</p>
+                <div class="book-detail-main__top">
+                    <div class="book-detail-main__content">
+                        <div class="book-detail-main__text text-content" v-html="detailInfo?.description"></div>
+                        <UIButton 
+                            download
+                            class="book-detail-main__button"
+                            color-variant="empty-red"
+                            :to="detailInfo?.file"
+                        >
+                            Скачать pdf
+                        </UIButton>
+                        <p class="book-detail-main__text p2">Дорогие читатели, если вы хотите задать вопросы о книге или получить ее в бумажном виде — пишите нам на почту</p>
+                    </div>
+                    <UIImage 
+                        class="book-detail-main__image" 
+                        :src="detailInfo?.image"
+                        :alt="detailInfo?.title"
+                    />
                 </div>
-                <UIImage 
-                    class="book-detail-main__image" 
-                    :src="detailInfo?.image"
-                    :alt="detailInfo?.title"
-                />
+                <div v-if="detailInfo?.similar.length" class="book-detail-main__similar">
+                    <h3 class="book-detail-main__similar-title h3">Похожие материалы:</h3>
+                    <div class="book-detail-main__similar-list">
+                        <LibraryCard 
+                            v-for="book in detailInfo?.similar"
+                            :key="book.id"
+                            :content="book"
+                        />
+                    </div>
+                </div>
             </div>
         </template>
     </ModalBase>
@@ -78,12 +90,14 @@
     }
 
     .book-detail-main {
-        display: grid;
-        grid-template-columns: 1fr clampFluid(326);
-        gap: clampFluid(70);
-        @include tablet {
-            grid-template-columns: 1fr;
-            gap: clampFluid(40);
+        &__top {
+            display: grid;
+            grid-template-columns: 1fr clampFluid(326);
+            gap: clampFluid(70);
+            @include tablet {
+                grid-template-columns: 1fr;
+                gap: clampFluid(40);
+            }
         }
         &__content {
             display: flex;
@@ -93,6 +107,15 @@
         }
         &__image {
             height: auto;
+        }
+        &__similar-list {
+            margin-top: clampFluid(40);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clampFluid(40);
+            @include tablet {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     }
 </style>
