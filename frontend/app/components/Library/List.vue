@@ -11,6 +11,9 @@
             :key="card.id"
             :content="card"
         />
+        <Teleport to="body">
+            <LibraryDetail />
+        </Teleport>
     </div>
 </template>
 

@@ -11,6 +11,7 @@
                 <slot></slot>
             </main>
         </div>
+        <ToastrError />
     </div>
 </template>
 
@@ -36,10 +37,10 @@
         padding: clampFluid(30) clampFluid(40) clampFluid(30) clampFluid(60);
         overflow: auto;
         @include tablet {
-            padding: 100px 40px;
+            padding: 20px 40px 90px;
         }
         @include mobile {
-            padding: 100px 20px 20px;
+            padding: 20px 20px 90px;
         }
     }
 </style>

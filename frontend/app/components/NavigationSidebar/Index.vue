@@ -19,11 +19,12 @@
         background-color: var(--gray-06);
         @include mobile {
             position: fixed;
+            z-index: 5;
             bottom: 0;
             left: 0;
             width: 100%;
             height: auto;
-            padding-inline: 30px;
+            padding-inline: 10px;
         }
         &__logo {
             margin: clampFluid(20) clampFluid(41) clampFluid(35);
