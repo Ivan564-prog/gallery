@@ -1,10 +1,15 @@
 <script lang="ts" setup>
     const modelValue = defineModel<string | number>()
     const input = defineModel<HTMLInputElement>('input')
-    const { type = 'text' } = defineProps<{
+    const { 
+        type = 'text', 
+        readonly = false,
+        styleVariant = 'default',
+    } = defineProps<{
         type?: 'text' | 'number' | 'password'
         placeholder?: string
         readonly?: boolean
+        styleVariant: 'default' | 'minimal'
     }>()
 </script>
 
@@ -40,8 +45,7 @@
         &:not(:has(#{$this}__value:placeholder-shown)),
         &:has(#{$this}__value:focus-visible) {
             #{$this}__placeholder {
-                // opacity: 0;
-                translate: 0 -1em;
+                opacity: 0;
             }
         }
         &__value {
@@ -50,17 +54,15 @@
             border: none;
             font-size: inherit;
             line-height: inherit;
-
             &::placeholder {
             }
         }
         &__placeholder {
             position: absolute;
-            transition: all 0.3s ease;
-
+            transition: $tr;
             font-size: inherit;
             line-height: inherit;
-            color: #a3a3a3;
+            color: var(--gray-03);
         }
     }
 </style>

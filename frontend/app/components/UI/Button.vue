@@ -70,8 +70,8 @@
                 --font-color: var(--white);
             }
             &-gray {
-                --background-color: var(--gray_05);
-                --border-color: var(--gray_05);
+                --background-color: var(--gray-05);
+                --border-color: var(--gray-05);
                 --font-color: var(--black);
             }
             &-empty-red {

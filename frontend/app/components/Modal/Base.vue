@@ -51,9 +51,11 @@
         top: 0;
         left: 0;
         width: 100vw;
-        height: 100vh;
+        height: 100dvh;
         display: flex;
         justify-content: flex-end;
+        overflow-x: hidden;
+        overflow-y: auto;
         &.modal-enter-active,
         &.modal-leave-active {
             transition: $tr;
@@ -81,7 +83,8 @@
             flex-direction: column;
             gap: clampFluid(30);
             width: 70%;
-            height: 100%;
+            min-height: 100%;
+            height: fit-content;
             background-color: var(--gray-06);
             @include tablet {
                 width: 100%;
@@ -112,10 +115,7 @@
         }
         &__close-bg {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
+            inset: 0;
             background-color: rgba(#000, 0.5);
         }
         &__main {
@@ -148,5 +148,10 @@
                 padding: 20px;
             }
         }
+    }
+
+    .modal-footer {
+        padding: clampFluid(30) clampFluid(40);
+        background-color: var(--white);
     }
 </style>

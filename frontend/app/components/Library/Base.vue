@@ -28,6 +28,10 @@
         <LibraryHead class="library__head" v-model="bookType" />
         <LibraryList v-if="bookList.length" :book-list="bookList" />
         <UIEmptyBanner v-else />
+        <Teleport to="body">
+            <LibraryDetail />
+            <LibraryBookCreator />
+        </Teleport>
     </section>
 </template>
 

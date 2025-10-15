@@ -90,6 +90,8 @@
     }
 
     .book-detail-main {
+        display: grid;
+        gap: clampFluid(46);
         &__top {
             display: grid;
             grid-template-columns: 1fr clampFluid(326);

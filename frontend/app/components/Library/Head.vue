@@ -43,9 +43,10 @@
                 />
             </label>
         </div>
+        <!-- TODO ДОБАВИТЬ КОГДА ЗАКОНЧУ v-if="userStore.userData?.role === 'root'" -->
         <UIButton 
-            v-if="userStore.userData?.role === 'root'"
             class="library-head__button"
+            to="#book-creator"
         >Добавить публикацию</UIButton>
     </div>
 </template>

@@ -1,5 +1,5 @@
 .text-content {
-    p {
+    p, div {
         @include p2;
         margin-bottom: 1em;
     }
@@ -17,12 +17,15 @@
     }
     ul {
         li {
-            @include p1;
+            margin-left: clampFluid(20);
+            list-style-type: disc;
+            @include p2;
         }
     }
     ol {
         li {
-            @include p1;
+            margin-left: clampFluid(20);
+            @include p2;
         }
     }
     table {
