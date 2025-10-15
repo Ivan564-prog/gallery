@@ -79,7 +79,7 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
         return instance
 
 
-class RegisterSerializer(PhoneSerializerValidator, UserSerializer):
+class RegisterSerializer(UserSerializer):
     code = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
     surname = serializers.CharField(required=True)
