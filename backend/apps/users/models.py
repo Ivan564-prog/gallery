@@ -138,6 +138,9 @@ class User(
     def get_book_wishlist(self):
         return self.wishlist.get_or_create(user=self)[0]
 
+    def full_name(self):
+        return ' '.join([self.surname, self.name, self.patronumic])
+
     @classmethod
     def has_user(cls, username_field):
         return cls.objects.filter(is_active=True).filter(**{cls.USERNAME_FIELD: username_field.lower()})
