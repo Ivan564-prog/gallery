@@ -110,6 +110,21 @@ class User(
         verbose_name='Почта', max_length=255, unique=True)
     diocese = models.ForeignKey(
         'local_hierarchy.Diocese', verbose_name='Епархия', on_delete=models.CASCADE, null=True, blank=True)
+    
+    name = models.CharField(
+        verbose_name='Имя', null=True)
+    surname = models.CharField(
+        verbose_name='Фамилия', blank=True, null=True)
+    patronumic = models.CharField(
+        verbose_name='Отчество', blank=True, null=True)
+    date_of_birth = models.DateField(
+        verbose_name='День рождения', blank=True, null=True)
+    city = models.CharField(
+        verbose_name='Город проживания', null=True, blank=True)
+    phone = models.CharField(
+        verbose_name='Телефон', null=True, blank=True)
+    image = models.ImageField(
+        verbose_name='Изображение', upload_to='images/users/', null=True, blank=True)
 
     objects = CustomUserManager()
     

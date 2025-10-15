@@ -1,5 +1,20 @@
 from rest_framework import serializers
 from . import models
+from apps.users.models import User
+
+
+# class CreatorSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = User
+#         fields = (
+#             'id',
+#             'id',
+#             'id',
+#             'id',
+#             'id',
+#             'id',
+#         )
 
 
 class DiaryListSerializer(serializers.ModelSerializer):
