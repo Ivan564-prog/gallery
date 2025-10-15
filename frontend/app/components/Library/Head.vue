@@ -91,6 +91,9 @@
             }
         }
         &__icon {
+            width: clampFluid(40);
+            height: auto;
+            aspect-ratio: 1;
             color: var(--color);
             transition: $tr;
         }

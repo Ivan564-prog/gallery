@@ -4,24 +4,36 @@
     } = defineProps<{
         content: IBook
     }>()
+    const toastrStore = useToastrStore()
+    const modalStore = useModalStore()
+    const emits = defineEmits<{
+        (event: 'open-modal', id: number): void
+    }>()
     const inWishlist = ref<boolean>(content.onWishlist)
 
     const toggleWishlist = async () => {
         try {
             inWishlist.value = await request<boolean>('/api/v1/wishlist/book/', 'POST', {
-                bookId: content.id
+                bookId: content.id,
             })
         } catch {
-
+            toastrStore.showError("Ошибка добавление в избранное")
         }
+    }
+
+    const openDetailInfo = () => {
+        modalStore.optionalData = {
+            bookId: content.id,
+        }
+        modalStore.openedModal = 'book-detail'
     }
 </script>
 
 <template>
     <div class="library-card">
-        <UILink 
+        <button 
             class="library-card__link" 
-            :to="`#book-${content.id}`"
+            @click="openDetailInfo"
         />
         <p class="library-card__new-banner p3">новинка</p>
         <div class="library-card__panel">
@@ -61,7 +73,7 @@
             inset: 0;
             cursor: pointer;
             @include hover {
-                & + #{$this}__title {
+                & ~ #{$this}__title {
                     color: var(--color);
                 }
             }
@@ -100,6 +112,7 @@
         }
         &__title {
             margin: clampFluid(10) 0 clampFluid(6);
+            transition: $tr;
             @include tablet {
                 margin: 6px 0 4px;
             }

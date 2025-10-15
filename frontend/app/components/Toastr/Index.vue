@@ -22,7 +22,7 @@
         aspect-ratio: 200 / 90;
         right: clampFluid(20);
         bottom: clampFluid(20);
-        background-color: var(--white);
+        background-color: var(--gray-04);
         padding: clampFluid(20);
         display: flex;
         align-items: center;
@@ -35,7 +35,7 @@
         }
         &.toastr-enter-active,
         &.toastr-leave-active {
-            @include transition;
+            transition: $tr;
         }
         &.toastr-enter-from,
         &.toastr-leave-to {
@@ -61,7 +61,7 @@
             bottom: 0;
             left: 0;
             height: 2px;
-            background-color: var(--color-main);
+            background-color: var(--color);
         }
     }
 </style>

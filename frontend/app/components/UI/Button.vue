@@ -50,8 +50,9 @@
         transition: $tr;
         @include hover {
             background-color: var(--color-hover);
+            border-color: var(--color-hover);
             #{$this}__text {
-                color: var(--white);
+                color: var(--white) !important;
             }
         }
         &--width {
@@ -75,7 +76,7 @@
             }
             &-empty-red {
                 --background-color: transparent;
-                --border-color: var(--gray_05);
+                --border-color: var(--color);
                 --font-color: var(--black);
             }
             &-empty-black {
@@ -85,7 +86,7 @@
             }
         }
         &__text {
-            color: var(--font-color);
+            color: var(--font-color) !important;
             transition: $tr;
             &--size {
                 &-default {

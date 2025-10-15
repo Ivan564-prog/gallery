@@ -11,7 +11,7 @@
     <Toastr v-model="opened">
         <div class="toastr-error">
             <NuxtIcon class="toastr-error__icon" name="close" />
-            <p class="toastr-error__text p1">{{ toastrStore.toastrMessage }}</p>
+            <p class="toastr-error__text p3">{{ toastrStore.toastrMessage }}</p>
         </div>
     </Toastr>
 </template>

@@ -8,7 +8,7 @@
             <UILink class="header__logo desktop-hidden" to="/">
                 <NuxtIcon class="header__logo-icon" name="logo" />
             </UILink>
-            <h1 class="header__title h1">{{ settingsStore.pageTitle }}</h1>
+            <h1 class="header__title h1 mobile-hidden">{{ settingsStore.pageTitle }}</h1>
         </div>
         <HeaderAccountLinks class="header__account-links" />
     </header>

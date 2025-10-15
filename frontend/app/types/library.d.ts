@@ -21,8 +21,9 @@ declare global {
     interface IBookDetail extends IBook {
         description: string | null
         file: string | null
-        published: string
         type: IBookType
         status: TBookStatus
+        similar: IBook[]
+        publishedAt: string
     }
 }
