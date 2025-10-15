@@ -27,27 +27,34 @@ class UserViewSet(ViewSet):
         return Response(serializer.data)
     
     @action(methods=['POST'], detail=False)
+    def register(self, request):
+        serializer = serializers.RegisterSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        object = serializer.save()
+        models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
+        return Response(self.serializer_class(object, context={'request': request}).data)
+    
+    @action(methods=['POST'], detail=False)
     def invite(self, request):
         role_map = {
             'chief': 'missionary',
             'admin': 'chief',
             'root': 'admin',
         }
-        models.Invite.objects.create(
+        invite = models.Invite.objects.create(
             invite_by=request.user,
             email=request.data.get('email'),
             diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
             role=role_map[request.user.status],
         )
+        invite.send(request)
         return Response(status=201)
     
-    @action(methods=['POST'], detail=False)
-    def register(self, request):
-        self.queryset.filter(**{'is_active': False, self.username_field: request.data[self.username_field].lower()}).delete()
-        serializer = serializers.RegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        object = serializer.save()
-        return Response(self.serializer_class(object, context={'request': request}).data)
+    
+    @action(methods=['GET'], detail=False)
+    def check_register(self, request):
+        invites = models.Invite.objects.filter(code=request.GET.get('code'))
+        return Response(invites.exists() and timezone.now() < invites.get().deadline)
         
     @action(methods=['POST'], detail=False)
     def authorize(self, request):

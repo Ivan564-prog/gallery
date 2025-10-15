@@ -33,7 +33,7 @@ class DiaryListSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.wishlist_ids = self.context['request'].user.get_diary_wishlist().get_ids()
+        self.wishlist_ids = self.context['request'].user.get_diary_wishlist().get_diary_ids()
 
     def get_diocese_name(self, obj):
         return obj.held_in_diocese.title

@@ -22,9 +22,9 @@ CORS_ALLOWED_ORIGINS = [
     f"http://{HOST}",
 ]
 
-# CSRF_TRUSTED_ORIGINS = [
-#     *CORS_ALLOWED_ORIGINS,
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    *CORS_ALLOWED_ORIGINS,
+]
 
 USE_X_FORWARDED_HOST = True
 
@@ -82,7 +82,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

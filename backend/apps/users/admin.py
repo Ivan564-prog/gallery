@@ -26,6 +26,13 @@ class UserAdmin(admin.ModelAdmin):
             ['is_active'],
             'is_staff', 'is_superuser',
             'email',
+            'name',
+            'surname',
+            'patronumic',
+            'date_of_birth',
+            'city',
+            'phone',
+            'image',
             'diocese',
             'new_password',)
         if request.user.is_authenticated and request.user.task_permission:

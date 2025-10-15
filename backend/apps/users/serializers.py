@@ -1,33 +1,9 @@
 from rest_framework import serializers
 from . import models
 from core.logger import logger
-from core.serializers import EmailSerializerValidator
+from core.serializers import PhoneSerializerValidator, EmailSerializerValidator
 from django.contrib.auth import authenticate
 from django.utils import timezone
-
-
-class ActivationSerializer(serializers.Serializer):
-
-    id = serializers.CharField()
-    code = serializers.CharField()
-
-    def validate(self, attrs):
-        users = models.User.objects.filter(id=attrs['id'])
-        if not users.exists():
-            raise serializers.ValidationError("Аккаунт не найден")
-        user = users.get()
-        if user.is_active:
-            raise serializers.ValidationError("Аккаунт уже активирован")
-        if user.activation_code != attrs['code']:
-            raise serializers.ValidationError("Код активации не верен")
-        if user.activation_deadline < timezone.now():
-            user.send_activation_code(self.request)
-            raise serializers.ValidationError("Код активации устарел. Новый код активации отравлен вам на почту")
-        return attrs
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.get('context', {}).get('request', None)
-        return super().__init__(*args, **kwargs)
 
 
 class AuthorizeSerializer(serializers.Serializer):
@@ -71,7 +47,7 @@ class UserPasswordSerializer(serializers.Serializer):
         return password1
 
 
-class UserSerializer(UserPasswordSerializer, EmailSerializerValidator, serializers.ModelSerializer):
+class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSerializerValidator, serializers.ModelSerializer):
     status = serializers.ReadOnlyField()
     
     class Meta:
@@ -82,25 +58,12 @@ class UserSerializer(UserPasswordSerializer, EmailSerializerValidator, serialize
             'is_superuser',
             'is_staff',
             'date_joined',
-            'activation_code',
-            'activation_deadline',
             'reset_code',
             'reset_deadline',
             'is_active',
             'groups',
             'user_permissions',
         )
-        
-    def create(self, validated_data):
-        validated_data[models.User.USERNAME_FIELD] = validated_data[models.User.USERNAME_FIELD].lower()
-        models.User.objects.filter(**{'is_active': False, models.User.USERNAME_FIELD: validated_data[models.User.USERNAME_FIELD]}).delete()
-        password = validated_data['password1']
-        del validated_data['password1']
-        del validated_data['password2']
-        obj = models.User.objects.create(**validated_data)
-        obj.set_password(password)
-        obj.save()
-        return obj
 
     def update(self, instance, validated_data):
 
@@ -114,13 +77,46 @@ class UserSerializer(UserPasswordSerializer, EmailSerializerValidator, serialize
             setattr(instance, key, validated_data.get(key, getattr(instance, key)))
         instance.save()
         return instance
-    
-class RegisterSerializer(UserSerializer):
+
+
+class RegisterSerializer(PhoneSerializerValidator, UserSerializer):
+    code = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+    surname = serializers.CharField(required=True)
+    patronumic = serializers.CharField(required=True)
+    date_of_birth = serializers.DateField(format='%d:%m:%Y', required=True)
+    city = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
 
     class Meta:
         model = models.User
         fields = (
-            models.User.USERNAME_FIELD,
+            'name',
+            'surname',
+            'patronumic',
+            'date_of_birth',
+            'city',
+            'phone',
             'password1',
             'password2',
+            'code',
         )
+
+    def validate_code(self, code):
+        invites = models.Invite.objects.filter(is_active=True, code=code)
+        if not models.Invite.objects.filter(code=code).exists() or timezone.now() > invites.get().deadline:
+            raise serializers.ValidationError("Код не существует или срок его действия закончился")
+        self.invite = invites.get()
+
+    def create(self, validated_data):
+        del validated_data['code']
+        validated_data['email'] = self.invite.email
+        validated_data[models.User.USERNAME_FIELD] = validated_data[models.User.USERNAME_FIELD].lower()
+        models.User.objects.filter(**{'is_active': False, models.User.USERNAME_FIELD: validated_data[models.User.USERNAME_FIELD]}).delete()
+        password = validated_data['password1']
+        del validated_data['password1']
+        del validated_data['password2']
+        obj = models.User.objects.create(**validated_data)
+        obj.set_password(password)
+        obj.save()
+        return obj

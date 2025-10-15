@@ -6,7 +6,10 @@ class BookTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.BookType
-        fields = '__all__'
+        exclude = (
+            'updated_at',
+            'created_at',
+        )
 
 
 class BookListSerializer(serializers.ModelSerializer):

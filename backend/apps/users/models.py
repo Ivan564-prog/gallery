@@ -44,8 +44,31 @@ class Invite(models.Model):
     def __str__(self):
         return f'Приглашение для {self.email}'
     
-    def send(self):
-        pass
+    def set_fields(self, user):
+        self.is_active = False
+        self.save()
+        user.diocese = self.diocese
+        if self.role == 'chief_in':
+            user.chief_in = self.diocese
+        elif self.role == 'admin_in':
+            user.admin_in = self.diocese
+        user.save()
+
+    
+    def send(self, request):
+        subject = f'Приглашение в миссионерство'
+        html_message = render_to_string(
+            'mails/invite.html',
+            {
+                'request': request,
+                'link': f'{request.scheme}://{request.get_host()}/registration?code={self.code}',
+                'role': self.get_role_display(),
+                'diocese': self.diocese.title,
+            }
+        )
+        to = [self.email]
+        logger.info(html_message)
+        # send_mail.delay(subject, to, html_message)
 
     def set_code(self, save=True):
         self.code = hashlib.sha256(secrets.token_bytes(16)).hexdigest()
@@ -136,7 +159,10 @@ class User(
         return self.email
 
     def get_book_wishlist(self):
-        return self.wishlist.get_or_create(user=self)[0]
+        return self.book_wishlist.get_or_create(user=self)[0]
+
+    def get_diary_wishlist(self):
+        return self.diary_wishlist.get_or_create(user=self)[0]
 
     def full_name(self):
         return ' '.join([self.surname, self.name, self.patronumic])
