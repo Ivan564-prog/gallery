@@ -31,8 +31,8 @@ declare global {
         title: string
         shortDescription: string
         description: string | null
-        image: File | null
-        file: File | null
+        image: File[]
+        file: File[]
         type: number | null
     }
 }

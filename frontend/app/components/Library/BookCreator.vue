@@ -15,8 +15,8 @@
         title: '',
         shortDescription: '',
         description: '',
-        image: null,
-        file: null,
+        image: [],
+        file: [],
         type: null,
     })
 
@@ -56,11 +56,12 @@
                     <UITitledInput 
                         class="book-creator-form__item book-creator-form__item--file"
                         icon="clip"
-                        text="Прикрепить файл"
+                        text="Прикрепить"
                     >
                         <UIFileInput 
-                            description="добавить файл" 
+                            description="Файл" 
                             formates="application"
+                            v-model="params.file"
                         />
                     </UITitledInput>
                     <div class="book-creator-form__photo">
@@ -74,6 +75,7 @@
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
+                        v-model="params.image"
                     />
                     </div>
                 </div>
