@@ -9,6 +9,11 @@ class BookModelViewSet(BaseModelViewSet):
     serializer_class = serializers.BookSerializer
     lookup_field = 'pk'
 
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.method != 'GET':
+            return serializers.CreateBookSerializer
+        return self.serializer_class
+
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
         queryset = queryset.exclude(status='deleted')

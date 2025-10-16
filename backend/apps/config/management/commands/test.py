@@ -1,13 +1,9 @@
 from django.core.management import BaseCommand
-from core.helpers import timer
-import time
+import requests
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        self.test()
-        
-    @timer
-    def test(self):
-        time.sleep(873)
+        r = requests.get('http://localhost/api/v1/library/book/')
+        print(r)
