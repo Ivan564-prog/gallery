@@ -15,8 +15,8 @@
         title: '',
         shortDescription: '',
         description: '',
-        image: null,
-        file: null,
+        image: [],
+        file: [],
         type: null,
     })
 
@@ -28,6 +28,12 @@
         return typeObject
     })
 
+    const createBook = async (status: TBookStatus) => {
+        const newBook = await request('/api/v1/library/book/', 'POST', {
+            status,
+            ...params,
+        })
+    }
 </script>
 
 <template>
@@ -56,11 +62,12 @@
                     <UITitledInput 
                         class="book-creator-form__item book-creator-form__item--file"
                         icon="clip"
-                        text="Прикрепить файл"
+                        text="Прикрепить"
                     >
                         <UIFileInput 
-                            description="добавить файл" 
+                            description="Файл" 
                             formates="application"
+                            v-model="params.file"
                         />
                     </UITitledInput>
                     <div class="book-creator-form__photo">
@@ -74,6 +81,7 @@
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
+                        v-model="params.image"
                     />
                     </div>
                 </div>
@@ -103,12 +111,14 @@
                     class="book-creator-footer__button"
                     font-size="big"
                     from="creatorBook"
+                    @click="createBook('published')"
                 >Добавить публикацию</UIButton>
                 <UIButton 
                     class="book-creator-footer__button" 
                     color-variant="gray"
                     font-size="big"
                     from="creatorBook"
+                    @click="createBook('draft')"
                 >Сохранить черновик</UIButton>
                 <button 
                     class="book-creator-footer__remove-button p1 p1--bold"

@@ -1,7 +1,13 @@
 <script lang="ts" setup>
     const modelValue = defineModel<File[]>()
     type TFormate = 'image' | 'application'
-    const { totalMaxSize, fileMaxSize, maxFiles, formates, rewrite } = defineProps<{
+    const { 
+        totalMaxSize, 
+        fileMaxSize, 
+        maxFiles, 
+        formates, 
+        rewrite 
+    } = defineProps<{
         description?: string
         totalMaxSize?: number
         fileMaxSize?: number
@@ -62,6 +68,8 @@
         let input = <HTMLInputElement>event.target
         let files = input.files ? [...input.files] : []
         inputFiles(files)
+        console.log(modelValue.value);
+        
     }
 </script>
 
@@ -69,8 +77,21 @@
     <div class="ui-file-wrapper">
         <template v-if="formates === 'image'">
             <div class="ui-file-image">
-                <div class="ui-file-image__list"></div>
-                <label class="ui-file-image__label">
+                <div v-if="modelValue?.length" class="ui-file-image__list">
+                    <div 
+                        v-for="file, index in modelValue"
+                        class="ui-file-image__item image-item"
+                    >
+                        <UIImage class="image-item__picture" :src="file.webkitRelativePath" />
+                        <button class="image-item__button" type="button" @click="removeFile(index)">
+                            <NuxtIcon class="image-item__button-icon" name="close" />
+                        </button>
+                    </div>
+                </div>
+                <label 
+                    v-if="(!maxFiles || !modelValue?.length) || ((modelValue && modelValue.length > 0) && (maxFiles < modelValue.length))" 
+                    class="ui-file-image__label"
+                >
                     <input multiple class="ui-file-image__input" type="file" @change="onInput" />  
                     <NuxtIcon class="ui-file-image__icon" name="plus" />
                 </label>
@@ -85,12 +106,10 @@
                     class="file-item" 
                     :key="ind"
                 >
-                    <div class="file-item__icon">
-                        <img v-if="isImg(file)" :src="getURLfromFile(file)" alt="" />
-                        <NuxtIcon v-else name="clip" filled />
-                    </div>
-                    <div class="file-item__name">{{ getFileName(file) }}</div>
-                    <button class="file-item__remove" @click="removeFile(ind)">x</button>
+                    <div class="file-item__name p3">{{ getFileName(file) }}</div>
+                    <button class="file-item__remove" @click="removeFile(ind)">
+                        <NuxtIcon class="file-item__remove-icon" name="close" />
+                    </button>
                 </div>
             </div>
         </label>
@@ -99,6 +118,14 @@
 
 <style lang="scss" scoped>
     .ui-file-image {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clampFluid(20);
+        &__list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clampFluid(20);
+        }
         &__label {
             display: flex;
             align-items: center;
@@ -121,6 +148,24 @@
         }
     }
 
+    .image-item {
+        position: relative;
+        width: clampFluid(111);
+        height: auto;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &__button {
+            position: absolute;
+            top: clampFluid(7);
+            right: clampFluid(7);
+            width: clampFluid(10);
+            height: auto;
+            aspect-ratio: 1;
+        }
+    }
+
     .ui-file-input {
         &__description {
             color: var(--gray-03);
@@ -132,22 +177,21 @@
     }
 
     .file-item {
-        display: grid;
-        grid-template-columns: 25px 1fr auto;
+        display: inline-flex;
+        gap: clampFluid(15);
         gap: 10px;
         align-items: center;
         &__icon {
             width: 100%;
             aspect-ratio: 1;
         }
-        &__name {
-            font-size: 13px;
-        }
-        &__remove {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            &:hover {
-                color: #f00;
+        &__remove-icon {
+            width: clampFluid(10);
+            height: auto;
+            aspect-ratio: 1;
+            transition: $tr;
+            @include hover {
+                color: var(--color);
             }
         }
     }
