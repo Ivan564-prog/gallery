@@ -37,7 +37,7 @@ export const request = async <T> (
     method?: TMethod,
     body?: TRequestBody,
 ) => {
-    url = getAPIUrl() + url
+    url = getAPIUrl() + url + '?auth=4321'
     if (!csrf && method != 'GET')
         csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     try {
