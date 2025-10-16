@@ -30,11 +30,13 @@
 
     const createBook = async (status: TBookStatus) => {
         const formData = new FormData()
-
-        Object.entries(params).forEach(([key, value]) => {
-            formData.append(key, value as keyof ICreateBook)
-        })
+        
+        formData.append('title', params.title)
         formData.append('status', status)
+        if (params.image[0]) formData.append('image', params.image[0])
+        if (params.file[0]) formData.append('file', params.file[0])
+        if (params.description) formData.append('description', params.description)
+        if (params.shortDescription) formData.append('description', params.shortDescription)
         
         const newBook = await request('/api/v1/library/book/', 'POST', formData)
     }
@@ -55,7 +57,7 @@
                 <div class="book-creator-form__top">
                     <UITitledInput 
                         class="book-creator-form__item"
-                        icon="star"
+                        icon="star-2"
                         text="Тип публикации"
                     >
                         <UISelect 

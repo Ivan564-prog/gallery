@@ -118,6 +118,7 @@
 
 <style lang="scss" scoped>
     .ui-file-image {
+        $this: &;
         display: flex;
         flex-wrap: wrap;
         gap: clampFluid(20);
@@ -135,6 +136,12 @@
             aspect-ratio: 1;
             background-color: var(--gray-05);
             transition: $tr;
+            @include hover {
+                background-color: var(--color);
+                #{$this}__icon {
+                    color: var(--white);
+                }
+            }
         }
         &__input {
             display: none;
