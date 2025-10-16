@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+    defineProps<{
+        typeList: IBookType[],
+    }>()
     const userStore = useUserStore()
-    const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
     const bookType = defineModel<number>()
 </script>
 

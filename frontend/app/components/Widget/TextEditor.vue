@@ -3,7 +3,7 @@
     const editorElement = ref<HTMLDivElement>()
 
     const setEditorContent = (value: string) => {
-        if (!editorElement.value) return
+        if (!editorElement.value || !content.value) return
         editorElement.value.innerHTML = value
     }
     
@@ -50,28 +50,60 @@
 <template>
     <div class="text-editor">
         <div class="text-editor__panel editor-panel">
-            <button class="editor-panel__button" @click="addBold">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addBold"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="bold" />
             </button>
-            <button class="editor-panel__button" @click="addItalic">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addItalic"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="italic" />
             </button>
-            <button class="editor-panel__button" @click="addUnderline">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addUnderline"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="strike" />
             </button>
-            <button class="editor-panel__button" @click="addStrike">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addStrike"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="line" />
             </button>
-            <button class="editor-panel__button" @click="addNumericList">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addNumericList"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="number-list" />
             </button>
-            <button class="editor-panel__button" @click="addList">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addList"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="list" />
             </button>
-            <button class="editor-panel__button" @click="addLeft">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addLeft"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="left" />
             </button>
-            <button class="editor-panel__button" @click="addCenter">
+            <button 
+                class="editor-panel__button" 
+                type="button" 
+                @click="addCenter"
+            >
                 <NuxtIcon class="editor-panel__button-icon" name="center" />
             </button>
         </div>

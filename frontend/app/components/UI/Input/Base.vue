@@ -9,12 +9,15 @@
         type?: 'text' | 'number' | 'password'
         placeholder?: string
         readonly?: boolean
-        styleVariant: 'default' | 'minimal'
+        styleVariant: 'default' | 'minimal' | 'big'
     }>()
 </script>
 
 <template>
-    <label class="ui-input">
+    <label 
+        class="ui-input"
+        :class="`ui-input--variant-${styleVariant}`"
+    >
         <input
             class="ui-input__value"
             placeholder=" "
@@ -33,14 +36,9 @@
     .ui-input {
         $this: &;
         position: relative;
-        border: 1px solid #333;
         cursor: text;
         display: flex;
         align-items: center;
-        height: 39px;
-        padding: 5px 10px 0;
-        font-size: 14px;
-        line-height: 125%;
         width: 100%;
         &:not(:has(#{$this}__value:placeholder-shown)),
         &:has(#{$this}__value:focus-visible) {
@@ -48,21 +46,40 @@
                 opacity: 0;
             }
         }
+        &--variant {
+            &-default {
+                border: 1px solid var(--gray-04);
+                padding: 0 clampFluid(20);
+                height: clampFluid(59);
+            }
+            &-minimal {
+                padding: clampFluid(4) clampFluid(16);
+                border-bottom: 1px solid var(--gray-04);
+            }
+            &-big {
+                #{$this}__value,
+                #{$this}__placeholder {
+                    @include h3;
+                }
+            }
+        }
         &__value {
-            width: 100%;
-            height: 100%;
-            border: none;
-            font-size: inherit;
-            line-height: inherit;
+            @include p2;
+            & {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
             &::placeholder {
             }
         }
         &__placeholder {
-            position: absolute;
-            transition: $tr;
-            font-size: inherit;
-            line-height: inherit;
-            color: var(--gray-03);
+            @include p2;
+            & {
+                position: absolute;
+                color: var(--gray-03) !important;
+                transition: $tr;
+            }
         }
     }
 </style>
