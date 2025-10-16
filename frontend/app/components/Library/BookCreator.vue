@@ -46,6 +46,7 @@
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
+                    v-model="params.title"
                 />
                 <div class="book-creator-form__top">
                     <UITitledInput 
@@ -57,6 +58,7 @@
                             empty
                             placeholder="Выберите"
                             :items="formattedTypeList"
+                            v-model="params.type"
                         />
                     </UITitledInput>
                     <UITitledInput 
@@ -92,7 +94,7 @@
                         text="Краткое описание"
                         variant="flex-start"
                     >
-                        <UITextarea placeholder="Напишите краткое описание " />
+                        <UITextarea placeholder="Напишите краткое описание " v-model="params.shortDescription" />
                     </UITitledInput>
                     <UITitledInput 
                         class="book-creator-form__item"
@@ -100,7 +102,7 @@
                         text="Описание"
                         variant="flex-start"
                     >
-                        <WidgetTextEditor class="book-creator-form__text-editor" />
+                        <WidgetTextEditor class="book-creator-form__text-editor" v-model="params.description" />
                     </UITitledInput>
                 </div>
             </form>
