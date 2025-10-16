@@ -106,12 +106,10 @@
                     class="file-item" 
                     :key="ind"
                 >
-                    <div class="file-item__icon">
-                        <img v-if="isImg(file)" :src="getURLfromFile(file)" alt="" />
-                        <NuxtIcon v-else name="clip" filled />
-                    </div>
-                    <div class="file-item__name">{{ getFileName(file) }}</div>
-                    <button class="file-item__remove" @click="removeFile(ind)">x</button>
+                    <div class="file-item__name p3">{{ getFileName(file) }}</div>
+                    <button class="file-item__remove" @click="removeFile(ind)">
+                        <NuxtIcon class="file-item__remove-icon" name="close" />
+                    </button>
                 </div>
             </div>
         </label>
@@ -179,22 +177,21 @@
     }
 
     .file-item {
-        display: grid;
-        grid-template-columns: 25px 1fr auto;
+        display: inline-flex;
+        gap: clampFluid(15);
         gap: 10px;
         align-items: center;
         &__icon {
             width: 100%;
             aspect-ratio: 1;
         }
-        &__name {
-            font-size: 13px;
-        }
-        &__remove {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            &:hover {
-                color: #f00;
+        &__remove-icon {
+            width: clampFluid(10);
+            height: auto;
+            aspect-ratio: 1;
+            transition: $tr;
+            @include hover {
+                color: var(--color);
             }
         }
     }

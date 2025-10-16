@@ -28,6 +28,12 @@
         return typeObject
     })
 
+    const createBook = async (status: TBookStatus) => {
+        const newBook = await request('/api/v1/library/book/', 'POST', {
+            status,
+            ...params,
+        })
+    }
 </script>
 
 <template>
@@ -105,12 +111,14 @@
                     class="book-creator-footer__button"
                     font-size="big"
                     from="creatorBook"
+                    @click="createBook('published')"
                 >Добавить публикацию</UIButton>
                 <UIButton 
                     class="book-creator-footer__button" 
                     color-variant="gray"
                     font-size="big"
                     from="creatorBook"
+                    @click="createBook('draft')"
                 >Сохранить черновик</UIButton>
                 <button 
                     class="book-creator-footer__remove-button p1 p1--bold"
