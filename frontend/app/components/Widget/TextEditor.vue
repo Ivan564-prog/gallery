@@ -134,6 +134,7 @@
         background-color: var(--gray-06);
         border-radius: clampFluid(64);
         &__button {
+            padding: clampFluid(2);
             transition: $tr;
             @include hover {
                 background-color: var(--gray-04);

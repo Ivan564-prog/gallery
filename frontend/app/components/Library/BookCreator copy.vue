@@ -6,8 +6,6 @@
         typeList: IBookType[],
     }>()
     const modalStore = useModalStore()
-    const toastrStore = useToastrStore()
-    const isLoading = ref<boolean>(false)
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
@@ -31,27 +29,17 @@
     })
 
     const createBook = async (status: TBookStatus) => {
-        isLoading.value = true
-
         const formData = new FormData()
+        
         formData.append('title', params.title)
         formData.append('status', status)
         if (params.image[0]) formData.append('image', params.image[0])
         if (params.file[0]) formData.append('file', params.file[0])
         if (params.description) formData.append('description', params.description)
-        if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
+        if (params.shortDescription) formData.append('description', params.shortDescription)
         if (params.type) formData.append('type', String(params.type))
-
-        try {
-            const newBook = await request('/api/v1/library/book/', 'POST', formData)
-            opened.value = false
-            toastrStore.showSuccess("Публикация успешно создана")
-        } catch (error) {
-
-        }
-
-        isLoading.value = false
         
+        const newBook = await request('/api/v1/library/book/', 'POST', formData)
     }
 </script>
 
@@ -62,7 +50,6 @@
         </template>
         <template v-slot:main>
             <form id="creatorBook" class="book-creator-form">
-                <UILoader v-if="isLoading" class="book-creator-loader" />
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
@@ -142,17 +129,16 @@
                     from="creatorBook"
                     @click="createBook('draft')"
                 >Сохранить черновик</UIButton>
+                <button 
+                    class="book-creator-footer__remove-button p1 p1--bold"
+                    from="creatorBook"
+                >Удалить</button>
             </div>
         </template>
     </ModalBase>
 </template>
 
 <style lang="scss" scoped>
-    .book-creator-loader {
-        position: absolute;
-        z-index: 5;
-        inset: 0;
-    }
     .book-creator-form {
         display: flex;
         flex-direction: column;

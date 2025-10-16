@@ -131,9 +131,13 @@
     }
 
     .modal-head {
+        position: sticky;
+        z-index: 5;
+        top: 0;
         display: flex;
         justify-content: space-between;
-        padding: clampFluid(20) clampFluid(40) 0;
+        padding: clampFluid(20) clampFluid(40) clampFluid(10);
+        background-color: var(--gray-06);
         @include tablet {
             padding: 20px 20px 0;
         }
@@ -158,7 +162,10 @@
     }
 
     .modal-footer {
+        position: sticky;
+        bottom: 0;
         padding: clampFluid(30) clampFluid(40);
         background-color: var(--white);
+        border-top: 2px solid var(--gray-06);
     }
 </style>
