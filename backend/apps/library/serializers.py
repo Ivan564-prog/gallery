@@ -29,7 +29,18 @@ class BookListSerializer(serializers.ModelSerializer):
 
     def get_on_wishlist(self, instance):
         return instance.pk in self.wishlist_ids
-        
+    
+
+
+class CreateBookSerializer(serializers.ModelSerializer):
+    type = serializers.PrimaryKeyRelatedField(queryset=models.BookType.objects.all())
+
+    class Meta:
+        model = models.Book
+        exclude = (
+            'updated_at',
+            'created_at',
+        )
 
 
 class BookSerializer(serializers.ModelSerializer):
