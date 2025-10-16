@@ -50,7 +50,6 @@ class UserViewSet(ViewSet):
         invite.send(request)
         return Response(status=201)
     
-    
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
         invites = models.Invite.objects.filter(code=request.GET.get('code'))

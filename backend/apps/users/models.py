@@ -68,7 +68,7 @@ class Invite(models.Model):
         )
         to = [self.email]
         logger.info(html_message)
-        # send_mail.delay(subject, to, html_message)
+        send_mail.delay(subject, to, html_message)
 
     def set_code(self, save=True):
         self.code = hashlib.sha256(secrets.token_bytes(16)).hexdigest()
