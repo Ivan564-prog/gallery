@@ -2,7 +2,11 @@
     const modelValue = defineModel<string | number>()
     const text = ref<string>('')
     const isOpened = ref<boolean>(false)
-    const { items, readonly, empty } = defineProps<{
+    const { 
+        readonly = true, 
+        items, 
+        empty 
+    } = defineProps<{
         items: {
             [key: string | number]: string
         }
@@ -12,7 +16,7 @@
     }>()
 
     const select = (key: string | number) => {
-        text.value = items[key]
+        text.value = items[key]!
         modelValue.value = key
         isOpened.value = false
     }
@@ -25,7 +29,7 @@
     const filteredItemKeys = computed(() => {
         if (!readonly && text.value.length)
             return Object.keys(items).filter(key =>
-                items[key].toLowerCase().includes(text.value.toLowerCase()),
+                items[key]!.toLowerCase().includes(text.value.toLowerCase()),
             )
         return Object.keys(items)
     })
@@ -35,7 +39,7 @@
     <div class="ui-select" v-click-outside="() => (isOpened = false)">
         <div class="ui-select__field" @mousedown="() => (isOpened = !isOpened)">
             <UIInput
-                v-model="text"
+                class="ui-select__value"
                 :placeholder="placeholder"
                 :readonly="readonly"
                 :onInput="
@@ -43,7 +47,9 @@
                         modelValue = undefined
                     }
                 "
+                v-model="text"
             />
+            <NuxtIcon class="ui-select__icon" name="arrow" />
         </div>
         <div class="ui-select__list" :class="{ 'ui-select__list--active': isOpened }">
             <div class="ui-select__list-wrapper">
@@ -57,10 +63,19 @@
                         }
                     "
                 >
-                    <span class="ui-select-item__text">—</span>
+                    <span class="ui-select-item__text p2">—</span>
                 </div>
-                <div class="ui-select-item" v-for="itemKey in filteredItemKeys" @click="select(itemKey)">
-                    <span>{{ items[itemKey] }}</span>
+                <div 
+                    v-for="itemKey in filteredItemKeys" 
+                    class="ui-select-item" 
+                    :class="{
+                        'ui-select-item--active': itemKey === modelValue
+                    }"
+                    @click="select(itemKey)"
+                >
+                    <span
+                        class="ui-select-item__text p2" 
+                    >{{ items[itemKey] }}</span>
                 </div>
             </div>
         </div>
@@ -74,32 +89,33 @@
         display: flex;
         flex-direction: column;
         z-index: 1;
+        user-select: none;
         &__field {
             display: flex;
             align-items: center;
             cursor: pointer;
-
-            &::after {
-                content: '';
-                width: 6px;
-                height: auto;
-                border: 1px solid #000;
-                aspect-ratio: 1;
-                position: absolute;
-                clip-path: polygon(100% 0, 100% 100%, 0 100%);
-                rotate: 45deg;
-                translate: 0 -25%;
-                right: 10px;
-            }
+        }
+        &__value {
+            pointer-events: none;
+        }
+        &__icon {
+            position: absolute;
+            top: 50%;
+            right: clampFluid(20);
+            width: clampFluid(16);
+            height: auto;
+            aspect-ratio: 16 / 9;
+            color: var(--gray-02);
+            translate: 0 -50%;
         }
         &__list {
             position: absolute;
             top: 100%;
-            background-color: #fff;
-            border-top: none;
+            background-color: var(--white);
+            padding: 0 clampFluid(20);
             display: none;
             width: 100%;
-            border: 1px solid #000;
+            border: 1px solid var(--gray-04);
             border-top: none;
             &--active {
                 display: block;
@@ -115,6 +131,10 @@
     .ui-select-item {
         padding: 3px 5px;
         cursor: pointer;
+        &--active {
+            pointer-events: none;
+            color: var(--gray-03);
+        }
         &__text {
             display: block;
             min-height: 1em;

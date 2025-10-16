@@ -20,23 +20,25 @@
     <Transition name="modal">
         <div class="base-modal" v-if="opened">
             <button class="base-modal__close-bg" @click="closeModal"></button>
-            <div class="base-modal__container">
-                <div class="base-modal__head modal-head">
-                    <div class="modal-head__content">
-                        <slot name="head"></slot>
+            <div class="base-modal__wrapper">
+                <div class="base-modal__container">
+                    <div class="base-modal__head modal-head">
+                        <div class="modal-head__content">
+                            <slot name="head"></slot>
+                        </div>
+                        <button class="base-modal__close" @click="closeModal">
+                            <NuxtIcon class="base-modal__close-icon" name="close" />
+                            <span class="base-modal__close-text p2 p2--bold mobile-hidden">Закрыть</span>
+                        </button>
                     </div>
-                    <button class="base-modal__close" @click="closeModal">
-                        <NuxtIcon class="base-modal__close-icon" name="close" />
-                        <span class="base-modal__close-text p2 p2--bold mobile-hidden">Закрыть</span>
-                    </button>
-                </div>
-                <div v-if="slots.main" class="base-modal__main modal-main">
-                    <div class="modal-main__content">
-                        <slot name="main"></slot>
+                    <div v-if="slots.main" class="base-modal__main modal-main">
+                        <div class="modal-main__content">
+                            <slot name="main"></slot>
+                        </div>
                     </div>
-                </div>
-                <div class="base-modal__footer modal-footer">
-                    <slot name="footer"></slot>
+                    <div class="base-modal__footer modal-footer">
+                        <slot name="footer"></slot>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,14 +50,8 @@
         $this: &;
         position: fixed;
         z-index: 10;
-        top: 0;
-        left: 0;
         width: 100vw;
         height: 100dvh;
-        display: flex;
-        justify-content: flex-end;
-        overflow-x: hidden;
-        overflow-y: auto;
         &.modal-enter-active,
         &.modal-leave-active {
             transition: $tr;
@@ -76,6 +72,17 @@
             #{$this}__container {
                 translate: 0 0;
             }
+        }
+        &__wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: flex-end;
+            width: 100vw;
+            height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         &__container {
             position: relative;

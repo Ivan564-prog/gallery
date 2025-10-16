@@ -26,4 +26,13 @@ declare global {
         similar: IBook[]
         publishedAt: string
     }
+
+    interface ICreateBook {
+        title: string
+        shortDescription: string
+        description: string | null
+        image: File | null
+        file: File | null
+        type: number | null
+    }
 }
