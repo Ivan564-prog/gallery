@@ -29,10 +29,14 @@
     })
 
     const createBook = async (status: TBookStatus) => {
-        const newBook = await request('/api/v1/library/book/', 'POST', {
-            status,
-            ...params,
+        const formData = new FormData()
+
+        Object.entries(params).forEach(([key, value]) => {
+            formData.append(key, value as keyof ICreateBook)
         })
+        formData.append('status', status)
+        
+        const newBook = await request('/api/v1/library/book/', 'POST', formData)
     }
 </script>
 
