@@ -37,6 +37,7 @@
         if (params.file[0]) formData.append('file', params.file[0])
         if (params.description) formData.append('description', params.description)
         if (params.shortDescription) formData.append('description', params.shortDescription)
+        if (params.type) formData.append('type', String(params.type))
         
         const newBook = await request('/api/v1/library/book/', 'POST', formData)
     }
