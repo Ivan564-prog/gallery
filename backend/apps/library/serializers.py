@@ -1,6 +1,4 @@
 from rest_framework import serializers
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from . import models
 
 
@@ -49,10 +47,6 @@ class BookSerializer(serializers.ModelSerializer):
     def many_init(cls, *args, **kwargs):
         kwargs['child'] = BookListSerializer(*args, **kwargs)
         return serializers.ListSerializer(*args, **kwargs)
-
-    @method_decorator(csrf_exempt)
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
     
     def get_similar(self, instance):
         return BookListSerializer(instance.get_similar(), many=True, context=self.context).data
