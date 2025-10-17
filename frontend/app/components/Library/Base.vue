@@ -39,7 +39,7 @@
             v-model="bookType" 
         />
         <LibraryList 
-            v-if="bookList?.length" 
+            v-if="bookList?.length"
             :book-list="bookList" 
         />
         <UIEmptyBanner v-else />

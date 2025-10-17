@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-    const t = useRootSettingsStore()
-    const PAGE_TITLE = 'Библиотека'
+    const PAGE_TITLE = 'Уведомления'
     setPageTitle(PAGE_TITLE)
 </script>
 
 <template>
     <LayerBase>
-        <LibraryBase />
+
     </LayerBase>
 </template>
 
