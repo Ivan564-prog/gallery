@@ -3,6 +3,7 @@ from django.db.models import Case, When, Value, IntegerField
 from . import models, serializers
 from core.logger import logger
 from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 
 
 class BookModelViewSet(BaseModelViewSet):
@@ -19,7 +20,7 @@ class BookModelViewSet(BaseModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = serializer.save()
-        return Response(serializers.BookListSerializer(item, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(serializers.BookListSerializer(item, context={'request': request}).data, status=HTTP_201_CREATED)
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
