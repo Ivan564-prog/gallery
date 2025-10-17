@@ -44,6 +44,10 @@ class CreateBookSerializer(serializers.ModelSerializer):
             'created_at',
         )
 
+    def create(self, validated_data):
+        object = models.Book.objects.create(**validated_data)
+        return BookListSerializer(object).data
+
 
 class BookSerializer(serializers.ModelSerializer):
     type = BookTypeSerializer()
