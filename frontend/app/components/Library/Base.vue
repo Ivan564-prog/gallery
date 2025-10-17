@@ -49,6 +49,7 @@
                 :type-list="typeList"
                 @add-new-book="addNewBook"
             />
+            <LibraryBookEditor />
         </Teleport>
     </section>
 </template>

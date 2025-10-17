@@ -27,6 +27,13 @@
         }
         modalStore.openedModal = 'book-detail'
     }
+
+    const openEditor = () => {
+        modalStore.optionalData = {
+            bookId: content,
+        }
+        modalStore.openedModal = 'book-editor'
+    }
 </script>
 
 <template>
@@ -35,15 +42,26 @@
             class="library-card__link" 
             @click="openDetailInfo"
         />
-        <p v-if="content.isNew" class="library-card__new-banner p3">новинка</p>
+        <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">черновик</p>
+        <p v-else-if="content.isNew" class="library-card__banner library-card__banner--new p3">новинка</p>
         <div class="library-card__panel">
+            <button 
+                v-if="content.status === 'draft'"
+                class="library-card__button" 
+                @click="openEditor"
+            >
+                <NuxtIcon 
+                    class="library-card__button-icon" 
+                    name="pencil" 
+                />
+            </button>
             <button class="library-card__button" @click="toggleWishlist">
                 <NuxtIcon 
                     class="library-card__button-icon" 
+                    :name="inWishlist ? 'favorite-2' : 'favorite'" 
                     :class="{
                         'library-card__button-icon--active': inWishlist,
                     }"
-                    :name="inWishlist ? 'favorite-2' : 'favorite'" 
                 />
             </button>
             <a 
@@ -81,7 +99,7 @@
                 }
             }
         }
-        &__new-banner {
+        &__banner {
             position: absolute;
             top: 0;
             left: 0;
@@ -89,7 +107,12 @@
             display: inline-block;
             padding: clampFluid(2) clampFluid(10);
             color: var(--white);
-            background-color: var(--color);
+            &--new {
+                background-color: var(--color);
+            }
+            &--draft {
+                background-color: var(--gray-02);
+            }
         }
         &__panel {
             position: absolute;

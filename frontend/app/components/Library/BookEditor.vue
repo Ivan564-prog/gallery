@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    const MODAL_NAME = 'book-creator'
+    const MODAL_NAME = 'book-editor'
     const {
         typeList,
     } = defineProps<{
@@ -10,6 +10,7 @@
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const bookData = ref<IBook>()
     const emits = defineEmits<{
         (event:'add-new-book', book: IBook): void
     }>()

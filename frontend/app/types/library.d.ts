@@ -16,13 +16,13 @@ declare global {
         isNew: boolean
         onWishlist: boolean
         file: string | null
+        status: TBookStatus
     }
 
     interface IBookDetail extends IBook {
         description: string | null
         file: string | null
         type: IBookType
-        status: TBookStatus
         similar: IBook[]
         publishedAt: string
     }
