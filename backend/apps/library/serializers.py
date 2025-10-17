@@ -33,11 +33,13 @@ class BookListSerializer(serializers.ModelSerializer):
 
 
 class CreateBookSerializer(serializers.ModelSerializer):
-    type = serializers.PrimaryKeyRelatedField(queryset=models.BookType.objects.all())
+    title = serializers.CharField(required=True)
+    type = serializers.PrimaryKeyRelatedField(queryset=models.BookType.objects.all(), required=True)
 
     class Meta:
         model = models.Book
         exclude = (
+            'published_at',
             'updated_at',
             'created_at',
         )
