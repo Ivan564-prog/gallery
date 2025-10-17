@@ -2,8 +2,16 @@ from rest_framework import serializers
 from . import models
 
 
-# class Serializer(serializers.ModelSerializer):
+class NoticeSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = models.Name
-#         fields = '__all__'
+    class Meta:
+        model = models.Notice
+        fields = (
+            'id',
+            'title',
+            'text',
+            'is_viewed',
+            'created_at',
+        )
+
+    

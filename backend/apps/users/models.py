@@ -16,6 +16,10 @@ import hashlib
 import secrets
 
 
+def get_deadline():
+    return timezone.now() + timedelta(days=14)
+
+
 class Invite(models.Model):
     ROLES = (
         ('admin', 'Администратор епархии'),
@@ -35,7 +39,7 @@ class Invite(models.Model):
     code = models.CharField(
         verbose_name='Код', unique=True, db_index=True)
     deadline = models.DateTimeField(  
-        verbose_name='Дата истечения приглашения', default=timezone.now() + timedelta(days=14))
+        verbose_name='Дата истечения приглашения', default=get_deadline)
     
     class Meta:
         verbose_name = 'Приглашение'
