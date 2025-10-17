@@ -2,12 +2,13 @@ from core import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from .helpers import get_pagination_page, get_host
 from apps.config.models import Domain
 
 
 class BaseModelViewSet(ModelViewSet):
-    permission_classes = [permissions.IsSuperuserOrReadOnly]
+    permission_classes = [permissions.IsSuperuserOrReadOnly, IsAuthenticated]
     lookup_field = 'slug'
     with_pagin = False
 

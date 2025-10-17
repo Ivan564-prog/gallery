@@ -16,18 +16,6 @@ class RootSettingsAdmin(SingletonModelAdmin):
                 'robots',
             ),
         }),
-        ('Социальные сети', {
-            'fields': (
-                'vk_link',
-                'rt_link',
-                'mx_link',
-                'yt_link',
-                'tg_link',
-                'wa_link',
-                'dz_link',
-                'ok_link',
-            ),
-        }),
     )
     exclude = (
         'created_at',
