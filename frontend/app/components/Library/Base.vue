@@ -18,6 +18,10 @@
     )     
     const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
 
+    const addNewBook = (book: IBook) => {
+        bookList.value.push(book)
+    }
+
     watch(() => requestParams.value, async () => {
         await refresh()
     })
@@ -39,6 +43,7 @@
             <LibraryDetail />
             <LibraryBookCreator 
                 :type-list="typeList"
+                @add-new-book="addNewBook"
             />
         </Teleport>
     </section>
