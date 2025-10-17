@@ -12,6 +12,7 @@
             </main>
         </div>
         <ToastrError />
+        <ToastrSuccess />
     </div>
 </template>
 

@@ -10,7 +10,7 @@ export const getAPIUrl = () => {
 let csrf: string
 
 export const useRequest = async <T>(url: string, method?: TMethod, body?: TRequestBody) => {
-    url = getAPIUrl() + url + '?auth=4321'
+    url = getAPIUrl() + url
     if (!csrf && method != 'GET') 
         csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     const response = await useFetch(url, {
@@ -37,7 +37,7 @@ export const request = async <T> (
     method?: TMethod,
     body?: TRequestBody,
 ) => {
-    url = getAPIUrl() + url + '?auth=4321'
+    url = getAPIUrl() + url
     if (!csrf && method != 'GET')
         csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     try {
