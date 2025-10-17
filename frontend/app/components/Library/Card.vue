@@ -40,6 +40,9 @@
             <button class="library-card__button" @click="toggleWishlist">
                 <NuxtIcon 
                     class="library-card__button-icon" 
+                    :class="{
+                        'library-card__button-icon--active': inWishlist,
+                    }"
                     :name="inWishlist ? 'favorite-2' : 'favorite'" 
                 />
             </button>
@@ -103,6 +106,9 @@
             color: var(--black);
             transition: $tr;
             @include hover {
+                color: var(--color);
+            }
+            &--active {
                 color: var(--color);
             }
         }

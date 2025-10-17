@@ -6,6 +6,7 @@
         typeList: IBookType[],
     }>()
     const modalStore = useModalStore()
+    const toastrStore = useToastrStore()
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
@@ -54,6 +55,7 @@
             const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
             emits('add-new-book', newBook)
             opened.value = false
+            toastrStore.showSuccess('Публикация успешно создана')
 
         } catch(error) {
             errorsInfo.value = (error as IErrorRequest<ICreateBookErrors>).data
