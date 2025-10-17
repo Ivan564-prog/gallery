@@ -35,7 +35,7 @@
             class="library-card__link" 
             @click="openDetailInfo"
         />
-        <p class="library-card__new-banner p3">новинка</p>
+        <p v-if="content.isNew" class="library-card__new-banner p3">новинка</p>
         <div class="library-card__panel">
             <button class="library-card__button" @click="toggleWishlist">
                 <NuxtIcon 

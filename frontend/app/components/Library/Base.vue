@@ -11,6 +11,7 @@
             }
     })
     
+    
     const { data: bookList, refresh } = await useRequest<IBook[]>(
         '/api/v1/library/book/', 
         'GET', 
@@ -19,7 +20,10 @@
     const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
 
     const addNewBook = (book: IBook) => {
-        bookList.value.push(book)
+        bookList.value = [
+            ...bookList.value,
+            book,
+        ]
     }
 
     watch(() => requestParams.value, async () => {
