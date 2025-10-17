@@ -31,7 +31,6 @@ class BookListSerializer(serializers.ModelSerializer):
         return instance.pk in self.wishlist_ids
     
 
-
 class CreateBookSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=True)
     type = serializers.PrimaryKeyRelatedField(queryset=models.BookType.objects.all(), required=True)
@@ -43,10 +42,6 @@ class CreateBookSerializer(serializers.ModelSerializer):
             'updated_at',
             'created_at',
         )
-
-    def create(self, validated_data):
-        object = models.Book.objects.create(**validated_data)
-        return BookListSerializer(object).data
 
 
 class BookSerializer(serializers.ModelSerializer):

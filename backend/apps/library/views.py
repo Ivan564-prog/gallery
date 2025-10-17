@@ -2,6 +2,8 @@ from core.mixins import BaseModelViewSet
 from django.db.models import Case, When, Value, IntegerField
 from . import models, serializers
 from core.logger import logger
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 
 
 class BookModelViewSet(BaseModelViewSet):
@@ -13,11 +15,16 @@ class BookModelViewSet(BaseModelViewSet):
         if self.request.method != 'GET':
             return serializers.CreateBookSerializer
         return self.serializer_class
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        item = serializer.save()
+        return Response(serializers.BookListSerializer(item, context={'request': request}).data, status=HTTP_201_CREATED)
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
         queryset = queryset.exclude(status='deleted')
-        logger.info(f'{self.request.GET.get('in_wishlist', None)=}')
         if self.request.user.status != 'root':
             queryset = queryset.exclude(status='draft')
         book_type_id = self.request.GET.get('book_type')

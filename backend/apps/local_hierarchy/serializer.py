@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Diocese
+from .models import Diocese, Metropolis
 
 
 class DioceseSerializer(serializers.ModelSerializer):
@@ -10,3 +10,10 @@ class DioceseSerializer(serializers.ModelSerializer):
             'id',
             'title',
         )
+
+
+class MetropolisSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Metropolis
+        fields = '__all__'
