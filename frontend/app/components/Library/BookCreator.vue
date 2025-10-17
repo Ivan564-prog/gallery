@@ -47,7 +47,7 @@
         if (params.description) 
             formData.append('description', params.description)
         if (params.shortDescription) 
-            formData.append('description', params.shortDescription)
+            formData.append('shortDescription', params.shortDescription)
         if (params.type) 
             formData.append('type', String(params.type))
         
@@ -56,7 +56,6 @@
             emits('add-new-book', newBook)
             opened.value = false
             toastrStore.showSuccess('Публикация успешно создана')
-
         } catch(error) {
             errorsInfo.value = (error as IErrorRequest<ICreateBookErrors>).data
             modalElement.value?.scrollTo({
