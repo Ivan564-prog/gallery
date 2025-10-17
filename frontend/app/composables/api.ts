@@ -1,11 +1,11 @@
 type TMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE'
 
 export const getAPIUrl = () => {
-    // let url = `${useRequestURL().protocol}//${useRequestURL().hostname}`
-    // if (process.server) url = url.replace('localhost', 'django:8000')
+    let url = `${useRequestURL().protocol}//${useRequestURL().hostname}`
+    if (process.server) url = url.replace('localhost', 'django:8000')
 
-    // return url
-    return 'https://lk-sinmis.docker-sandbox.place-start.ru'
+    return url
+    // return 'https://lk-sinmis.docker-sandbox.place-start.ru'
 }
 let csrf: string
 

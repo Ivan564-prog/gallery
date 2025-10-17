@@ -21,18 +21,11 @@
         }
     }
 
-    const openDetailInfo = () => {
+    const openWindow = (modalName: string) => {
         modalStore.optionalData = {
             bookId: content.id,
         }
-        modalStore.openedModal = 'book-detail'
-    }
-
-    const openEditor = () => {
-        modalStore.optionalData = {
-            bookId: content,
-        }
-        modalStore.openedModal = 'book-editor'
+        modalStore.openedModal = modalName
     }
 </script>
 
@@ -40,7 +33,7 @@
     <div class="library-card">
         <button 
             class="library-card__link" 
-            @click="openDetailInfo"
+            @click="openWindow('book-detail')"
         />
         <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">черновик</p>
         <p v-else-if="content.isNew" class="library-card__banner library-card__banner--new p3">новинка</p>
@@ -48,7 +41,7 @@
             <button 
                 v-if="content.status === 'draft'"
                 class="library-card__button" 
-                @click="openEditor"
+                @click="openWindow('book-editor')"
             >
                 <NuxtIcon 
                     class="library-card__button-icon" 

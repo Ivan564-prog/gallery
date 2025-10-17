@@ -39,7 +39,7 @@
             v-model="bookType" 
         />
         <LibraryList 
-            v-if="bookList.length" 
+            v-if="bookList?.length" 
             :book-list="bookList" 
         />
         <UIEmptyBanner v-else />
@@ -49,7 +49,9 @@
                 :type-list="typeList"
                 @add-new-book="addNewBook"
             />
-            <LibraryBookEditor />
+            <LibraryBookEditor 
+                :type-list="typeList"
+            />
         </Teleport>
     </section>
 </template>

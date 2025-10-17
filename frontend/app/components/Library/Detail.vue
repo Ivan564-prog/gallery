@@ -16,7 +16,10 @@
             detailInfo.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
     }
 
-    watch(() => modalStore.optionalData.bookId, setDetailInfo)
+    watch(() => modalStore.optionalData.bookId, newValue => {        
+        if (modalStore.optionalData.bookId)
+            setDetailInfo()
+    })
 </script>
 
 <template>

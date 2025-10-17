@@ -10,7 +10,7 @@
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
-    const bookData = ref<IBook>()
+    const bookData = ref<IBookDetail>()
     const emits = defineEmits<{
         (event:'add-new-book', book: IBook): void
     }>()
@@ -25,6 +25,10 @@
     })
     const errorsInfo = ref<ICreateBookErrors>({})
 
+    const setBookData = async () => {
+        bookData.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
+    }
+
     const formattedTypeList = computed(() => {
         let typeObject: TRequestBody = {}
         typeList.forEach(type => {
@@ -33,38 +37,27 @@
         return typeObject
     })
 
-    const createBook = async (status: TBookStatus) => {
-        const formData = new FormData()
-        
-        formData.append('title', params.title)
-        formData.append('status', status)
-        if (params.image[0]) 
-            formData.append('image', params.image[0])
-        if (params.file[0]) 
-            formData.append('file', params.file[0])
-        if (params.description) 
-            formData.append('description', params.description)
-        if (params.shortDescription) 
-            formData.append('description', params.shortDescription)
-        if (params.type) 
-            formData.append('type', String(params.type))
-        
-        const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
-        emits('add-new-book', newBook)
+    const editBook = (status: TBookStatus) => {
+
     }
+
+    watch(() => modalStore.optionalData.bookId, () => {
+        if (modalStore.optionalData.bookId)
+            setBookData()
+    })
 </script>
 
 <template>
     <ModalBase v-model="opened">
         <template v-slot:head>
-            <h2 class="book-creator-title h2">Новая публикация</h2>
+            <h2 class="book-creator-title h2">Редактирование публикации</h2>
         </template>
         <template v-slot:main>
-            <form id="creatorBook" class="book-creator-form">
+            <form v-if="bookData" class="book-creator-form">
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
-                    v-model="params.title"
+                    v-model="bookData.title"
                 />
                 <div class="book-creator-form__top">
                     <UITitledInput 
@@ -87,7 +80,7 @@
                         <UIFileInput 
                             description="Файл" 
                             formates="application"
-                            v-model="params.file"
+                            v-model="bookData.file"
                         />
                     </UITitledInput>
                     <div class="book-creator-form__photo">
@@ -101,7 +94,7 @@
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
-                        v-model="params.image"
+                        v-model="bookData.image"
                     />
                     </div>
                 </div>
@@ -112,7 +105,7 @@
                         text="Краткое описание"
                         variant="flex-start"
                     >
-                        <UITextarea placeholder="Напишите краткое описание " v-model="params.shortDescription" />
+                        <UITextarea placeholder="Напишите краткое описание " v-model="bookData.shortDescription" />
                     </UITitledInput>
                     <UITitledInput 
                         class="book-creator-form__item"
@@ -120,7 +113,7 @@
                         text="Описание"
                         variant="flex-start"
                     >
-                        <WidgetTextEditor class="book-creator-form__text-editor" v-model="params.description" />
+                        <WidgetTextEditor class="book-creator-form__text-editor" v-model="bookData.description" />
                     </UITitledInput>
                 </div>
             </form>
@@ -131,14 +124,14 @@
                     class="book-creator-footer__button"
                     font-size="big"
                     from="creatorBook"
-                    @click="createBook('published')"
+                    @click="editBook('published')"
                 >Добавить публикацию</UIButton>
                 <UIButton 
                     class="book-creator-footer__button" 
                     color-variant="gray"
                     font-size="big"
                     from="creatorBook"
-                    @click="createBook('draft')"
+                    @click="editBook('draft')"
                 >Сохранить черновик</UIButton>
                 <button 
                     class="book-creator-footer__remove-button p1 p1--bold"

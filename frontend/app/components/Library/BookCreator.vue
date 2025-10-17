@@ -72,7 +72,7 @@
             <h2 class="book-creator-title h2">Новая публикация</h2>
         </template>
         <template v-slot:main>
-            <form id="creatorBook" class="book-creator-form">
+            <form class="book-creator-form">
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
