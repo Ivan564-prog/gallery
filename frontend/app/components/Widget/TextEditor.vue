@@ -7,7 +7,6 @@
         editorElement.value.innerHTML = value
     }
     
-
     const addBold = () => {
         document.execCommand('bold', false)
     }

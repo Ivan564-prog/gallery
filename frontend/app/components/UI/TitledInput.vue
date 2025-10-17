@@ -5,6 +5,7 @@
         icon: string
         text: string
         variant?: 'center' | 'flex-start'
+        errorText?: string
     }>()
 </script>
 
@@ -17,7 +18,12 @@
     >
         <div class="titled-input__content">
             <NuxtIcon class="titled-input__content-icon" :name="icon" />
-            <span class="titled-input__content-text p2">{{ text }}</span>
+            <span 
+                class="titled-input__content-text p2"
+                :class="{
+                    'titled-input__content-text--error': errorText,
+                }"
+            >{{ text }}</span>
         </div>
         <div class="titled-input__field">
             <slot></slot>
@@ -45,6 +51,11 @@
             height: auto;
             aspect-ratio: 1;
             color: var(--gray-03);
+        }
+        &__content-text {
+            &--error {
+                color: var(--color);
+            }
         }
     }
 </style>

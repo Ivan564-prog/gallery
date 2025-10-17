@@ -35,4 +35,11 @@ declare global {
         file: File[]
         type: number | null
     }
+
+    interface ICreateBookErrors {
+        title?: string[]
+        file?: string[]
+        image?: string[]
+        type?: string[]
+    }
 }

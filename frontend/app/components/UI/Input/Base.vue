@@ -9,7 +9,8 @@
         type?: 'text' | 'number' | 'password'
         placeholder?: string
         readonly?: boolean
-        styleVariant: 'default' | 'minimal' | 'big'
+        styleVariant?: 'default' | 'minimal' | 'big'
+        errorText?: string
     }>()
 </script>
 
@@ -28,6 +29,9 @@
         />
         <span v-if="placeholder" class="ui-input__placeholder">
             {{ placeholder }}
+        </span>
+        <span v-if="errorText" class="ui-input__error">
+            {{ errorText }}
         </span>
     </label>
 </template>
@@ -70,8 +74,6 @@
                 height: 100%;
                 border: none;
             }
-            &::placeholder {
-            }
         }
         &__placeholder {
             @include p2;
@@ -79,6 +81,16 @@
                 position: absolute;
                 color: var(--gray-03) !important;
                 transition: $tr;
+            }
+        }
+        &__error {
+            @include p4;
+            & {
+                position: absolute;
+                left: clampFluid(15);
+                bottom: 0;
+                translate: 0 100%;
+                color: var(--color);
             }
         }
     }

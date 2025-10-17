@@ -6,12 +6,14 @@
         typeList: IBookType[],
     }>()
     const modalStore = useModalStore()
-    const toastrStore = useToastrStore()
-    const isLoading = ref<boolean>(false)
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const emits = defineEmits<{
+        (event:'add-new-book', book: IBook): void
+    }>()
+    const modalElement = ref<HTMLElement>()
 
     const params = reactive<ICreateBook>({
         title: '',
@@ -21,6 +23,7 @@
         file: [],
         type: null,
     })
+    const errorsInfo = ref<ICreateBookErrors>({})
 
     const formattedTypeList = computed(() => {
         let typeObject: TRequestBody = {}
@@ -31,41 +34,48 @@
     })
 
     const createBook = async (status: TBookStatus) => {
-        isLoading.value = true
-
         const formData = new FormData()
+        errorsInfo.value = {}
+        
         formData.append('title', params.title)
         formData.append('status', status)
-        if (params.image[0]) formData.append('image', params.image[0])
-        if (params.file[0]) formData.append('file', params.file[0])
-        if (params.description) formData.append('description', params.description)
-        if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
-        if (params.type) formData.append('type', String(params.type))
-
-        try {
-            const newBook = await request('/api/v1/library/book/', 'POST', formData)
-            opened.value = false
-            toastrStore.showSuccess("Публикация успешно создана")
-        } catch (error) {
-
-        }
-
-        isLoading.value = false
+        if (params.image[0]) 
+            formData.append('image', params.image[0])
+        if (params.file[0]) 
+            formData.append('file', params.file[0])
+        if (params.description) 
+            formData.append('description', params.description)
+        if (params.shortDescription) 
+            formData.append('description', params.shortDescription)
+        if (params.type) 
+            formData.append('type', String(params.type))
         
+        try {
+            const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
+            emits('add-new-book', newBook)
+            opened.value = false
+
+        } catch(error) {
+            errorsInfo.value = (error as IErrorRequest<ICreateBookErrors>).data
+            modalElement.value?.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            })
+        }
     }
 </script>
 
 <template>
-    <ModalBase v-model="opened">
+    <ModalBase ref="modalElement" v-model="opened">
         <template v-slot:head>
             <h2 class="book-creator-title h2">Новая публикация</h2>
         </template>
         <template v-slot:main>
             <form id="creatorBook" class="book-creator-form">
-                <UILoader v-if="isLoading" class="book-creator-loader" />
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
+                    :error-text="errorsInfo.title && errorsInfo.title[0]"
                     v-model="params.title"
                 />
                 <div class="book-creator-form__top">
@@ -73,11 +83,13 @@
                         class="book-creator-form__item"
                         icon="star-2"
                         text="Тип публикации"
+                        :error-text="errorsInfo.type && errorsInfo.type[0]"
                     >
                         <UISelect 
                             empty
                             placeholder="Выберите"
                             :items="formattedTypeList"
+                            :error-text="errorsInfo.type && errorsInfo.type[0]"
                             v-model="params.type"
                         />
                     </UITitledInput>
@@ -89,6 +101,7 @@
                         <UIFileInput 
                             description="Файл" 
                             formates="application"
+                            :error-text="errorsInfo.file && errorsInfo.file[0]"
                             v-model="params.file"
                         />
                     </UITitledInput>
@@ -97,12 +110,14 @@
                             class="book-creator-form__item"
                             icon="image"
                             text="Главное изображений"
+                            :error-text="errorsInfo.image && errorsInfo.image[0]"
                         >
                         <span class="book-creator-form__description p3">(необходимо добавить 1 фото)</span>
                     </UITitledInput>
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
+                        :error-text="errorsInfo.image && errorsInfo.image[0]"
                         v-model="params.image"
                     />
                     </div>
@@ -132,14 +147,12 @@
                 <UIButton 
                     class="book-creator-footer__button"
                     font-size="big"
-                    from="creatorBook"
                     @click="createBook('published')"
                 >Добавить публикацию</UIButton>
                 <UIButton 
                     class="book-creator-footer__button" 
                     color-variant="gray"
                     font-size="big"
-                    from="creatorBook"
                     @click="createBook('draft')"
                 >Сохранить черновик</UIButton>
             </div>
@@ -148,11 +161,6 @@
 </template>
 
 <style lang="scss" scoped>
-    .book-creator-loader {
-        position: absolute;
-        z-index: 5;
-        inset: 0;
-    }
     .book-creator-form {
         display: flex;
         flex-direction: column;
@@ -185,6 +193,7 @@
             color: var(--gray-03);
         }
     }
+
     .book-creator-footer {
         display: flex;
         align-items: center;

@@ -24,4 +24,8 @@ declare global {
         page: number
         items: T[]
     }
+
+    interface IErrorRequest<T> {
+        data: T
+    }
 }

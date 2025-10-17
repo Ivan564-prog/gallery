@@ -10,6 +10,9 @@
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const emits = defineEmits<{
+        (event:'add-new-book', book: IBook): void
+    }>()
 
     const params = reactive<ICreateBook>({
         title: '',
@@ -19,6 +22,7 @@
         file: [],
         type: null,
     })
+    const errorsInfo = ref<ICreateBookErrors>({})
 
     const formattedTypeList = computed(() => {
         let typeObject: TRequestBody = {}
@@ -33,13 +37,19 @@
         
         formData.append('title', params.title)
         formData.append('status', status)
-        if (params.image[0]) formData.append('image', params.image[0])
-        if (params.file[0]) formData.append('file', params.file[0])
-        if (params.description) formData.append('description', params.description)
-        if (params.shortDescription) formData.append('description', params.shortDescription)
-        if (params.type) formData.append('type', String(params.type))
+        if (params.image[0]) 
+            formData.append('image', params.image[0])
+        if (params.file[0]) 
+            formData.append('file', params.file[0])
+        if (params.description) 
+            formData.append('description', params.description)
+        if (params.shortDescription) 
+            formData.append('description', params.shortDescription)
+        if (params.type) 
+            formData.append('type', String(params.type))
         
-        const newBook = await request('/api/v1/library/book/', 'POST', formData)
+        const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
+        emits('add-new-book', newBook)
     }
 </script>
 
