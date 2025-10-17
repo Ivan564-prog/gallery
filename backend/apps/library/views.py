@@ -32,14 +32,13 @@ class BookModelViewSet(BaseModelViewSet):
             queryset = queryset.filter(type__id=book_type_id)
         if self.request.GET.get('in_wishlist', None):
             wish_pks = self.request.user.get_book_wishlist().get_book_ids()
-            logger.info(wish_pks)
             queryset = queryset.filter(pk__in=wish_pks)
         return queryset.annotate(
             is_published=Case(
-                    When(published_at__isnull=True, then=Value(1)),
-                    default=Value(0),
+                    When(published_at__isnull=True, then=Value(0)),
+                    default=Value(1),
                     output_field=IntegerField(),
-                )).order_by('-is_published', '-published_at')
+                )).order_by('is_published', '-published_at')
     
     def perform_destroy(self, instance):
         instance.status = 'deleted'
