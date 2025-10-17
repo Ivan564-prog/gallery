@@ -13,7 +13,6 @@
     const emits = defineEmits<{
         (event:'add-new-book', book: IBook): void
     }>()
-    const modalElement = ref<HTMLElement>()
 
     const params = reactive<ICreateBook>({
         title: '',
@@ -35,7 +34,6 @@
 
     const createBook = async (status: TBookStatus) => {
         const formData = new FormData()
-        errorsInfo.value = {}
         
         formData.append('title', params.title)
         formData.append('status', status)
@@ -50,23 +48,13 @@
         if (params.type) 
             formData.append('type', String(params.type))
         
-        try {
-            const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
-            emits('add-new-book', newBook)
-            opened.value = false
-
-        } catch(error) {
-            errorsInfo.value = (error as IErrorRequest<ICreateBookErrors>).data
-            modalElement.value?.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            })
-        }
+        const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
+        emits('add-new-book', newBook)
     }
 </script>
 
 <template>
-    <ModalBase ref="modalElement" v-model="opened">
+    <ModalBase v-model="opened">
         <template v-slot:head>
             <h2 class="book-creator-title h2">Новая публикация</h2>
         </template>
@@ -75,7 +63,6 @@
                 <UIInput 
                     placeholder="Введите название заголовка" 
                     style-variant="big" 
-                    :error-text="errorsInfo.title && errorsInfo.title[0]"
                     v-model="params.title"
                 />
                 <div class="book-creator-form__top">
@@ -83,13 +70,11 @@
                         class="book-creator-form__item"
                         icon="star-2"
                         text="Тип публикации"
-                        :error-text="errorsInfo.type && errorsInfo.type[0]"
                     >
                         <UISelect 
                             empty
                             placeholder="Выберите"
                             :items="formattedTypeList"
-                            :error-text="errorsInfo.type && errorsInfo.type[0]"
                             v-model="params.type"
                         />
                     </UITitledInput>
@@ -101,7 +86,6 @@
                         <UIFileInput 
                             description="Файл" 
                             formates="application"
-                            :error-text="errorsInfo.file && errorsInfo.file[0]"
                             v-model="params.file"
                         />
                     </UITitledInput>
@@ -110,14 +94,12 @@
                             class="book-creator-form__item"
                             icon="image"
                             text="Главное изображений"
-                            :error-text="errorsInfo.image && errorsInfo.image[0]"
                         >
                         <span class="book-creator-form__description p3">(необходимо добавить 1 фото)</span>
                     </UITitledInput>
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
-                        :error-text="errorsInfo.image && errorsInfo.image[0]"
                         v-model="params.image"
                     />
                     </div>
@@ -147,14 +129,20 @@
                 <UIButton 
                     class="book-creator-footer__button"
                     font-size="big"
+                    from="creatorBook"
                     @click="createBook('published')"
                 >Добавить публикацию</UIButton>
                 <UIButton 
                     class="book-creator-footer__button" 
                     color-variant="gray"
                     font-size="big"
+                    from="creatorBook"
                     @click="createBook('draft')"
                 >Сохранить черновик</UIButton>
+                <button 
+                    class="book-creator-footer__remove-button p1 p1--bold"
+                    from="creatorBook"
+                >Удалить</button>
             </div>
         </template>
     </ModalBase>
@@ -193,7 +181,6 @@
             color: var(--gray-03);
         }
     }
-
     .book-creator-footer {
         display: flex;
         align-items: center;

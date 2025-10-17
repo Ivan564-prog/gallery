@@ -7,7 +7,6 @@
         editorElement.value.innerHTML = value
     }
     
-
     const addBold = () => {
         document.execCommand('bold', false)
     }
@@ -134,6 +133,7 @@
         background-color: var(--gray-06);
         border-radius: clampFluid(64);
         &__button {
+            padding: clampFluid(2);
             transition: $tr;
             @include hover {
                 background-color: var(--gray-04);

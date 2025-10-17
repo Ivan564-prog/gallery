@@ -13,6 +13,7 @@
         placeholder?: string
         readonly?: boolean
         empty?: boolean
+        errorText?: string
     }>()
 
     const select = (key: string | number) => {
@@ -42,6 +43,7 @@
                 class="ui-select__value"
                 :placeholder="placeholder"
                 :readonly="readonly"
+                :error-text="errorText"
                 :onInput="
                     () => {
                         modelValue = undefined
