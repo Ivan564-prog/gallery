@@ -2,6 +2,7 @@ from core.mixins import BaseModelViewSet
 from django.db.models import Case, When, Value, IntegerField
 from . import models, serializers
 from core.logger import logger
+from rest_framework.response import Response
 
 
 class BookModelViewSet(BaseModelViewSet):
@@ -13,6 +14,12 @@ class BookModelViewSet(BaseModelViewSet):
         if self.request.method != 'GET':
             return serializers.CreateBookSerializer
         return self.serializer_class
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        item = serializer.save()
+        return Response(serializers.BookListSerializer(item, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
