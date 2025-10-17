@@ -97,9 +97,11 @@
                 </label>
             </div>
         </template>
-        <label v-else class="ui-file-input">
-            <input multiple class="drop-zone__input" type="file" @change="onInput" />
-            <p v-if="description" class="ui-file-input__description p3">{{ description }}</p>
+        <div v-else class="ui-file-input">
+            <label class="ui-file-input__label">
+                <input multiple class="drop-zone__input" type="file" @change="onInput" />
+                <p v-if="description" class="ui-file-input__description p3">{{ description }}</p>
+            </label>
             <div class="ui-file-input__list">
                 <div 
                     v-for="file, ind in modelValue"
@@ -112,7 +114,7 @@
                     </button>
                 </div>
             </div>
-        </label>
+        </div>
     </div>
 </template>
 

@@ -58,6 +58,10 @@
     line-height: 130%;
 }
 
+@mixin p5 {
+    font-size: 12px;
+}
+
 $laptop: 1280;
 $tablet: 1024;
 $mobile: 768;

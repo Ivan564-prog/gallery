@@ -17,7 +17,10 @@
 <template>
     <label 
         class="ui-input"
-        :class="`ui-input--variant-${styleVariant}`"
+        :class="{
+            [`ui-input--variant-${styleVariant}`]: true,
+            'ui-input--error': errorText,
+        }"
     >
         <input
             class="ui-input__value"
@@ -67,6 +70,9 @@
                 }
             }
         }
+        &--error {
+            border-color: var(--color)
+        }
         &__value {
             @include p2;
             & {
@@ -84,7 +90,7 @@
             }
         }
         &__error {
-            @include p4;
+            @include p5;
             & {
                 position: absolute;
                 left: clampFluid(15);
