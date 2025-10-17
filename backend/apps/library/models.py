@@ -46,10 +46,7 @@ class Book(TimestampModelMixin, models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        prev_status = self.status 
-        if prev_status != 'published' and self.status == 'published':
-            self.published_at = timezone.now()
-        elif self.status == 'published' and not self.published_at:
+        if self.status == 'published' and not self.published_at:
             self.published_at = timezone.now()
         return super().save(*args, **kwargs)
     
