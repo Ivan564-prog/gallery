@@ -40,7 +40,7 @@ class BookModelViewSet(BaseModelViewSet):
                     When(published_at__isnull=True, then=Value(1)),
                     default=Value(0),
                     output_field=IntegerField(),
-                )).order_by('is_published', '-published_at')
+                )).order_by('-is_published', '-published_at')
     
     def perform_destroy(self, instance):
         instance.status = 'deleted'
