@@ -12,9 +12,14 @@ class BookModelViewSet(BaseModelViewSet):
     lookup_field = 'pk'
 
     def get_serializer_class(self, *args, **kwargs):
-        if self.request.method != 'GET':
-            return serializers.CreateBookSerializer
-        return self.serializer_class
+        serializer = {
+            'GET': serializers.BookSerializer,
+            'POST': serializers.CreateBookSerializer,
+            'PATCH': serializers.BookUpdateSerializer,
+            'PUT': serializers.BookUpdateSerializer,
+        }[self.request.method]
+        return serializer
+        
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

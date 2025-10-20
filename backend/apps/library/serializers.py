@@ -62,3 +62,21 @@ class BookSerializer(serializers.ModelSerializer):
     
     def get_similar(self, instance):
         return BookListSerializer(instance.get_similar(), many=True, context=self.context).data
+    
+
+class BookUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Book
+        exclude = (
+            'published_at',
+            'updated_at',
+            'created_at',
+        )
+
+    def update(self, instance, validated_data):
+        if 'image' in validated_data and validated_data['image'] is None:
+            instance.image = None
+        if 'file' in validated_data and validated_data['file'] is None:
+            instance.file = None
+        return super().update(instance, validated_data)

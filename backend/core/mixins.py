@@ -32,12 +32,6 @@ class BaseModelViewSet(ModelViewSet):
     
     def _get_labeled_link(self, item):
         return get_host(self.request) + item.get_absolute_url()
-    
-    def update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-    
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
 
     @action(methods=['GET'], detail=False)
     def labeled_sitemap(self, *args, **kwargs):
