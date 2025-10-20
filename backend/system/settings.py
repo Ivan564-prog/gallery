@@ -17,6 +17,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     'https://localhost',
     'https://localhost:3000',
+    'http://django:8000',
     'http://localhost',
     f"https://{HOST}",
     f"http://{HOST}",

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-    const t = useRootSettingsStore()
     const PAGE_TITLE = 'Библиотека'
     setPageTitle(PAGE_TITLE)
 </script>
