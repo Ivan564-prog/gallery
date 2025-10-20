@@ -1,12 +1,18 @@
 <script lang="ts" setup>
     const opened = defineModel()
     const slots = useSlots()
+    const modalStore = useModalStore()
 
     const closeModal = () => (opened.value = false)
 
     const clickKeyboardHandler = (event: KeyboardEvent) => {
         if (event.key === 'Escape') closeModal()
     }
+
+    watch(opened, newValue => {
+        if (!newValue)
+            modalStore.optionalData = {}
+    })
 
     onMounted(() => {
         document.addEventListener('keydown', clickKeyboardHandler)
@@ -18,7 +24,7 @@
 
 <template>
     <Transition name="modal">
-        <div class="base-modal" v-if="opened">
+        <div v-if="opened" class="base-modal">
             <button class="base-modal__close-bg" @click="closeModal"></button>
             <div class="base-modal__wrapper">
                 <div class="base-modal__container">
@@ -31,7 +37,7 @@
                             <span class="base-modal__close-text p2 p2--bold mobile-hidden">Закрыть</span>
                         </button>
                     </div>
-                    <div v-if="slots.main" class="base-modal__main modal-main">
+                    <div v-if="slots.main" class="base-modal__main modal-main" :opened="opened">
                         <div class="modal-main__content">
                             <slot name="main"></slot>
                         </div>

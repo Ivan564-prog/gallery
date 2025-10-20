@@ -21,9 +21,13 @@
 
     const addNewBook = (book: IBook) => {
         bookList.value = [
-            ...bookList.value,
             book,
+            ...bookList.value,
         ]
+    }
+
+    const removeBook = (book: IBook) => {
+        bookList.value = bookList.value.filter(item => item.id !== book.id)
     }
 
     watch(() => requestParams.value, async () => {
@@ -51,6 +55,7 @@
             />
             <LibraryBookEditor 
                 :type-list="typeList"
+                @remove-book="removeBook"
             />
         </Teleport>
     </section>

@@ -36,6 +36,15 @@ declare global {
         type: number | null
     }
 
+     interface IEditorBook {
+        title: string
+        shortDescription: string
+        description: string
+        image?: File[]
+        file?: File[]
+        type: number | null
+    }
+
     interface ICreateBookErrors {
         title?: string[]
         file?: string[]

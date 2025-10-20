@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-    const modelValue = defineModel<File[]>()
+    const modelValue = defineModel<File[] | null>()
+    const visualValue = defineModel<string>('visual')
     type TFormate = 'image' | 'application'
     const { 
         totalMaxSize, 
@@ -15,6 +16,16 @@
         rewrite?: boolean
         formates?: TFormate[] | TFormate
     }>()
+
+    const allFileCount = computed(() => {
+        let list = []
+        if (modelValue.value?.length)
+            list = [...modelValue.value]
+        if (visualValue.value)
+            list.push(visualValue.value)
+        return list.length
+            
+    })
 
     const fileValide = (file: File) => {
         if (fileMaxSize && file.size / 1024 / 1024 > fileMaxSize) return false
@@ -50,6 +61,11 @@
         modelValue.value?.splice(index, 1)
     }
 
+    const removeVisualFile = () => {
+        visualValue.value = undefined
+        modelValue.value = null
+    }
+
     const getFileName = (file: File) => {
         return file.name.length > 25
             ? file.name.slice(0, 20) + '... .' + file.name.split('.')[file.name.split('.').length - 1]
@@ -67,29 +83,37 @@
     const onInput = (event: Event) => {
         let input = <HTMLInputElement>event.target
         let files = input.files ? [...input.files] : []
-        inputFiles(files)
-        console.log(modelValue.value);
-        
+        inputFiles(files)        
     }
 </script>
 
 <template>
     <div class="ui-file-wrapper">
         <template v-if="formates === 'image'">
+            {{ modelValue }}
             <div class="ui-file-image">
-                <div v-if="modelValue?.length" class="ui-file-image__list">
+                <div v-if="modelValue?.length || visualValue" class="ui-file-image__list">
                     <div 
                         v-for="file, index in modelValue"
                         class="ui-file-image__item image-item"
                     >
-                        <UIImage class="image-item__picture" :src="file.webkitRelativePath" />
+                        <UIImage class="image-item__picture" :src="getURLfromFile(file)" />
                         <button class="image-item__button" type="button" @click="removeFile(index)">
+                            <NuxtIcon class="image-item__button-icon" name="close" />
+                        </button>
+                    </div>
+                    <div
+                        v-if="visualValue"
+                        class="ui-file-image__item image-item"
+                    >
+                        <UIImage class="image-item__picture" :src="visualValue" />
+                        <button class="image-item__button" type="button" @click="removeVisualFile()">
                             <NuxtIcon class="image-item__button-icon" name="close" />
                         </button>
                     </div>
                 </div>
                 <label 
-                    v-if="(!maxFiles || !modelValue?.length) || ((modelValue && modelValue.length > 0) && (maxFiles < modelValue.length))" 
+                    v-if="(!maxFiles || !allFileCount) || ((modelValue && allFileCount > 0) && (maxFiles < allFileCount))" 
                     class="ui-file-image__label"
                 >
                     <input multiple class="ui-file-image__input" type="file" @change="onInput" />  

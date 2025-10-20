@@ -5,6 +5,7 @@
     } = defineProps<{
         typeList: IBookType[],
     }>()
+    const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
@@ -12,21 +13,34 @@
     })
     const bookData = ref<IBookDetail>()
     const emits = defineEmits<{
-        (event:'add-new-book', book: IBook): void
+        (event:'edit-book', book: IBook): void
+        (event:'remove-book', book: IBook): void
     }>()
 
-    const params = reactive<ICreateBook>({
+    const params = reactive<IEditorBook>({
         title: '',
         shortDescription: '',
         description: '',
-        image: [],
-        file: [],
+        image: undefined,
+        file: undefined,
         type: null,
     })
+    const visualImage = ref<string>()
+    const visualFile = ref<string>()
     const errorsInfo = ref<ICreateBookErrors>({})
 
     const setBookData = async () => {
         bookData.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
+
+        params.title = bookData.value.title
+        params.shortDescription = bookData.value.shortDescription || ''
+        params.description = bookData.value.description || ''
+        params.type = bookData.value.type.id
+
+        if (bookData.value.image)
+            visualImage.value = bookData.value.image
+        if (bookData.value.file)
+            visualFile.value = bookData.value.file
     }
 
     const formattedTypeList = computed(() => {
@@ -37,13 +51,67 @@
         return typeObject
     })
 
-    const editBook = (status: TBookStatus) => {
+    const editBook = async (status: TBookStatus) => {
+        if (!bookData.value) return
 
+        const formData = new FormData()
+        errorsInfo.value = {}
+        
+        formData.append('title', params.title)
+        formData.append('status', status)
+        if (params.image && params.image[0]) 
+            formData.append('image', params.image[0])
+        else if (params.image === null) 
+            formData.append('image', new File([], ''))
+
+        if (params.file && params.file[0]) 
+            formData.append('file', params.file[0])
+        else if (params.file === null) 
+            formData.append('file', new File([], ''))
+
+        if (params.description) 
+            formData.append('description', params.description)
+        if (params.shortDescription) 
+            formData.append('shortDescription', params.shortDescription)
+        if (params.type) 
+            formData.append('type', String(params.type))
+
+        try {
+            const editedBook = await request<IBook>(
+                `/api/v1/library/book/${modalStore.optionalData.bookId}/`, 
+                'PATCH', 
+                formData
+            )
+
+        } catch {
+            toastrStore.showError("Ошибка редактирования публикации")
+        }
     }
 
-    watch(() => modalStore.optionalData.bookId, () => {
+    const removeBook = async () => {
+        if (!bookData.value) return
+
+        try {
+            await request<IBook>(
+                `/api/v1/library/book/${modalStore.optionalData.bookId}/`, 
+                'DELETE', 
+            )
+            emits('remove-book', bookData.value)
+            opened.value = false
+            toastrStore.showSuccess("Публикация успешно удалена")
+        } catch {
+            toastrStore.showError("Ошибка удаления публикации")
+        }
+    }
+
+    watch(opened, newValue => {
+        if (!newValue)
+            bookData.value = undefined
+    })
+
+    watch(() => modalStore.optionalData.bookId, async () => {
         if (modalStore.optionalData.bookId)
-            setBookData()
+            await setBookData()
     })
 </script>
 
@@ -80,7 +148,8 @@
                         <UIFileInput 
                             description="Файл" 
                             formates="application"
-                            v-model="bookData.file"
+                            v-model="params.file"
+                            v-model:visual="visualFile"
                         />
                     </UITitledInput>
                     <div class="book-creator-form__photo">
@@ -94,7 +163,8 @@
                     <UIFileInput 
                         formates="image"
                         :max-files="1"
-                        v-model="bookData.image"
+                        v-model="params.image"
+                        v-model:visual="visualImage"
                     />
                     </div>
                 </div>
@@ -105,7 +175,10 @@
                         text="Краткое описание"
                         variant="flex-start"
                     >
-                        <UITextarea placeholder="Напишите краткое описание " v-model="bookData.shortDescription" />
+                        <UITextarea 
+                            placeholder="Напишите краткое описание" 
+                            v-model="params.shortDescription" 
+                        />
                     </UITitledInput>
                     <UITitledInput 
                         class="book-creator-form__item"
@@ -113,7 +186,10 @@
                         text="Описание"
                         variant="flex-start"
                     >
-                        <WidgetTextEditor class="book-creator-form__text-editor" v-model="bookData.description" />
+                        <WidgetTextEditor 
+                            class="book-creator-form__text-editor" 
+                            v-model="params.description" 
+                        />
                     </UITitledInput>
                 </div>
             </form>
@@ -136,6 +212,7 @@
                 <button 
                     class="book-creator-footer__remove-button p1 p1--bold"
                     from="creatorBook"
+                    @click="removeBook"
                 >Удалить</button>
             </div>
         </template>
