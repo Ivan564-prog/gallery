@@ -1,12 +1,13 @@
 <script lang="ts" setup>
     defineProps<{
-        src: string
+        src?: string
         alt?: string
     }>()
 </script>
 
 <template>
-    <NuxtImg :src="src || '/images/placeholder.jpg'" :alt="alt" />
+    <!-- <NuxtImg :src="src || '/images/placeholder.jpg'" :alt="alt" /> -->
+    <NuxtImg :src="'/images/placeholder.jpg'" :alt="alt" />
 </template>
 
 <style lang="scss" scoped></style>

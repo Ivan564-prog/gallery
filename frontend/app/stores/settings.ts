@@ -6,11 +6,13 @@ export const useRootSettingsStore = defineStore('rootSettings', () => {
         const { data } = await useRequest<IRootSettings>('/api/v1/config/root/')
         settings.value = data.value
     }
-
-    setRootSettings()
+    const setPT = (t: string) => {
+        pageTitle.value = t
+    }
     return {
         setRootSettings,
         pageTitle,
         settings,
+        setPT,
     }
 })

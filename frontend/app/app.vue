@@ -1,8 +1,10 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+    // await useRootSettingsStore().setRootSettings()
+</script>
 
 <template>
     <div class="root-wrapper">
-        <NuxtLayout />
+        <NuxtPage />
     </div>
 </template>
 

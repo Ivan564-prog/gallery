@@ -1,5 +1,6 @@
 <script lang="ts" setup>
     const settingsStore = useRootSettingsStore()
+    
 </script>
 
 <template>

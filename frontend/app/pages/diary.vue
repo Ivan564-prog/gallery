@@ -4,7 +4,9 @@
 </script>
 
 <template>
-    <DiaryBase />
+    <LayerBase>
+        <DiaryBase />
+    </LayerBase>
 </template>
 
 <style lang="scss" scoped>
