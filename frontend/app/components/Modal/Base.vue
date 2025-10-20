@@ -142,7 +142,7 @@
             padding: 20px 20px 0;
         }
         &__content {
-            flex: 1 0 auto;
+            flex: 1 1 auto;
         }
     }
 
@@ -163,6 +163,7 @@
 
     .modal-footer {
         position: sticky;
+        z-index: 1;
         bottom: 0;
         padding: clampFluid(30) clampFluid(40);
         background-color: var(--white);

@@ -25,8 +25,8 @@ services:
       # user: ${UID:-1000}:${GID:-1000}
       networks:
         - internal
-      ports:
-        - 8000:8000
+      # ports:
+        # - 8000:8000
       volumes:
         - ./backend:/app
       depends_on:
@@ -59,7 +59,7 @@ services:
     networks:
       - internal
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - ./configs/nginx-default-dev.conf:/etc/nginx/conf.d/default.conf
       - ./backend/media:/app/media
