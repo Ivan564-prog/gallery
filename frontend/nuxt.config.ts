@@ -43,4 +43,9 @@ export default defineNuxtConfig({
             'https://' + <string>process.env.HOST + '/api/v1/catalog/product/sitemap/',
         ],
     },
+    runtimeConfig: {
+        public: {
+            host: process.env.HOST,
+        }
+    }
 })
