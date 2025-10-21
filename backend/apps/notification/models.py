@@ -20,6 +20,13 @@ class Notification(TimestampModelMixin, models.Model):
     def chiefs_notices(self):
         return self.notices.filter(user__chief_in__isnull=False)
     
+    def create_notification(self, title, text, users):
+        notification = Notification.objects.create(title=title, text=text)
+        create_list = []
+        for user in users:
+            create_list.append(Notice(notification=notification, user= user))
+        Notice.objects.bulk_create(create_list, batch_size=100)
+
 
 class Notice(TimestampModelMixin, models.Model):
     notification = models.ForeignKey(

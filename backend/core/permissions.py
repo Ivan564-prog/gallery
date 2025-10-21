@@ -16,6 +16,18 @@ class IsSuperuserOrReadOnly(permissions.BasePermission):
         return True
 
 
+class IsRoot(permissions.BasePermission):
+    
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.status == 'root'
+
+
+class IsAdministration(permissions.BasePermission):
+    
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.status != 'missionary'
+
+
 class IsSuperuserOrReadonlyAuthorize(permissions.BasePermission):
     
     def has_permission(self, request, view):
