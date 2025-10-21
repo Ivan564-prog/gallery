@@ -40,7 +40,7 @@
             </UILink>
             <UILink 
                 class="account-link account-link--personal-account"
-                to="/account"
+                to="/"
             >
                 <UIImage class="account-link__image" :src="userStore.userData?.image" />
             </UILink>

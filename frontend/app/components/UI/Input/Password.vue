@@ -2,6 +2,7 @@
     const modelValue = defineModel<string | number>()
     defineProps<{
         placeholder?: string
+        errorText?: string
     }>()
     const type = ref<'text' | 'password'>('password')
     const toggleSecret = () => {
@@ -11,10 +12,25 @@
 
 <template>
     <div class="ui-input-password">
-        <UIInputBase :type="type" v-model="modelValue" :placeholder="placeholder" />
-        <div class="ui-input-password__toggle" @click="toggleSecret">
-            <NuxtIcon name="eye" />
-        </div>
+        <UIInputBase 
+            :type="type" 
+            :placeholder="placeholder" 
+            :error-text="errorText"
+            v-model="modelValue"
+        />
+        <button 
+            class="ui-input-password__toggle" 
+            type="button"
+            @click="toggleSecret"
+        >
+            <NuxtIcon 
+                class="ui-input-password__icon" 
+                name="eye" 
+                :class="{
+                    'ui-input-password__icon--active': type === 'text',
+                }"
+            />
+        </button>
     </div>
 </template>
 
@@ -32,10 +48,15 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            .nuxt-icon {
-                width: 20px;
-                height: auto;
-                aspect-ratio: 1;
+        }
+        &__icon {
+            width: clampFluid(24);
+            height: auto;
+            aspect-ratio: 1;
+            color: var(--black);
+            transition: $tr;
+            &--active {
+                color: var(--color);
             }
         }
     }

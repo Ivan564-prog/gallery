@@ -59,7 +59,7 @@
 }
 
 @mixin p5 {
-    font-size: 12px;
+    font-size: clampFluid(10, 12);
 }
 
 $laptop: 1280;
