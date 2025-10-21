@@ -103,6 +103,7 @@
                             description="Файл" 
                             formates="application"
                             :error-text="errorsInfo.file && errorsInfo.file[0]"
+                            :max-files="1"
                             v-model="params.file"
                         />
                     </UITitledInput>

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     const modelValue = defineModel<File[] | null>()
     const visualValue = defineModel<string>('visual')
+    const toastrStore = useToastrStore()
     type TFormate = 'image' | 'application'
     const { 
         totalMaxSize, 
@@ -40,17 +41,25 @@
     }
 
     const filesValidate = (files: File[]) => {
-        if (maxFiles && maxFiles < files.length) return false
+        const filesCount = allFileCount.value + files.length
+        
+        if (maxFiles && maxFiles < filesCount) {
+            toastrStore.showError(`Максимальное количество файлов - ${maxFiles}`)
+            return false
+        } 
+        if (!totalMaxSize) return true
+
         let totalSize = 0
         files.forEach(file => {
             totalSize += file.size / 1024 / 1024
         })
-        if (totalMaxSize && totalMaxSize < totalSize) return false
-        return true
+        return totalMaxSize >= totalSize
     }
 
     const inputFiles = (files: File[]) => {
-        if (rewrite) modelValue.value = []
+        if (rewrite || !modelValue.value) 
+            modelValue.value = []
+        
         if (filesValidate(files))
             files.forEach(file => {
                 if (fileValide(file)) modelValue.value?.push(file)
@@ -63,7 +72,7 @@
 
     const removeVisualFile = () => {
         visualValue.value = undefined
-        modelValue.value = null
+        modelValue.value = []
     }
 
     const getFileName = (file: File) => {
@@ -90,7 +99,6 @@
 <template>
     <div class="ui-file-wrapper">
         <template v-if="formates === 'image'">
-            {{ modelValue }}
             <div class="ui-file-image">
                 <div v-if="modelValue?.length || visualValue" class="ui-file-image__list">
                     <div 
@@ -116,14 +124,24 @@
                     v-if="(!maxFiles || !allFileCount) || ((modelValue && allFileCount > 0) && (maxFiles < allFileCount))" 
                     class="ui-file-image__label"
                 >
-                    <input multiple class="ui-file-image__input" type="file" @change="onInput" />  
+                    <input 
+                        class="ui-file-image__input" 
+                        type="file" 
+                        :multiple="!!(maxFiles && maxFiles > 1)"
+                        @change="onInput" 
+                    />  
                     <NuxtIcon class="ui-file-image__icon" name="plus" />
                 </label>
             </div>
         </template>
         <div v-else class="ui-file-input">
             <label class="ui-file-input__label">
-                <input multiple class="drop-zone__input" type="file" @change="onInput" />
+                <input 
+                    class="drop-zone__input" 
+                    type="file" 
+                    :multiple="!!(maxFiles && maxFiles > 1)"
+                    @change="onInput" 
+                />
                 <p v-if="description" class="ui-file-input__description p3">{{ description }}</p>
             </label>
             <div class="ui-file-input__list">
@@ -134,6 +152,15 @@
                 >
                     <div class="file-item__name p3">{{ getFileName(file) }}</div>
                     <button class="file-item__remove" @click="removeFile(ind)">
+                        <NuxtIcon class="file-item__remove-icon" name="close" />
+                    </button>
+                </div>
+                <div
+                        v-if="visualValue"
+                        class="file-item"
+                >
+                    <div class="file-item__name p3">{{ visualValue }}</div>
+                    <button class="file-item__remove" @click="removeVisualFile()">
                         <NuxtIcon class="file-item__remove-icon" name="close" />
                     </button>
                 </div>
@@ -193,9 +220,18 @@
             position: absolute;
             top: clampFluid(7);
             right: clampFluid(7);
-            width: clampFluid(10);
+            width: clampFluid(15);
             height: auto;
+            padding: clampFluid(4);
             aspect-ratio: 1;
+            background-color: var(--white);
+        }
+        &__button-icon {
+            color: var(--black);
+            transition: $tr;
+            @include hover {
+                color: var(--color);
+            }
         }
     }
 

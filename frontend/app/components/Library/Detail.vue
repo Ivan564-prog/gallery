@@ -1,19 +1,36 @@
 <script lang="ts" setup>
     const MODAL_NAME = 'book-detail'
+    const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const detailInfo = ref<IBookDetail>()
+    const emits = defineEmits<{
+        (event: 'toggle-wishlist', bookId: number, status: boolean): void
+    }>()
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const inWishlist = ref<boolean | undefined>(detailInfo.value?.onWishlist)
     const formattedDate = computed(() => {
         if (!detailInfo.value?.publishedAt) return
         const date = new Date(detailInfo.value?.publishedAt)
         return `${date.getDay()} ${monthByNum(date.getMonth())} ${date.getFullYear()}`
     })
+
     const setDetailInfo = async () => {
         if (modalStore.optionalData.bookId)
             detailInfo.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
+    }
+
+    const toggleWishlist = async () => {
+        try {
+            inWishlist.value = await request<boolean>('/api/v1/wishlist/book/', 'POST', {
+                bookId: detailInfo.value!.id,
+            })
+            emits('toggle-wishlist', detailInfo.value!.id, inWishlist.value)
+        } catch {
+            toastrStore.showError("Ошибка добавление в избранное")
+        }
     }
 
     watch(() => modalStore.optionalData.bookId, newValue => {        
@@ -30,8 +47,14 @@
                     <h2 class="book-detail-head__title h2">{{ detailInfo?.title }}</h2>
                     <p class="book-detail-head__info p2">{{ `${formattedDate} / ${detailInfo?.type.title}` }}</p>
                 </div>
-                <button class="book-detail-head__button">
-                    <NuxtIcon class="book-detail-head__button-icon" name="favorite" />
+                <button 
+                    class="book-detail-head__button"
+                    @click="toggleWishlist"
+                >
+                    <NuxtIcon 
+                        class="book-detail-head__button-icon" 
+                        :name="inWishlist ? 'favorite-2' : 'favorite'" 
+                    />
                 </button>
             </div>
         </template>
@@ -89,6 +112,10 @@
             width: clampFluid(60);
             height: auto;
             aspect-ratio: 1;
+            transition: $tr;
+            @include hover {
+                color: var(--color);
+            }
         }
     }
 

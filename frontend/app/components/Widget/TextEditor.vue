@@ -41,10 +41,6 @@
         document.execCommand('justifyCenter', false)
     }
 
-    watch(content, newValue => {
-        setEditorContent(newValue)
-    })
-
     onMounted(() => {
         setEditorContent(content.value)
     })

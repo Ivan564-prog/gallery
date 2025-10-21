@@ -61,12 +61,12 @@
         formData.append('status', status)
         if (params.image && params.image[0]) 
             formData.append('image', params.image[0])
-        else if (params.image === null) 
+        else if (!params.image?.length) 
             formData.append('image', new File([], ''))
 
         if (params.file && params.file[0]) 
             formData.append('file', params.file[0])
-        else if (params.file === null) 
+        else if (!params.file?.length) 
             formData.append('file', new File([], ''))
 
         if (params.description) 
@@ -148,6 +148,7 @@
                         <UIFileInput 
                             description="Файл" 
                             formates="application"
+                            :max-files="1"
                             v-model="params.file"
                             v-model:visual="visualFile"
                         />
@@ -252,6 +253,7 @@
             color: var(--gray-03);
         }
     }
+
     .book-creator-footer {
         display: flex;
         align-items: center;
