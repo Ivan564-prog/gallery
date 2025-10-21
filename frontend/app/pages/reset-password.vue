@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-    const PAGE_TITLE = 'Личный кабинет'
+    const PAGE_TITLE = 'Смена пароля'
     setPageTitle(PAGE_TITLE)
 </script>
 
 <template>
-    <LayerBase>
-        
-    </LayerBase>
+    <LayerAuth>
+        <ResetPasswordBase />
+    </LayerAuth>
 </template>
 
 <style lang="scss" scoped>

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-    const PAGE_TITLE = 'Личный кабинет'
+    const PAGE_TITLE = 'Авторизация'
     setPageTitle(PAGE_TITLE)
 </script>
 
 <template>
-    <LayerBase>
-        
-    </LayerBase>
+    <LayerAuth>
+        <AuthorizeBase />
+    </LayerAuth>
 </template>
 
 <style lang="scss" scoped>

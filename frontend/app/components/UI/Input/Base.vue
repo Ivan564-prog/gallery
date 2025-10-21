@@ -86,6 +86,7 @@
             & {
                 position: absolute;
                 color: var(--gray-03) !important;
+                pointer-events: none;
                 transition: $tr;
             }
         }

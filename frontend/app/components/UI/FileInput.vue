@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-    const modelValue = defineModel<File[]>()
+    const modelValue = defineModel<File[] | null>()
+    const visualValue = defineModel<string>('visual')
+    const toastrStore = useToastrStore()
     type TFormate = 'image' | 'application'
     const { 
         totalMaxSize, 
@@ -16,6 +18,16 @@
         formates?: TFormate[] | TFormate
     }>()
 
+    const allFileCount = computed(() => {
+        let list = []
+        if (modelValue.value?.length)
+            list = [...modelValue.value]
+        if (visualValue.value)
+            list.push(visualValue.value)
+        return list.length
+            
+    })
+
     const fileValide = (file: File) => {
         if (fileMaxSize && file.size / 1024 / 1024 > fileMaxSize) return false
         if (formates)
@@ -29,17 +41,25 @@
     }
 
     const filesValidate = (files: File[]) => {
-        if (maxFiles && maxFiles < files.length) return false
+        const filesCount = allFileCount.value + files.length
+        
+        if (maxFiles && maxFiles < filesCount) {
+            toastrStore.showError(`Максимальное количество файлов - ${maxFiles}`)
+            return false
+        } 
+        if (!totalMaxSize) return true
+
         let totalSize = 0
         files.forEach(file => {
             totalSize += file.size / 1024 / 1024
         })
-        if (totalMaxSize && totalMaxSize < totalSize) return false
-        return true
+        return totalMaxSize >= totalSize
     }
 
     const inputFiles = (files: File[]) => {
-        if (rewrite) modelValue.value = []
+        if (rewrite || !modelValue.value) 
+            modelValue.value = []
+        
         if (filesValidate(files))
             files.forEach(file => {
                 if (fileValide(file)) modelValue.value?.push(file)
@@ -48,6 +68,11 @@
 
     const removeFile = (index: number) => {
         modelValue.value?.splice(index, 1)
+    }
+
+    const removeVisualFile = () => {
+        visualValue.value = undefined
+        modelValue.value = []
     }
 
     const getFileName = (file: File) => {
@@ -67,9 +92,7 @@
     const onInput = (event: Event) => {
         let input = <HTMLInputElement>event.target
         let files = input.files ? [...input.files] : []
-        inputFiles(files)
-        console.log(modelValue.value);
-        
+        inputFiles(files)        
     }
 </script>
 
@@ -77,29 +100,48 @@
     <div class="ui-file-wrapper">
         <template v-if="formates === 'image'">
             <div class="ui-file-image">
-                <div v-if="modelValue?.length" class="ui-file-image__list">
+                <div v-if="modelValue?.length || visualValue" class="ui-file-image__list">
                     <div 
                         v-for="file, index in modelValue"
                         class="ui-file-image__item image-item"
                     >
-                        <UIImage class="image-item__picture" :src="file.webkitRelativePath" />
+                        <UIImage class="image-item__picture" :src="getURLfromFile(file)" />
                         <button class="image-item__button" type="button" @click="removeFile(index)">
+                            <NuxtIcon class="image-item__button-icon" name="close" />
+                        </button>
+                    </div>
+                    <div
+                        v-if="visualValue"
+                        class="ui-file-image__item image-item"
+                    >
+                        <UIImage class="image-item__picture" :src="visualValue" />
+                        <button class="image-item__button" type="button" @click="removeVisualFile()">
                             <NuxtIcon class="image-item__button-icon" name="close" />
                         </button>
                     </div>
                 </div>
                 <label 
-                    v-if="(!maxFiles || !modelValue?.length) || ((modelValue && modelValue.length > 0) && (maxFiles < modelValue.length))" 
+                    v-if="(!maxFiles || !allFileCount) || ((modelValue && allFileCount > 0) && (maxFiles < allFileCount))" 
                     class="ui-file-image__label"
                 >
-                    <input multiple class="ui-file-image__input" type="file" @change="onInput" />  
+                    <input 
+                        class="ui-file-image__input" 
+                        type="file" 
+                        :multiple="!!(maxFiles && maxFiles > 1)"
+                        @change="onInput" 
+                    />  
                     <NuxtIcon class="ui-file-image__icon" name="plus" />
                 </label>
             </div>
         </template>
         <div v-else class="ui-file-input">
             <label class="ui-file-input__label">
-                <input multiple class="drop-zone__input" type="file" @change="onInput" />
+                <input 
+                    class="drop-zone__input" 
+                    type="file" 
+                    :multiple="!!(maxFiles && maxFiles > 1)"
+                    @change="onInput" 
+                />
                 <p v-if="description" class="ui-file-input__description p3">{{ description }}</p>
             </label>
             <div class="ui-file-input__list">
@@ -110,6 +152,15 @@
                 >
                     <div class="file-item__name p3">{{ getFileName(file) }}</div>
                     <button class="file-item__remove" @click="removeFile(ind)">
+                        <NuxtIcon class="file-item__remove-icon" name="close" />
+                    </button>
+                </div>
+                <div
+                        v-if="visualValue"
+                        class="file-item"
+                >
+                    <div class="file-item__name p3">{{ visualValue }}</div>
+                    <button class="file-item__remove" @click="removeVisualFile()">
                         <NuxtIcon class="file-item__remove-icon" name="close" />
                     </button>
                 </div>
@@ -165,13 +216,23 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
         &__button {
             position: absolute;
             top: clampFluid(7);
             right: clampFluid(7);
-            width: clampFluid(10);
+            width: clampFluid(15);
             height: auto;
+            padding: clampFluid(4);
             aspect-ratio: 1;
+            background-color: var(--white);
+        }
+        &__button-icon {
+            color: var(--black);
+            transition: $tr;
+            @include hover {
+                color: var(--color);
+            }
         }
     }
 

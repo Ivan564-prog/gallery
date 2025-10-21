@@ -21,9 +21,24 @@
 
     const addNewBook = (book: IBook) => {
         bookList.value = [
-            ...bookList.value,
             book,
+            ...bookList.value,
         ]
+    }
+
+    const removeBook = (book: IBook) => {
+        bookList.value = bookList.value.filter(item => item.id !== book.id)
+    }
+
+    const toggleWishlist = (bookId: number, status: boolean) => {
+        bookList.value = bookList.value.map(book => {
+                return book.id === bookId 
+                ? {
+                    ...book,
+                    onWishlist: status,
+                }
+                : book
+        })
     }
 
     watch(() => requestParams.value, async () => {
@@ -44,13 +59,16 @@
         />
         <UIEmptyBanner v-else />
         <Teleport to="body">
-            <LibraryDetail />
+            <LibraryDetail 
+                @toggle-wishlist="toggleWishlist"
+            />
             <LibraryBookCreator 
                 :type-list="typeList"
                 @add-new-book="addNewBook"
             />
             <LibraryBookEditor 
                 :type-list="typeList"
+                @remove-book="removeBook"
             />
         </Teleport>
     </section>

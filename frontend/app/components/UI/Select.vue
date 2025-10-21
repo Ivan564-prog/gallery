@@ -21,6 +21,8 @@
         modelValue.value = key
         isOpened.value = false
     }
+    if (modelValue.value)
+        select(modelValue.value)
 
     if (!empty && !modelValue.value) {
         modelValue.value = Object.keys(items)[0]

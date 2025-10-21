@@ -21,6 +21,10 @@
         }
     }
 
+    watch(() => content.onWishlist, newValue => {
+        inWishlist.value = newValue
+    })
+
     const openWindow = (modalName: string) => {
         modalStore.optionalData = {
             bookId: content.id,
@@ -34,7 +38,7 @@
         <button 
             class="library-card__link" 
             @click="openWindow('book-detail')"
-        />
+        ></button>
         <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">черновик</p>
         <p v-else-if="content.isNew" class="library-card__banner library-card__banner--new p3">новинка</p>
         <div class="library-card__panel">
@@ -116,7 +120,13 @@
             gap: clampFluid(10);
         }
         &__button {
+            width: clampFluid(40);
+            height: auto;
+            aspect-ratio: 1;
             background-color: var(--white);
+            @include tablet {
+                width: 24px;
+            }
         }
         &__button-icon {
             color: var(--black);

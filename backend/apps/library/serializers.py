@@ -75,6 +75,8 @@ class BookUpdateSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        print('sdfghdhdfghdfghdfgh')
+        print(validated_data['image'])
         if 'image' in validated_data and validated_data['image'] is None:
             instance.image = None
         if 'file' in validated_data and validated_data['file'] is None:
