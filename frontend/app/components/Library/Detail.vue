@@ -45,7 +45,7 @@
             <div class="book-detail-head">
                 <div class="book-detail-head__content">
                     <h2 class="book-detail-head__title h2">{{ detailInfo?.title }}</h2>
-                    <p class="book-detail-head__info p2">{{ `${formattedDate} / ${detailInfo?.type.title}` }}</p>
+                    <p class="book-detail-head__info p2">{{ `${formattedDate || 'Черновик'} / ${detailInfo?.type.title}` }}</p>
                 </div>
                 <button 
                     class="book-detail-head__button"

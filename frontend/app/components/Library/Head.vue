@@ -64,6 +64,16 @@
             flex-wrap: wrap;
             gap: clampFluid(14);
         }
+        &__button {
+            @include tablet {
+                position: fixed;
+                z-index: 5;
+                bottom: 70px;
+                left: 20px;
+                right: 20px;
+                width: auto;
+            }
+        }
     }
 
     .library-filter {

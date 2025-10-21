@@ -216,6 +216,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
         &__button {
             position: absolute;
             top: clampFluid(7);

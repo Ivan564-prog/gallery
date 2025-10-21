@@ -120,7 +120,13 @@
             gap: clampFluid(10);
         }
         &__button {
+            width: clampFluid(40);
+            height: auto;
+            aspect-ratio: 1;
             background-color: var(--white);
+            @include tablet {
+                width: 24px;
+            }
         }
         &__button-icon {
             color: var(--black);

@@ -46,6 +46,6 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             host: process.env.HOST,
-        }
+        },
     }
 })

@@ -70,6 +70,9 @@
             opacity: 0;
             #{$this}__container {
                 translate: 100% 0;
+                @include tablet {
+                    translate: 0 100%;
+                }
             }
         }
         &.modal-enter-to,
@@ -92,6 +95,7 @@
         }
         &__container {
             position: relative;
+            z-index: 6;
             display: flex;
             flex-direction: column;
             gap: clampFluid(30);
@@ -104,6 +108,7 @@
             }
         }
         &__close {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
             gap: clampFluid(20);
@@ -120,6 +125,10 @@
                 top: clampFluid(30);
                 translate: -100% 0;
             }
+            @include tablet {
+                width: 40px;
+                height: 40px;
+            }
         }
         &__close-icon {
             width: clampFluid(20);
@@ -128,6 +137,7 @@
         }
         &__close-bg {
             position: absolute;
+            z-index: 5;
             inset: 0;
             background-color: rgba(#000, 0.5);
         }
@@ -145,7 +155,8 @@
         padding: clampFluid(20) clampFluid(40) clampFluid(10);
         background-color: var(--gray-06);
         @include tablet {
-            padding: 20px 20px 0;
+            align-items: center;
+            padding: 20px 20px 5px;
         }
         &__content {
             flex: 1 1 auto;

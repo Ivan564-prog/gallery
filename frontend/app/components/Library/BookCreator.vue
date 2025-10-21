@@ -200,12 +200,13 @@
         display: flex;
         align-items: center;
         gap: clampFluid(10);
-        &__remove-button {
-            padding: 0 clampFluid(30);
-            height: clampFluid(59);
-            transition: $tr;
-            @include hover {
-                color: var(--color);
+        @include tablet {
+            align-items: normal;
+            flex-direction: column;
+        }
+        &__button {
+            @include tablet {
+                width: 100%;
             }
         }
     }

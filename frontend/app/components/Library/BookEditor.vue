@@ -258,6 +258,15 @@
         display: flex;
         align-items: center;
         gap: clampFluid(10);
+        @include tablet {
+            align-items: normal;
+            flex-direction: column;
+        }
+        &__button {
+            @include tablet {
+                width: 100%;
+            }
+        }
         &__remove-button {
             padding: 0 clampFluid(30);
             height: clampFluid(59);

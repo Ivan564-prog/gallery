@@ -2,13 +2,7 @@ type TMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE'
 
 export const getAPIUrl = () => {
     const runtimeConfig = useRuntimeConfig()
-    // let url = `${useRequestURL().protocol}//${useRequestURL().hostname}`
-    // if (process.server) url = url.replace('localhost', 'django:8000')
-
-    // return url
-    // return 'https://lk-sinmis.docker-sandbox.place-start.ru'
-    // return runtimeConfig.public.host ? `https://${runtimeConfig.public.host}` :  'http://django:8000'
-    return `${useRequestURL().protocol}//${runtimeConfig.public.host || 'django:8000'}`
+    return `${useRequestURL().protocol}//${!import.meta.dev && runtimeConfig.public.host || 'django:8000'}`
 }
 let csrf: string
 
