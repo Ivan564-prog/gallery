@@ -71,7 +71,6 @@ class Invite(models.Model):
             }
         )
         to = [self.email]
-        logger.info(html_message)
         send_mail.delay(subject, to, html_message)
 
     def set_code(self, save=True):
@@ -142,7 +141,7 @@ class User(
         verbose_name='Имя', null=True)
     surname = models.CharField(
         verbose_name='Фамилия', blank=True, null=True)
-    patronumic = models.CharField(
+    patronymic = models.CharField(
         verbose_name='Отчество', blank=True, null=True)
     date_of_birth = models.DateField(
         verbose_name='День рождения', blank=True, null=True)
@@ -169,7 +168,7 @@ class User(
         return self.diary_wishlist.get_or_create(user=self)[0]
 
     def full_name(self):
-        return ' '.join([self.surname, self.name, self.patronumic])
+        return ' '.join([self.surname or '', self.name or '', self.patronymic or ''])
 
     @classmethod
     def has_user(cls, username_field):
@@ -185,6 +184,14 @@ class User(
             return 'root'
         else:
             return 'missionary'
+        
+    @property
+    def region(self):
+        return self.diocese and self.diocese.region
+    
+    @property
+    def country(self):
+        return self.region and self.region.country
 
 
 class Transfer(TimestampModelMixin, models.Model):

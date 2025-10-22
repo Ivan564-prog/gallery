@@ -45,10 +45,29 @@ class UserPasswordSerializer(serializers.Serializer):
         if len(password1) < 6:
             raise serializers.ValidationError("Минимальная длина пароля 6 символов")
         return password1
+    
+
+class UserListSerializer(serializers.ModelSerializer):
+    diocese = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.User
+        fields = (
+            'id',
+            'email',
+            'diocese',
+            'full_name',
+            'image',
+        )
+
+    def get_diocese(self, obj):
+        return obj.diocese.title
 
 
 class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSerializerValidator, serializers.ModelSerializer):
     status = serializers.ReadOnlyField()
+    region = serializers.ReadOnlyField()
+    country = serializers.ReadOnlyField()
     
     class Meta:
         model = models.User

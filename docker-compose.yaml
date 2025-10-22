@@ -31,12 +31,12 @@ services:
         - ./backend:/app
       depends_on:
         - postgres
-  adminer:
-    image: adminer
-    networks:
-     - internal
-    ports:
-     - 8080:8080
+  # adminer:
+  #   image: adminer
+  #   networks:
+  #    - internal
+  #   ports:
+  #    - 8080:8080
 
   nuxt:
     build:
