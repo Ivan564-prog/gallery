@@ -1,11 +1,124 @@
 <script lang="ts" setup>
-    
+    const currentTab = defineModel<number>({ required: true })
+    const userStore = useUserStore()
+    const tabList = computed(() => {
+        switch (userStore.userData?.role) {
+            case 'chief':
+                return [
+                    { id: 1, title: 'Мои данные' },
+                    { id: 2, title: 'Приглашенные пользователи' },
+                ]
+            case 'root':
+                return [
+                    { id: 1, title: 'Мои данные' },
+                    { id: 2, title: 'Приглашенные администрации' },
+                ]
+            default:
+                return [
+                    { id: 1, title: 'Мои данные' },
+                    { id: 2, title: 'Активные пользователи' },
+                ]
+        }
+    })
 </script>
 
 <template>
-    <div class=""></div>
+    <div class="account-head">
+        <div class="account-head__tabs">
+            <div class="account-head__tabs-list">
+                <template v-if="userStore.userData?.role === 'missionary'">
+                    <h3 class="account-head__title h3">Данные пользователя</h3>
+                </template>
+                <template v-else>
+                    <button
+                        v-for="tab in tabList" 
+                        class="account-head__tab h3"
+                        :key="tab.id"
+                        :class="{
+                            'account-head__tab--active': currentTab === tab.id,
+                        }"
+                        @click="currentTab = tab.id"
+                    >{{ tab.title }}</button>
+                </template>
+            </div>
+        </div>
+        <button class="account-head__logout-button logout-button">
+            <span class="logout-button__text p2">Выйти из аккаунта</span>
+            <NuxtIcon class="logout-button__icon" name="logout" />
+        </button>
+    </div>
 </template>
 
 <style lang="scss" scoped>
-    
+    .account-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clampFluid(20);
+        @include tablet {
+            align-items: flex-start;
+            flex-direction: column-reverse;
+        }
+        &__tabs {
+            overflow: auto;
+            width: calc(100dvw - 40px);
+        }
+        &__tabs-list {
+            display: flex;
+            align-items: center;
+            gap: clampFluid(50);
+            width: fit-content;
+            @include tablet {
+                gap: 30px;
+            }
+        }
+        &__tab {
+            position: relative;
+            overflow: hidden;
+            padding-bottom: clampFluid(15);
+            white-space: nowrap;
+            transition: $tr;
+            @include hover {
+                color: var(--color);
+            }
+            &:before {
+                content: "";
+                position: absolute;
+                left: -100%;
+                bottom: 0;
+                width: 100%;
+                height: 2px;
+                background-color: var(--color);
+                transition: $tr;
+            }
+            &--active {
+                pointer-events: none;
+                &::before {
+                    left: 0;
+                }
+            }
+        }
+        &__logout-button {
+            margin-bottom: clampFluid(15);
+        }
+    }
+
+    .logout-button {
+        display: flex;
+        align-items: center;
+        gap: clampFluid(12);
+        color: var(--gray-02);
+        transition: $tr;
+        @include hover {
+            color: var(--color);
+        }
+        &__icon {
+            width: clampFluid(30);
+            height: auto;
+            aspect-ratio: 1;
+            @include tablet {
+                width: 30px;
+            }
+        }
+    }
 </style>

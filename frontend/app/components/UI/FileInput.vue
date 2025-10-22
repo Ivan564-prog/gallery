@@ -81,10 +81,6 @@
             : file.name
     }
 
-    const isImg = (file: File) => {
-        return window.FileReader && file.type.includes('image')
-    }
-
     const getURLfromFile = (file: File) => {
         return URL.createObjectURL(file)
     }

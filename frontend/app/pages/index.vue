@@ -5,7 +5,7 @@
 
 <template>
     <LayerBase>
-        
+        <AccountBase />
     </LayerBase>
 </template>
 
