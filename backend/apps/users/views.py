@@ -6,6 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.status import HTTP_404_NOT_FOUND
 from django.contrib.auth import authenticate, login, logout
 from apps.local_hierarchy.models import Diocese
+from apps.users.models import User
 from core.logger import logger
 
 
@@ -41,13 +42,17 @@ class UserViewSet(ViewSet):
             'admin': 'chief',
             'root': 'admin',
         }
-        invite = models.Invite.objects.create(
-            invite_by=request.user,
-            email=request.data.get('email'),
-            diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
-            role=role_map[request.user.status],
-        )
-        invite.send(request)
+        email = request.data.get('email')
+        if User.objects.filter(email=email).exists():
+            invite = models.Invite.objects.create(
+                invite_by=request.user,
+                email=request.data.get('email'),
+                diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
+                role=role_map[request.user.status],
+            )
+            invite.send(request)
+        else:
+            Response({'email': 'Такой пользователь уже существует'}, status=400)
         return Response(status=201)
     
     @action(methods=['GET'], detail=False, url_path='invite')

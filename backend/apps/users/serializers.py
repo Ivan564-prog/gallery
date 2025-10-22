@@ -4,6 +4,7 @@ from core.logger import logger
 from core.serializers import PhoneSerializerValidator, EmailSerializerValidator
 from django.contrib.auth import authenticate
 from django.utils import timezone
+from apps.local_hierarchy.serializer import DioceseSerializer
 
 
 class AuthorizeSerializer(serializers.Serializer):
@@ -68,6 +69,7 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
     status = serializers.ReadOnlyField()
     region = serializers.ReadOnlyField()
     country = serializers.ReadOnlyField()
+    diocese = DioceseSerializer()
     
     class Meta:
         model = models.User
