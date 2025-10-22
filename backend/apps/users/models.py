@@ -1,11 +1,11 @@
 from .managers import CustomUserManager
+from apps.reports.models import Report
 from django.db import models
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.template.loader import render_to_string
-from apps.wishlist.models import BookWishlist
 from datetime import timedelta
 from core.models import TimestampModelMixin
 from core.logger import logger
@@ -169,6 +169,13 @@ class User(
 
     def full_name(self):
         return ' '.join([self.surname or '', self.name or '', self.patronymic or ''])
+    
+    def get_current_report(self):
+        if hasattr(self, 'chief_in'):
+            return Report.get_current(self.chief_in)
+        elif hasattr(self, 'admin_in'):
+            return Report.get_current(self.admin_in)
+
 
     @classmethod
     def has_user(cls, username_field):
