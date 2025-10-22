@@ -20,8 +20,11 @@ class Notification(TimestampModelMixin, models.Model):
     @property
     def chiefs_notices(self):
         return self.notices.filter(user__chief_in__isnull=False)
+    
     @classmethod
-    def create_notification(cls, title, text, users):
+    def create_notification(cls, title, text, users=None):
+        if users is None:
+            users = User.objects.filter(is_active=True)
         notification = cls.objects.create(title=title, text=text)
         create_list = []
         for user in users:

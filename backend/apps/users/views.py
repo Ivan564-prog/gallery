@@ -17,7 +17,7 @@ class UserViewSet(ViewSet):
     def list(self, request):
         if request.user.is_authenticated and request.user.is_active:
             return Response(
-                self.serializer_class(request.user).data)
+                self.serializer_class(request.user, context={'request': request}).data)
         return Response()
     
     def patch(self, request):

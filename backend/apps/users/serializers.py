@@ -82,6 +82,9 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
             'is_active',
             'groups',
             'user_permissions',
+            'task_permission',
+            'created_at',
+            'updated_at',
         )
 
     def update(self, instance, validated_data):

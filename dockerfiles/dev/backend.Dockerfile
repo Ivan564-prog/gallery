@@ -20,5 +20,4 @@ CMD ["sh", "-c", \
                 "python3 manage.py collectstatic --noinput \
                 # && python3 manage.py makemigrations \
                 # && python3 manage.py migrate \
-                # && gunicorn --reload -b 0.0.0.0:8000 system.wsgi
-                && granian --host 0.0.0.0 --port 8000 --interface wsgi system.wsgi:application"]
+                && gunicorn --reload -b 0.0.0.0:8000 system.wsgi"]

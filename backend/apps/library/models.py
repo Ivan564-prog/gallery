@@ -2,6 +2,8 @@ from django.db import models
 from core.models import TimestampModelMixin
 from django.utils import timezone
 from datetime import timedelta
+from apps.notification.system_notify import notify_create_book
+from core.logger import logger
 
 
 class BookType(models.Model):
@@ -46,8 +48,12 @@ class Book(TimestampModelMixin, models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
+        logger.info('123')
         if self.status == 'published' and not self.published_at:
             self.published_at = timezone.now()
+            notify_create_book(self)
+        elif self.status != 'published' and self.published_at:
+            self.published_at = None
         return super().save(*args, **kwargs)
     
     @property
