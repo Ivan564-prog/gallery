@@ -28,7 +28,7 @@ class UserAdmin(admin.ModelAdmin):
             'email',
             'name',
             'surname',
-            'patronumic',
+            'patronymic',
             'date_of_birth',
             'city',
             'phone',
