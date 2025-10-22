@@ -62,6 +62,7 @@
             &-minimal {
                 padding: clampFluid(4) clampFluid(16);
                 border-bottom: 1px solid var(--gray-04);
+                height: clampFluid(38);
             }
             &-big {
                 #{$this}__value,

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-    const PAGE_TITLE = 'Придумайте новый пароль'
+    const PAGE_TITLE = 'Забыли пароль?'
     setPageTitle(PAGE_TITLE)
 </script>
 
 <template>
     <LayerAuth>
-        <ResetPasswordBase />
+        <ForgotPasswordBase />
     </LayerAuth>
 </template>
 

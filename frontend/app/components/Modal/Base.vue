@@ -56,6 +56,7 @@
         $this: &;
         position: fixed;
         z-index: 10;
+        inset: 0;
         width: 100vw;
         height: 100dvh;
         &.modal-enter-active,

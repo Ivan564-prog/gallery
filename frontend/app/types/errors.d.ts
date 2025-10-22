@@ -10,7 +10,11 @@ declare global {
         password?: string[]
     }
 
-    interface IResetPasswordErrors {
+    interface IForgotPasswordErrors {
         email?: string[]
+    }
+
+    interface IResetPasswordErrors {
+        nonFieldErrors?: string[]
     }
 }
