@@ -22,6 +22,7 @@ services:
         PG_DATABASE: db_name
         PG_HOST: postgres
         HOST: localhost
+        TZ: Europe/Moscow
       # user: ${UID:-1000}:${GID:-1000}
       networks:
         - internal
