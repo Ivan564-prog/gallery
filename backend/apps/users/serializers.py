@@ -69,7 +69,7 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
     status = serializers.ReadOnlyField()
     region = serializers.ReadOnlyField()
     country = serializers.ReadOnlyField()
-    diocese = DioceseSerializer()
+    diocese = DioceseSerializer(read_only=True)
     
     class Meta:
         model = models.User
@@ -107,7 +107,7 @@ class RegisterSerializer(UserSerializer):
     code = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
     surname = serializers.CharField(required=True)
-    patronumic = serializers.CharField(required=True)
+    patronymic = serializers.CharField(required=True)
     date_of_birth = serializers.DateField(format='%d:%m:%Y', required=True)
     city = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
@@ -117,7 +117,7 @@ class RegisterSerializer(UserSerializer):
         fields = (
             'name',
             'surname',
-            'patronumic',
+            'patronymic',
             'date_of_birth',
             'city',
             'phone',
