@@ -71,7 +71,6 @@ class HostOverrideMiddleware:
             request.META['HTTP_X_FORWARDED_HOST'] = request.META["HOST"]
         except KeyError:
             request.META['HTTP_X_FORWARDED_HOST'] = request.META["HTTP_HOST"]
-        print(request.META['HTTP_X_FORWARDED_HOST'] )
         if 'localhost' not in request.META['HTTP_X_FORWARDED_HOST'] and 'django' not in request.META['HTTP_X_FORWARDED_HOST']:
             request.META['wsgi.url_scheme'] = 'https'
         return self.get_response(request)

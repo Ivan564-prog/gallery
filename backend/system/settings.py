@@ -17,6 +17,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     'https://localhost',
     'https://localhost:3000',
+    'http://localhost:8000',
     'http://django:8000',
     'http://localhost',
     f"https://{HOST}",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'apps.diaries',
     'apps.local_hierarchy',
     'apps.notification',
+    'apps.reports',
     'apps.task_manager',
     'apps.library',
     'apps.users',
@@ -146,6 +148,10 @@ DATABASES = {
         'PASSWORD': os.environ.get('PG_PASSWORD'),
         'HOST': os.environ.get('PG_HOST'),
         'PORT': 5432,
+        'TEST': {
+            'NAME': 'test_mydatabase',  # Явное задание имени тестовой БД
+            'CHARSET': 'UTF8', 
+        }
     },
 }
 

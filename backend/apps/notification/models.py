@@ -1,5 +1,6 @@
 from django.db import models
 from core.models import TimestampModelMixin
+from apps.users.models import User
 
 
 class Notification(TimestampModelMixin, models.Model):
@@ -20,6 +21,26 @@ class Notification(TimestampModelMixin, models.Model):
     def chiefs_notices(self):
         return self.notices.filter(user__chief_in__isnull=False)
     
+    @classmethod
+    def create_notification(cls, title, text, users=None):
+        if users is None:
+            users = User.objects.filter(is_active=True)
+        notification = cls.objects.create(title=title, text=text)
+        create_list = []
+        for user in users:
+            create_list.append(Notice(notification=notification, user= user))
+        Notice.objects.bulk_create(create_list, batch_size=100)
+    
+    def get_unsuspecting_users(self):
+        return User.objects.all().filter(
+            is_active=True,
+            notices__is_viewed=False,
+            notices__notification=self,
+        ).filter(
+            models.Q(chief_in__isnull=False)
+            | models.Q(admin_in__isnull=False)
+        )
+
 
 class Notice(TimestampModelMixin, models.Model):
     notification = models.ForeignKey(

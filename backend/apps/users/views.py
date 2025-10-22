@@ -17,7 +17,7 @@ class UserViewSet(ViewSet):
     def list(self, request):
         if request.user.is_authenticated and request.user.is_active:
             return Response(
-                self.serializer_class(request.user).data)
+                self.serializer_class(request.user, context={'request': request}).data)
         return Response()
     
     def patch(self, request):
@@ -34,8 +34,24 @@ class UserViewSet(ViewSet):
         models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
         return Response(self.serializer_class(object, context={'request': request}).data)
     
-    @action(methods=['POST'], detail=False)
-    def invite(self, request):
+    @action(methods=['POST'], detail=False, url_path='invite')
+    def send_invite(self, request):
+        role_map = {
+            'chief': 'missionary',
+            'admin': 'chief',
+            'root': 'admin',
+        }
+        invite = models.Invite.objects.create(
+            invite_by=request.user,
+            email=request.data.get('email'),
+            diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
+            role=role_map[request.user.status],
+        )
+        invite.send(request)
+        return Response(status=201)
+    
+    @action(methods=['GET'], detail=False, url_path='invite')
+    def get_invite_list(self, request):
         role_map = {
             'chief': 'missionary',
             'admin': 'chief',

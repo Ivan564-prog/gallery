@@ -6,6 +6,7 @@ beautifulsoup4==4.13.3
 certifi==2024.2.2
 cffi==1.16.0
 charset-normalizer==3.3.2
+click==8.3.0
 cryptography==42.0.5
 dadata==24.10.0
 defusedxml==0.8.0rc2
@@ -27,6 +28,7 @@ django-tinymce==4.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 et_xmlfile==2.0.0
+granian==2.5.5
 gunicorn==22.0.0
 h11==0.16.0
 httpcore==1.0.9

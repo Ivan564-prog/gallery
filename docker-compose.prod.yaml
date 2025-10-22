@@ -30,6 +30,7 @@ services:
       HOST: ${FQDN:-changeme.docker-sandbox.place-start.ru}
       SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
+      TZ: Europe/Moscow
     volumes:
       - media:/app/media
       - static:/app/static
