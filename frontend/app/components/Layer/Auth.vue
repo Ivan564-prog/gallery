@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-    const PAGE_TITLE = 'Авторизация'
-    setPageTitle(PAGE_TITLE)
 </script>
 
 <template>
     <div class="authorize-layer">
         <div class="authorize-layer__head">
-            <NuxtIcon class="authorize-layer__logo" name="logo" />
+            <UILink class="authorize-layer__logo" to="/login">
+                <NuxtIcon class="authorize-layer__logo" name="logo" />
+            </UILink>
         </div>
         <div class="authorize-layer__wrapper">
             <slot></slot>

@@ -45,7 +45,7 @@
         </div>
         <UILink 
            class="authorize-form__link p2"
-           to="/reset-password"
+           to="/forgot-password"
         >Забыли пароль?</UILink>
         <UIButton 
             class="authorize-form__button"
