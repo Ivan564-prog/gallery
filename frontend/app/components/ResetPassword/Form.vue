@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     const route = useRoute()
-    const toastr = useToastrStore()
+    const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const isLoading = ref<boolean>(false)
     const params = reactive({
@@ -25,7 +25,7 @@
         } catch (error) {
             const errorMessage = (error as IHttpError<IResetPasswordErrors>).data.nonFieldErrors
             if (errorMessage?.length)
-                toastr.showError(errorMessage[0]!)
+                toastrStore.showError(errorMessage[0]!)
         }
         isLoading.value = false
     }

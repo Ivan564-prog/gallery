@@ -17,4 +17,10 @@ declare global {
     interface IResetPasswordErrors {
         nonFieldErrors?: string[]
     }
+
+    interface IUserErrors {
+        date?: string
+        phone?: string
+        password1?: string
+    }
 }

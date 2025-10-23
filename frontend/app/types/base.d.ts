@@ -28,4 +28,16 @@ declare global {
     interface IErrorRequest<T> {
         data: T
     }
+
+    interface IStats {
+        newNotification: number 
+        newBooks: number 
+        newWishlist: number 
+        diariesReports: number | null
+    }
+
+    interface IDiocese {
+        id: number,
+        title: string,
+    }
 }

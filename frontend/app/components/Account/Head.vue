@@ -61,7 +61,9 @@
         }
         &__tabs {
             overflow: auto;
-            width: calc(100dvw - 40px);
+            @include tablet {
+                width: calc(100dvw - 40px);
+            }
         }
         &__tabs-list {
             display: flex;
