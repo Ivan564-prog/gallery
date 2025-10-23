@@ -70,7 +70,7 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
     region = serializers.ReadOnlyField()
     country = serializers.ReadOnlyField()
     diocese = DioceseSerializer(read_only=True)
-    serializers.DateField(format='%d.%m.%Y', required=True, error_messages={'invalid': 'Пожалуйста, введите дату в формате ДД.ММ.ГГГГ'})
+    date_of_birth = serializers.DateField(format='%d.%m.%Y', required=True, error_messages={'invalid': 'Пожалуйста, введите дату в формате ДД.ММ.ГГГГ'})
     
     class Meta:
         model = models.User
