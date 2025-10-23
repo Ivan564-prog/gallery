@@ -1,25 +1,30 @@
 <script lang="ts" setup>
     const value = defineModel<string>({ required: true })
     const {
-        readonly = false
+        readonly = false,
+        type = 'text',
     } = defineProps<{
         title?: string
         readonly?: boolean
         placeholder?: string
+        type?: 'text' | 'tel' | 'password' | 'date'
+        errorText?: string
     }>()
 </script>
 
 <template>
-    <label class="contact-item">
+    <div class="contact-item">
         <p class="contact-item__title p3">{{ title }}</p>
         <UIInput 
             class="contact-item__field" 
             style-variant="minimal"
             :readonly="readonly"
             :placeholder="placeholder"
+            :type="type"
+            :error-text="errorText"
             v-model="value" 
         />
-    </label>
+    </div>
 </template>
 
 <style lang="scss" scoped>

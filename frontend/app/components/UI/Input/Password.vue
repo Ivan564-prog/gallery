@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     const modelValue = defineModel<string | number>()
     defineProps<{
+        styleVariant?: 'default' | 'minimal' | 'big'
         placeholder?: string
         errorText?: string
     }>()
@@ -16,6 +17,7 @@
             :type="type" 
             :placeholder="placeholder" 
             :error-text="errorText"
+            :style-variant="styleVariant"
             v-model="modelValue"
         />
         <button 

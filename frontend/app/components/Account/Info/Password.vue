@@ -1,15 +1,41 @@
 <script lang="ts" setup>
+    const toastrStore = useToastrStore()
     const params = reactive({
-        password: '',
+        password1: '',
         password2: '',
     })
+    const errorInfo = ref<IResetPasswordErrors & IUserErrors>({})
+
+    const setPassword = async () => {
+        errorInfo.value = {}
+        try {
+            await request<IUser>('/api/v1/user/', 'PATCH', params)
+            toastrStore.showSuccess('Пароль успешно обновлен')
+            Object.keys(params).forEach(key => (params as any)[key] = '')
+        } catch (error) {
+            const errorMessage = (error as IHttpError<IResetPasswordErrors>).data.nonFieldErrors
+            if (errorMessage?.length)
+                toastrStore.showError(errorMessage[0]!)
+            errorInfo.value = (error as IHttpError<IUserErrors>).data
+        }
+    }
 </script>
 
 <template>
-    <form class="account-password">
+    <form class="account-password" @submit.prevent="setPassword">
         <div class="account-password__fields">
-            <AccountInfoContactsItem title="Изменить пароль" v-model="params.password" />
-            <AccountInfoContactsItem v-model="params.password2" />
+            <AccountInfoContactsItem 
+                placeholder="Придумайте новый пароль" 
+                title="Изменить пароль" 
+                type="password"
+                :error-text="errorInfo.password1 && errorInfo.password1[0]"
+                v-model="params.password1" 
+            />
+            <AccountInfoContactsItem 
+                placeholder="Повторите пароль" 
+                type="password"
+                v-model="params.password2" 
+            />
         </div>
         <UIButton 
             class="account-password__button"

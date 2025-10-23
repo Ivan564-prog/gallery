@@ -13,6 +13,7 @@
         </div>
         <ToastrError />
         <ToastrSuccess />
+        <WidgetСonfirm />
     </div>
 </template>
 

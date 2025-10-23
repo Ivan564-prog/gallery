@@ -1,21 +1,24 @@
 <script lang="ts" setup>
     const { type = 'text' } = defineProps<{
-        type?: 'text' | 'tel' | 'password'
+        type?: 'text' | 'tel' | 'password' | 'date'
         errorText?: string,
     }>()
 </script>
 
 <template>
-    <UIInputText 
-        v-if="type == 'text'" 
-        :error-text="errorText"
-    />
     <UIInputPhone 
-        v-else-if="type == 'tel'" 
+        v-if="type == 'tel'" 
+        :type="type"
         :error-text="errorText"
     />
     <UIInputPassword 
         v-else-if="type == 'password'" 
+        :type="type"
+        :error-text="errorText"
+    />
+    <UIInputText 
+        v-else 
+        :type="type"
         :error-text="errorText"
     />
 </template>

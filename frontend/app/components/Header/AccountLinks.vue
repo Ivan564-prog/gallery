@@ -1,22 +1,22 @@
 <script lang="ts" setup>
     const userStore = useUserStore()
-    const wishListStore = useWishlistStore()
+    const statsStore = useStatsStore()
     const socialList = computed(() => {
         if (userStore.userData?.role == 'root')
             return [
-                { id: 1, icon: 'hearth', link: '/favorites', count: 1, },
-                { id: 2, icon: 'bell', link: '/notifications', count: 1, },
+                { id: 1, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist, },
+                { id: 2, icon: 'bell', link: '/notifications', count: statsStore.stats?.newNotification, },
             ]
         else if (userStore.userData?.role == 'missionary')
              return [
-                { id: 1, icon: 'hearth', link: '/favorites', count: 1, },
+                { id: 1, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist, },
                 { id: 2, icon: 'bell', link: '/notifications', count: 1, },
             ]
         else 
             return [
-                { id: 1, icon: 'star', link: '/report', count: 1, },
-                { id: 2, icon: 'hearth', link: '/favorites', count: 1, },
-                { id: 3, icon: 'bell', link: '/notifications', count: 1, },
+                { id: 1, icon: 'star', link: '/report', count: statsStore.stats?.diariesReports, },
+                { id: 2, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist, },
+                { id: 3, icon: 'bell', link: '/notifications', count: statsStore.stats?.newNotification, },
             ]
 
     })
@@ -36,7 +36,7 @@
                 :to="item.link"
             >
                 <NuxtIcon class="account-link__icon" :name="item.icon" />
-                <p class="account-link__count p4">{{ item.count }}</p>
+                <p v-if="item.count" class="account-link__count p4">{{ item.count }}</p>
             </UILink>
             <UILink 
                 class="account-link account-link--personal-account"

@@ -20,6 +20,7 @@
         :class="{
             [`ui-input--variant-${styleVariant}`]: true,
             'ui-input--error': errorText,
+            'ui-input--readonly': readonly,
         }"
     >
         <input
@@ -74,12 +75,19 @@
         &--error {
             border-color: var(--color)
         }
+        &--readonly {
+            pointer-events: none;
+            #{$this}__value {
+                color: var(--gray-02)
+            }
+        }
         &__value {
             @include p2;
             & {
                 width: 100%;
                 height: 100%;
                 border: none;
+                appearance: none;
             }
         }
         &__placeholder {
