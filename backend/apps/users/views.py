@@ -64,7 +64,7 @@ class UserViewSet(ViewSet):
             return Response({
                 'status': 'created',
                 'invite': serializers.InviteSerializer(invite, context={'request': request}).data,
-            }.data, status=201)
+            }, status=201)
         elif User.objects.filter(email=email).get().status == 'missionary' and role_map[request.user.status] in ['chief', 'admin']:
             user = User.objects.filter(email=email).get()
             user.diocese = diocese
