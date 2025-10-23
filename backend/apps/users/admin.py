@@ -22,7 +22,7 @@ class UserAdmin(admin.ModelAdmin):
     form = UserForm
     
     def get_fieldsets(self, request, obj=None):
-        none_fields = (
+        default_fields = (
             ['is_active'],
             'is_staff', 'is_superuser',
             'email',
@@ -36,10 +36,10 @@ class UserAdmin(admin.ModelAdmin):
             'diocese',
             'new_password',)
         if request.user.is_authenticated and request.user.task_permission:
-            none_fields[0].append('task_permission')
+            default_fields[0].append('task_permission')
         return (
             (None, {
-                'fields': none_fields,
+                'fields': default_fields,
             }),
         )
     def save_model(self, request, obj, form, change):

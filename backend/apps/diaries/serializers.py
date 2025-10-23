@@ -52,3 +52,15 @@ class DiarySerializer(serializers.ModelSerializer):
             'updated_at',
             'created_at',
         )
+
+
+class DiaryCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Diary
+        exclude = (
+            'creator',
+            'published_at',
+            'created_at',
+            'updated_at',
+        )
