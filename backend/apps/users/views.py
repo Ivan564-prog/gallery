@@ -6,6 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.status import HTTP_404_NOT_FOUND
 from django.contrib.auth import authenticate, login, logout
 from apps.local_hierarchy.models import Diocese
+# from apps.local_hierarchy.serializers import InviteSerializer
 from apps.users.models import User
 from core.logger import logger
 
@@ -43,15 +44,31 @@ class UserViewSet(ViewSet):
             'root': 'admin',
         }
         email = request.data.get('email')
+        diocese = Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese
         if not User.objects.filter(email=email).exists():
             invite = models.Invite.objects.create(
                 invite_by=request.user,
                 email=request.data.get('email'),
-                diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
+                diocese=diocese,
                 role=role_map[request.user.status],
             )
             invite.send(request)
-            return Response(status=201)
+            return Response({
+                'status': 'created',
+                'invite': serializers.InviteSerializer(invite, context={'request': request}).data,
+            }, datastatus=201)
+        elif User.objects.filter(email=email).get().status == 'missionary' and role_map[request.user.status] in ['chief', 'admin']:
+            user = User.objects.filter(email=email).get()
+            user.diocese = diocese
+            if role_map[request.user.status] == 'chief':
+                user.chief_in = diocese
+            else:
+                user.admin_in = diocese
+            user.save()
+            return Response({
+                'status': 'updated',
+                'user':  serializers.UserListSerializer(user, context={'request': request}).data,
+            })
         else:
             return Response({'email': 'Такой пользователь уже существует'}, status=400)
     

@@ -3,7 +3,6 @@ from .models import Diocese, Metropolis
 from apps.users.models import User, Invite
 
 
-
 class DioceseSerializer(serializers.ModelSerializer):
 
     class Meta:

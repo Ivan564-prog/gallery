@@ -1,6 +1,6 @@
 from core.mixins import BaseModelViewSet
 from .models import Diocese, Metropolis
-from .serializer import DioceseSerializer, DioceseExtendSerializer, MetropolisSerializer
+from .serializers import DioceseSerializer, DioceseExtendSerializer, MetropolisSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
