@@ -43,7 +43,7 @@ class UserViewSet(ViewSet):
             'root': 'admin',
         }
         email = request.data.get('email')
-        if User.objects.filter(email=email).exists():
+        if not User.objects.filter(email=email).exists():
             invite = models.Invite.objects.create(
                 invite_by=request.user,
                 email=request.data.get('email'),
@@ -51,25 +51,25 @@ class UserViewSet(ViewSet):
                 role=role_map[request.user.status],
             )
             invite.send(request)
+            return Response(status=201)
         else:
-            Response({'email': 'Такой пользователь уже существует'}, status=400)
-        return Response(status=201)
+            return Response({'email': 'Такой пользователь уже существует'}, status=400)
     
-    @action(methods=['GET'], detail=False, url_path='invite')
-    def get_invite_list(self, request):
-        role_map = {
-            'chief': 'missionary',
-            'admin': 'chief',
-            'root': 'admin',
-        }
-        invite = models.Invite.objects.create(
-            invite_by=request.user,
-            email=request.data.get('email'),
-            diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
-            role=role_map[request.user.status],
-        )
-        invite.send(request)
-        return Response(status=201)
+    # @action(methods=['GET'], detail=False, url_path='invite')
+    # def get_invite_list(self, request):
+    #     role_map = {
+    #         'chief': 'missionary',
+    #         'admin': 'chief',
+    #         'root': 'admin',
+    #     }
+    #     invite = models.Invite.objects.create(
+    #         invite_by=request.user,
+    #         email=request.data.get('email'),
+    #         diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
+    #         role=role_map[request.user.status],
+    #     )
+    #     invite.send(request)
+    #     return Response(status=201)
     
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
@@ -113,3 +113,23 @@ class UserViewSet(ViewSet):
         user.set_password(data['password1'])
         user.save()
         return Response()
+    
+    @action(methods=['GET'], detail=False, url_path='dioces_users')
+    def get_diocese_users(self, request):
+        user = request.user
+        return Response({
+            'transfers': serializers.TransferSerializer(user.get_transfers(), many=True, context={"request": request}),
+            'invites': serializers.InviteSerializer(user.get_invites(), many=True),
+            'users': serializers.UserListSerializer(user.get_invite_users(), many=True, context={'request': request}),
+        })
+    
+    @action(methods=['PATCH'], detail=False, url_path='transfer_management/(?P<transfer_id>[^/.]+)')
+    def transfer_management(self, request, transfer_id):
+        actions = [
+            'accept',
+            'close',
+        ]
+        action = request.data.get('action')
+        if action in actions:
+            transfer = request.user.get_transfers().get(id=transfer_id, status='created')
+            getattr(transfer, action)()

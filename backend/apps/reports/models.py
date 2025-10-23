@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import datetime
+from core.logger import logger
 
 
 class Quarter(models.Model):
@@ -27,7 +28,7 @@ class Quarter(models.Model):
     def is_last_quarter(self):
         quarter_ids = [q.id for q in Quarter.objects.all().order_by('title')]
         current_index = quarter_ids.index(self.pk)
-        return current_index == len(quarter_ids)
+        return current_index == len(quarter_ids) - 1
     
     def get_next(self):
         quarter_ids = [q.id for q in Quarter.objects.all().order_by('title')]
@@ -52,7 +53,7 @@ class Quarter(models.Model):
         start_date = datetime.strptime(f'{start}.{year}', '%d.%m.%Y')
         end_date = datetime.strptime(f'{end}.{year}', '%d.%m.%Y')
         if start_date > end_date:
-            end_date = datetime.strptime(f'{end}.{year + 1}', '%d.%m.%Y')
+            start_date = datetime.strptime(f'{end}.{year - 1}', '%d.%m.%Y')
         return [start_date, end_date]
 
 
@@ -93,7 +94,10 @@ class Report(models.Model):
             self.start_period = datetime.strptime(f'{self.quarter.start_period}.{self.year}', '%d.%m.%Y').date()
             self.end_period = datetime.strptime(f'{self.quarter.end_period}.{self.year}', '%d.%m.%Y').date()
             self.start_send = datetime.strptime(f'{self.quarter.start_send}.{self.year}', '%d.%m.%Y').date()
-            self.start_send = datetime.strptime(f'{self.quarter.start_send}.{self.year}', '%d.%m.%Y').date()
+            end_send_year = self.year
+            if self.quarter.is_last_quarter and self.quarter.end_send.split('.')[1] == '01':
+                end_send_year += 1
+            self.end_send = datetime.strptime(f'{self.quarter.end_send}.{end_send_year}', '%d.%m.%Y').date()
         return super().save(*args, **kwargs)
     
     def toggle_diary(self, diary):
@@ -104,20 +108,23 @@ class Report(models.Model):
     
     @classmethod
     def get_current(cls, diocese, today=timezone.now()):
-        current_reports = cls.objects.filter(diocese=diocese, start_period__lte=today.date, end_send__gte=today.date())
-        if current_reports.fitler(is_sended=False).exists():
+        current_reports = cls.objects.filter(diocese=diocese, start_period__lte=today.date(), end_send__gte=today.date())
+        print(diocese.reports.all())
+        if current_reports.filter(is_sended=False).exists():
             # Возвращаем текущий не отправленный
-            return current_reports.fitler(is_sended=False).get()
-        elif current_reports.fitler(is_sended=True).exists():
+            logger.info('Возвращаем текущий не отправленный')
+            return current_reports.filter(is_sended=False).get()
+        elif current_reports.filter(is_sended=True).exists():
             # Возвращаем следующий так как текущий отправлен
-            curent_sended = current_reports.fitler(is_sended=True)
+            logger.info('Возвращаем следующий так как текущий отправлен')
+            curent_sended = current_reports.get(is_sended=True)
             year = curent_sended.year
             if curent_sended.quarter.is_last_quarter:
                 year += 1
-            return cls.objects.get_or_create(year=year, quarter=curent_sended.quarter.get_next())[0]
+            return cls.objects.get_or_create(diocese=diocese, year=year, quarter=curent_sended.quarter.get_next())[0]
         else:
+            logger.info('Текущий еще не создан, по этому создаем и возвращаем')
             # Текущий еще не создан, по этому создаем и возвращаем
-            
             quarter = Quarter.get_by_date(today)
             year = today.year
             if quarter.is_last_quarter and today.month == 0:

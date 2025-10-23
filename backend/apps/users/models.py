@@ -35,7 +35,7 @@ class Invite(models.Model):
     role = models.CharField(
         verbose_name='Роль', choices=ROLES)
     diocese = models.ForeignKey(
-        'local_hierarchy.Diocese', verbose_name='Епархия', on_delete=models.CASCADE)
+        'local_hierarchy.Diocese', verbose_name='Епархия', on_delete=models.CASCADE, related_name='invites')
     code = models.CharField(
         verbose_name='Код', unique=True, db_index=True)
     deadline = models.DateTimeField(  
@@ -71,7 +71,7 @@ class Invite(models.Model):
             }
         )
         to = [self.email]
-        send_mail.delay(subject, to, html_message)
+        # send_mail.delay(subject, to, html_message)
 
     def set_code(self, save=True):
         self.code = hashlib.sha256(secrets.token_bytes(16)).hexdigest()
@@ -135,7 +135,7 @@ class User(
     email = models.EmailField(
         verbose_name='Почта', max_length=255, unique=True)
     diocese = models.ForeignKey(
-        'local_hierarchy.Diocese', verbose_name='Епархия', on_delete=models.CASCADE, null=True, blank=True)
+        'local_hierarchy.Diocese', verbose_name='Епархия', related_name='users', on_delete=models.CASCADE, null=True, blank=True)
     
     name = models.CharField(
         verbose_name='Имя', null=True)
@@ -163,6 +163,21 @@ class User(
 
     def get_book_wishlist(self):
         return self.book_wishlist.get_or_create(user=self)[0]
+    
+    def get_inites(self):
+        related_diocese = self.get_related_diocese()
+        if related_diocese:
+            return related_diocese.filter(is_active=True).order_by('-deadline')
+    
+    def get_invite_users(self):
+        related_diocese = self.get_related_diocese()
+        if related_diocese:
+            return related_diocese.users.filter(is_active=True)
+        
+    def get_transfers(self):
+        related_diocese = self.get_related_diocese()
+        if related_diocese:
+            return related_diocese.transfers_to.filter(status='created')
 
     def get_diary_wishlist(self):
         return self.diary_wishlist.get_or_create(user=self)[0]
@@ -170,12 +185,15 @@ class User(
     def full_name(self):
         return ' '.join([self.surname or '', self.name or '', self.patronymic or ''])
     
-    def get_current_report(self):
+    def get_related_diocese(self):
         if hasattr(self, 'chief_in'):
-            return Report.get_current(self.chief_in)
+            return self.chief_in
         elif hasattr(self, 'admin_in'):
-            return Report.get_current(self.admin_in)
+            return self.admin_in
 
+    def get_current_report(self):
+        related_diocese = self.get_related_diocese()
+        return Report.get_current(related_diocese)
 
     @classmethod
     def has_user(cls, username_field):
@@ -207,6 +225,8 @@ class Transfer(TimestampModelMixin, models.Model):
         ('accepted', 'Переведен'),
         ('closed', 'Закрыт'),
     )
+    status = models.CharField(
+        verbose_name='Статус', choices=STATUSES, default='created')
     diocese_from = models.ForeignKey(
         'local_hierarchy.Diocese', verbose_name='Из епархии', on_delete=models.CASCADE, related_name='transfers_from')
     diocese_to = models.ForeignKey(
@@ -215,7 +235,7 @@ class Transfer(TimestampModelMixin, models.Model):
         User, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='transfers')
     by_user = models.ForeignKey(
         User, verbose_name='Кем переведен', on_delete=models.CASCADE, related_name='inited_transfers')
-    
+
     class Meta:
         verbose_name = 'Трансфер'
         verbose_name_plural = 'Трансферы'
@@ -223,6 +243,16 @@ class Transfer(TimestampModelMixin, models.Model):
     def __str__(self):
         return f'{self.user.email} из {self.diocese_from.title} в {self.diocese_to.title}({self.status})'
     
+    def accept(self):
+        self.user.diocese = self.user.diocese_to
+        self.user.save()
+        self.status = 'accepted'
+        self.save()
+
+    def close(self):
+        self.status = 'closed'
+        self.save()
+
 
 @receiver(post_migrate)
 def create_superuser(sender, **kwargs):

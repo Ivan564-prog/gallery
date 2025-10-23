@@ -145,3 +145,24 @@ class RegisterSerializer(UserSerializer):
         obj.set_password(password)
         obj.save()
         return obj
+
+
+class TransferSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = models.Transfer
+        fields = (
+            'id',
+            'user',
+        )
+
+
+class InviteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Invite
+        fields = (
+            'id',
+            'email',
+        )
