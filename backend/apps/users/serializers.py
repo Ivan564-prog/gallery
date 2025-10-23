@@ -4,7 +4,7 @@ from core.logger import logger
 from core.serializers import PhoneSerializerValidator, EmailSerializerValidator
 from django.contrib.auth import authenticate
 from django.utils import timezone
-from backend.apps.local_hierarchy.serializers import DioceseSerializer
+from apps.local_hierarchy.serializers import DioceseSerializer
 
 
 class AuthorizeSerializer(serializers.Serializer):

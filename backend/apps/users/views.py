@@ -17,12 +17,14 @@ class UserViewSet(ViewSet):
     username_field = models.User.USERNAME_FIELD
 
     def list(self, request):
+        """Отображение инормации о текущем пользователе"""
         if request.user.is_authenticated and request.user.is_active:
             return Response(
                 self.serializer_class(request.user, context={'request': request}).data)
         return Response()
     
     def patch(self, request):
+        """Изменение информации о текущем пользователе"""
         serializer = self.serializer_class(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -30,6 +32,7 @@ class UserViewSet(ViewSet):
     
     @action(methods=['POST'], detail=False)
     def register(self, request):
+        """Регистрация"""
         serializer = serializers.RegisterSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
@@ -38,6 +41,11 @@ class UserViewSet(ViewSet):
     
     @action(methods=['POST'], detail=False, url_path='invite')
     def send_invite(self, request):
+        """
+            Отправка приглашения пользователя
+            Если пользователь миссионер, а приглашение на должность выше, то пользователь изменяет свой статус
+            Старый аккаунт администрации или 
+        """
         role_map = {
             'chief': 'missionary',
             'admin': 'chief',
