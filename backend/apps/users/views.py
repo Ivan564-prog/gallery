@@ -55,22 +55,6 @@ class UserViewSet(ViewSet):
         else:
             return Response({'email': 'Такой пользователь уже существует'}, status=400)
     
-    # @action(methods=['GET'], detail=False, url_path='invite')
-    # def get_invite_list(self, request):
-    #     role_map = {
-    #         'chief': 'missionary',
-    #         'admin': 'chief',
-    #         'root': 'admin',
-    #     }
-    #     invite = models.Invite.objects.create(
-    #         invite_by=request.user,
-    #         email=request.data.get('email'),
-    #         diocese=Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese,
-    #         role=role_map[request.user.status],
-    #     )
-    #     invite.send(request)
-    #     return Response(status=201)
-    
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
         invites = models.Invite.objects.filter(code=request.GET.get('code'))
@@ -114,13 +98,24 @@ class UserViewSet(ViewSet):
         user.save()
         return Response()
     
+    @action(methods=['DELETE'], detail=False, url_path='invite/(?P<invite_id>[^/.]+)')
+    def disable_invite(self, request, invite_id):
+        try:
+            invite = request.user.get_invites().get(id=invite_id)
+        except:
+            return Response({'message': 'Приглашение не найдено'}, status=404)
+        invite.is_active = False
+        invite.save()
+        return Response(status=204)
+
+    
     @action(methods=['GET'], detail=False, url_path='dioces_users')
     def get_diocese_users(self, request):
         user = request.user
         return Response({
-            'transfers': serializers.TransferSerializer(user.get_transfers(), many=True, context={"request": request}),
-            'invites': serializers.InviteSerializer(user.get_invites(), many=True),
-            'users': serializers.UserListSerializer(user.get_invite_users(), many=True, context={'request': request}),
+            'transfers': serializers.TransferSerializer(user.get_transfers(), many=True, context={"request": request}).data,
+            'invites': serializers.InviteSerializer(user.get_invites(), many=True).data,
+            'users': serializers.UserListSerializer(user.get_invite_users(), many=True, context={'request': request}).data,
         })
     
     @action(methods=['PATCH'], detail=False, url_path='transfer_management/(?P<transfer_id>[^/.]+)')

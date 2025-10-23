@@ -57,7 +57,6 @@ class Invite(models.Model):
         elif self.role == 'admin_in':
             user.admin_in = self.diocese
         user.save()
-
     
     def send(self, request):
         subject = f'Приглашение в миссионерство'
@@ -71,7 +70,7 @@ class Invite(models.Model):
             }
         )
         to = [self.email]
-        # send_mail.delay(subject, to, html_message)
+        send_mail.delay(subject, to, html_message)
 
     def set_code(self, save=True):
         self.code = hashlib.sha256(secrets.token_bytes(16)).hexdigest()
@@ -164,10 +163,13 @@ class User(
     def get_book_wishlist(self):
         return self.book_wishlist.get_or_create(user=self)[0]
     
-    def get_inites(self):
-        related_diocese = self.get_related_diocese()
-        if related_diocese:
-            return related_diocese.filter(is_active=True).order_by('-deadline')
+    def get_invites(self):
+        if self.status == 'root':
+            return self.invites.filter(is_active=True)
+        else:
+            related_diocese = self.get_related_diocese()
+            if related_diocese:
+                return related_diocese.filter(is_active=True).order_by('-deadline')
     
     def get_invite_users(self):
         related_diocese = self.get_related_diocese()
