@@ -1,5 +1,6 @@
 <script lang="ts" setup>
     const currentTab = defineModel<number>({ required: true })
+    const confirmStore = useConfirmStore()
     const userStore = useUserStore()
     const tabList = computed(() => {
         switch (userStore.userData?.role) {
@@ -20,6 +21,21 @@
                 ]
         }
     })
+
+    const logout = async () => {
+        try {
+            await confirmStore.openConfirmModal(
+                'Подтверждение', 
+                'Вы действительно хотите выйти из аккаунта?'
+            )
+            await request('/api/v1/user/logout/', 'POST')
+            navigateTo('/login')
+        } catch {
+            return
+        }
+    }
+
+
 </script>
 
 <template>
@@ -42,7 +58,7 @@
                 </template>
             </div>
         </div>
-        <button class="account-head__logout-button logout-button">
+        <button class="account-head__logout-button logout-button" @click="logout">
             <span class="logout-button__text p2">Выйти из аккаунта</span>
             <NuxtIcon class="logout-button__icon" name="logout" />
         </button>
