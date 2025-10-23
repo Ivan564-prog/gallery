@@ -109,21 +109,18 @@ class Report(models.Model):
     @classmethod
     def get_current(cls, diocese, today=timezone.now()):
         current_reports = cls.objects.filter(diocese=diocese, start_period__lte=today.date(), end_send__gte=today.date())
-        print(diocese.reports.all())
+
         if current_reports.filter(is_sended=False).exists():
             # Возвращаем текущий не отправленный
-            logger.info('Возвращаем текущий не отправленный')
             return current_reports.filter(is_sended=False).get()
         elif current_reports.filter(is_sended=True).exists():
             # Возвращаем следующий так как текущий отправлен
-            logger.info('Возвращаем следующий так как текущий отправлен')
             curent_sended = current_reports.get(is_sended=True)
             year = curent_sended.year
             if curent_sended.quarter.is_last_quarter:
                 year += 1
             return cls.objects.get_or_create(diocese=diocese, year=year, quarter=curent_sended.quarter.get_next())[0]
         else:
-            logger.info('Текущий еще не создан, по этому создаем и возвращаем')
             # Текущий еще не создан, по этому создаем и возвращаем
             quarter = Quarter.get_by_date(today)
             year = today.year
