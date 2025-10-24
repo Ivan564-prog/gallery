@@ -233,7 +233,8 @@ class User(
 
     def get_current_report(self):
         related_diocese = self.get_related_diocese()
-        return Report.get_current(related_diocese)
+        if related_diocese:
+            return Report.get_current(related_diocese)
 
     @classmethod
     def has_user(cls, username_field):
