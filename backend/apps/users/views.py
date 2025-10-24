@@ -46,7 +46,12 @@ class UserViewSet(ViewSet):
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
-        serializer = getattr(serializers, f'Register{self.ROLE_MAP[request.user.role].capitalize()}Serializer')(data=request.data, context={"request": request})
+        code = request.data.get('code', None)
+        try:
+            invite = models.Invite.objects.get(code=code)
+        except:
+            Response({'code': 'Код не существует или срок его действия закончился'}, status=400)
+        serializer = getattr(serializers, f'Register{invite.role.capitalize()}Serializer')(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
         models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
