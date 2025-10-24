@@ -33,7 +33,7 @@ class UserViewSet(ViewSet):
     def destroy(self, request, pk=None):
         """Деактивация роли пользователя"""
         try:
-            object = models.User.objects.get(pk=pk, is_active=True)
+            object = request.user.get_related_users().get(pk=pk)
         except:
             return Response(status=404)
         object.is_active = False

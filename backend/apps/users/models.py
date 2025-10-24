@@ -170,6 +170,16 @@ class User(
             related_diocese = self.get_related_diocese()
             if related_diocese:
                 return related_diocese.filter(is_active=True).order_by('-deadline')
+            
+    def get_related_users(self):
+        if not self.is_active or self.status == 'missionary':
+            return User.objects.none()
+        if self.status == 'admin':
+            return User.objects.filter(pk=getattr(self.get_related_diocese(), 'chief', None), is_active=True)
+        if self.status == 'chief':
+            return self.get_related_diocese().users.filter(is_active=True)
+        if self.status == 'root':
+            return User.obects.filter(is_active=True)
     
     def get_invite_users(self):
         related_diocese = self.get_related_diocese()
