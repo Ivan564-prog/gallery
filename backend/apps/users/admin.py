@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from . import models
+from apps.local_hierarchy.models import Diocese
     
 
 class UserForm(forms.ModelForm):
@@ -16,10 +17,26 @@ class InviteAdmin(admin.ModelAdmin):
     pass
 
 
+class AdminInDioceseInline(admin.StackedInline):
+    model = Diocese
+    fk_name = 'admin'
+    extra = 0
+    verbose_name = 'Администратор в'
+    verbose_name_plural = verbose_name
+
+class ChiefInDioceseInline(admin.StackedInline):
+    model = Diocese
+    fk_name = 'chief'
+    extra = 0
+    verbose_name = 'Главный миссионер в'
+    verbose_name_plural = verbose_name
+
+
 @admin.register(models.User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'is_active', 'is_staff', 'is_superuser',)
     form = UserForm
+    inlines = (AdminInDioceseInline, ChiefInDioceseInline,)
     
     def get_fieldsets(self, request, obj=None):
         default_fields = (

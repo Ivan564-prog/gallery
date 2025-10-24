@@ -64,7 +64,7 @@ class Invite(models.Model):
             'mails/invite.html',
             {
                 'request': request,
-                'link': f'{request.scheme}://{request.get_host()}/registration?code={self.code}',
+                'link': f'{request.scheme}://{request.get_host()}/registration-{self.role}?code={self.code}',
                 'role': self.get_role_display(),
                 'diocese': self.diocese.title,
             }
@@ -196,11 +196,14 @@ class User(
     def reset_manage_role(self):
         if hasattr(self, 'chief_in'):
             diocese = self.chief_in
-        elif hasattr(self, 'admin_in'):
-            diocese = self.admin_in
-        if diocese:
             diocese.chief = None
             diocese.save()
+        elif hasattr(self, 'admin_in'):
+            diocese = self.admin_in
+            diocese.admin = None
+            diocese.save()
+            # print(diocese)
+            # print(diocese.admin)
 
 
     def get_current_report(self):

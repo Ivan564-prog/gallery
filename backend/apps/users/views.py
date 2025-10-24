@@ -30,6 +30,14 @@ class UserViewSet(ViewSet):
         serializer.save()
         return Response(serializer.data)
     
+    def remove(self, request):
+        """Деактивация роли пользователя"""
+        object = self.get_object()
+        object.is_active = False
+        object.reset_manage_role()
+        object.save()
+        return Response(status=204)
+    
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
@@ -87,7 +95,10 @@ class UserViewSet(ViewSet):
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
         invites = models.Invite.objects.filter(code=request.GET.get('code'))
-        return Response(invites.exists() and timezone.now() < invites.get().deadline)
+        return Response({
+            'success': invites.exists() and timezone.now() < invites.get().deadline,
+            'role': invites.get().role,
+        })
         
     @action(methods=['POST'], detail=False)
     def authorize(self, request):
