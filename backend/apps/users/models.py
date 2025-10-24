@@ -54,9 +54,9 @@ class Invite(models.Model):
         if self.role == 'admin':
             user.name = self.diocese.title
         user.diocese = self.diocese
-        if self.role == 'chief_in':
+        if self.role == 'chief':
             user.chief_in = self.diocese
-        elif self.role == 'admin_in':
+        elif self.role == 'admin':
             user.admin_in = self.diocese
         user.save()
     
@@ -168,7 +168,7 @@ class User(
             'admin': 'chief',
             'root': 'admin',
             'missionary': None
-        }[self.status]
+        }[self.role]
     
     def deactivate(self):
         object.is_active = False
@@ -179,7 +179,7 @@ class User(
         return self.book_wishlist.get_or_create(user=self)[0]
     
     def get_invites(self):
-        if self.status == 'root':
+        if self.role == 'root':
             return self.invites.filter(is_active=True)
         else:
             related_diocese = self.get_related_diocese()
@@ -187,13 +187,13 @@ class User(
                 return related_diocese.filter(is_active=True).order_by('-deadline')
             
     def get_related_users(self):
-        if not self.is_active or self.status == 'missionary':
+        if not self.is_active or self.role == 'missionary':
             return User.objects.none()
-        if self.status == 'admin':
+        if self.role == 'admin':
             return User.objects.filter(pk=getattr(self.get_related_diocese(), 'chief', None), is_active=True)
-        if self.status == 'chief':
+        if self.role == 'chief':
             return self.get_related_diocese().users.filter(is_active=True, admin_in__isnull=True)
-        if self.status == 'root':
+        if self.role == 'root':
             return User.obects.filter(is_active=True)
     
     def get_invite_users(self):
@@ -241,7 +241,7 @@ class User(
         return cls.objects.filter(is_active=True).filter(**{cls.USERNAME_FIELD: username_field.lower()})
     
     @property
-    def status(self):
+    def role(self):
         if hasattr(self, 'chief_in'):
             return 'chief'
         elif hasattr(self, 'admin_in'):

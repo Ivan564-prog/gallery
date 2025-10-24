@@ -89,9 +89,9 @@ class Diocese(models.Model):
             self._set_role(user, role)
             return [True, 'Пользователь восстановлен и роль установлена']
         else:
-            if user.status in ['chief', 'admin', 'root']:
+            if user.role in ['chief', 'admin', 'root']:
                 return [False, 'Пользователь уже имеет управляющую роль']
-            elif user.status == 'missionary' and role == 'missionary':
+            elif user.role == 'missionary' and role == 'missionary':
                 return [False, 'Пользователь уже является миссионером']
             else:
                 self._set_role(user, role)

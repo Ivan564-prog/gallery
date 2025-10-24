@@ -13,7 +13,7 @@ class ReportViewSet(BaseModelViewSet):
     def get_queryset(self):
         queryset = models.Report.objects.all()
         user = self.request.user
-        if user.status in ['chief', 'admin']:
+        if user.role in ['chief', 'admin']:
             queryset = queryset.filter(diocese=user.chief_in or user.admin_in)
         queryset = self.search(queryset)
         return queryset

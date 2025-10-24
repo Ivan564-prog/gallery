@@ -30,7 +30,7 @@ class BookModelViewSet(BaseModelViewSet):
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
         queryset = queryset.exclude(status='deleted')
-        if self.request.user.status != 'root':
+        if self.request.user.role != 'root':
             queryset = queryset.exclude(status='draft')
         book_type_id = self.request.GET.get('book_type')
         if book_type_id:

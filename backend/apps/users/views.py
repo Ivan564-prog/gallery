@@ -46,7 +46,7 @@ class UserViewSet(ViewSet):
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
-        serializer = getattr(serializers, f'Register{self.ROLE_MAP[request.user.status].capitalize()}Serializer')(data=request.data, context={"request": request})
+        serializer = getattr(serializers, f'Register{self.ROLE_MAP[request.user.role].capitalize()}Serializer')(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
         models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
@@ -62,7 +62,7 @@ class UserViewSet(ViewSet):
             Если пользователь старший миссионер, администрация или главный админ - ошибка
         """
         email = request.data.get('email')
-        diocese = Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese
+        diocese = Diocese.objects.get(pk=request.data.get('diocese')) if request.user.role == 'root' else request.user.diocese
         try:
             user = User.objects.get(email=email)
         except:
@@ -72,7 +72,7 @@ class UserViewSet(ViewSet):
                 invite_by=request.user,
                 email=request.data.get('email'),
                 diocese=diocese,
-                role=self.ROLE_MAP[request.user.status],
+                role=self.ROLE_MAP[request.user.role],
             )
             invite.send(request)
             return Response({
@@ -81,7 +81,7 @@ class UserViewSet(ViewSet):
                 'invite': serializers.InviteSerializer(invite, context={'request': request}).data,
             }, status=201)
         else:
-            success, message = diocese.set_role(user, self.ROLE_MAP[request.user.status])
+            success, message = diocese.set_role(user, self.ROLE_MAP[request.user.role])
             if success:
                 return Response(
                     {
