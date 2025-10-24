@@ -51,6 +51,8 @@ class Invite(models.Model):
     def set_fields(self, user):
         self.is_active = False
         self.save()
+        if self.role == 'admin':
+            self.name = self.diocese.title
         user.diocese = self.diocese
         if self.role == 'chief_in':
             user.chief_in = self.diocese
