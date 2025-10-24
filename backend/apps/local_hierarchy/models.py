@@ -69,6 +69,8 @@ class Diocese(models.Model):
     def _set_role(self, user, role):
         user.is_active = True
         user.diocese = self
+        user.chief_in = None
+        user.admin_in = None
         user.save()
         if role in ['chief', 'admin']:
             setattr(self, role, user)
