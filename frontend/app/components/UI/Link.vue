@@ -20,12 +20,7 @@
 </script>
 
 <template>
-    <NuxtLink
-        v-if="!isModal"
-        :to="link"
-        class="link"
-        :target="isBlank ? '_blank' : null"
-    >
+    <NuxtLink v-if="!isModal" :to="link" class="link" :target="isBlank ? '_blank' : null">
         <slot></slot>
     </NuxtLink>
     <span v-else class="link" @click="openModal">
@@ -33,5 +28,4 @@
     </span>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

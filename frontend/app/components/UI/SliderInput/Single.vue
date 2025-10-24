@@ -3,7 +3,7 @@
     const { minValue, maxValue, step } = defineProps<{
         minValue: number
         maxValue: number
-        step: number,
+        step: number
     }>()
     const handleOffset = ref<number>(0)
     const handleMin = ref<number>(0)
@@ -12,24 +12,26 @@
     const pxStep = ref<number>(1)
 
     const updateValue = () => {
-        modelValue.value = Math.round((maxValue - minValue) * handleOffset.value / barElement.value!.clientWidth + minValue)
+        modelValue.value = Math.round(
+            ((maxValue - minValue) * handleOffset.value) / barElement.value!.clientWidth + minValue,
+        )
     }
 
     const setHandlesByValue = () => {
-        if (barElement.value){
-            handleOffset.value = (modelValue.value - minValue) / (maxValue - minValue) * barElement.value.clientWidth
+        if (barElement.value) {
+            handleOffset.value =
+                ((modelValue.value - minValue) / (maxValue - minValue)) * barElement.value.clientWidth
         }
     }
 
     watch(modelValue, setHandlesByValue)
-
 
     onMounted(() => {
         if (barElement.value) {
             handleMin.value = barElement.value.getBoundingClientRect().left
             handleMax.value = handleMin.value + barElement.value.clientWidth
             setHandlesByValue()
-            pxStep.value = step / (maxValue - minValue) * barElement.value.clientWidth
+            pxStep.value = (step / (maxValue - minValue)) * barElement.value.clientWidth
         }
     })
 </script>
@@ -73,7 +75,7 @@
             height: 2px;
             background-color: #e4e4e4;
         }
-        &__progress{
+        &__progress {
             background-color: #62ee46;
             position: absolute;
             left: 0;

@@ -8,11 +8,7 @@
 <template>
     <div class="ui-textarea">
         <p v-if="placeholder" class="ui-textarea__placeholder">{{ placeholder }}</p>
-        <textarea 
-            class="ui-textarea__field" 
-            placeholder=""
-            v-model="modelValue" 
-        ></textarea>
+        <textarea class="ui-textarea__field" placeholder="" v-model="modelValue"></textarea>
     </div>
 </template>
 

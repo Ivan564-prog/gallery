@@ -3,7 +3,7 @@
     const { minValue, maxValue, step } = defineProps<{
         minValue: number
         maxValue: number
-        step: number,
+        step: number
     }>()
     const handleOffset1 = ref<number>(0)
     const handleOffset2 = ref<number>(0)
@@ -13,28 +13,33 @@
     const pxStep = ref<number>(1)
 
     const updateValue1 = () => {
-        modelValue.value[0] = Math.round((maxValue - minValue) * handleOffset1.value / barElement.value!.clientWidth + minValue)
+        modelValue.value[0] = Math.round(
+            ((maxValue - minValue) * handleOffset1.value) / barElement.value!.clientWidth + minValue,
+        )
     }
     const updateValue2 = () => {
-        modelValue.value[1] = Math.round((maxValue - minValue) * handleOffset2.value / barElement.value!.clientWidth + minValue)
+        modelValue.value[1] = Math.round(
+            ((maxValue - minValue) * handleOffset2.value) / barElement.value!.clientWidth + minValue,
+        )
     }
 
     const setHandlesByValue = () => {
-        if (barElement.value){
-            handleOffset1.value = (modelValue.value[0] - minValue) / (maxValue - minValue) * barElement.value.clientWidth
-            handleOffset2.value = (modelValue.value[1] - minValue) / (maxValue - minValue) * barElement.value.clientWidth
+        if (barElement.value) {
+            handleOffset1.value =
+                ((modelValue.value[0] - minValue) / (maxValue - minValue)) * barElement.value.clientWidth
+            handleOffset2.value =
+                ((modelValue.value[1] - minValue) / (maxValue - minValue)) * barElement.value.clientWidth
         }
     }
 
-    watch(modelValue, setHandlesByValue, {deep: true})
-
+    watch(modelValue, setHandlesByValue, { deep: true })
 
     onMounted(() => {
         if (barElement.value) {
             handleMin.value = barElement.value.getBoundingClientRect().left
             handleMax.value = handleMin.value + barElement.value.clientWidth
             setHandlesByValue()
-            pxStep.value = step / (maxValue - minValue) * barElement.value.clientWidth
+            pxStep.value = (step / (maxValue - minValue)) * barElement.value.clientWidth
         }
     })
 </script>
@@ -43,7 +48,10 @@
     <div class="range-slider">
         <div class="range-slider__wrapper">
             <div class="range-slider__bar" ref="barElement"></div>
-            <div class="range-slider__progress" :style="`left: ${handleOffset1}px ;width: ${handleOffset2 - handleOffset1}px;`"></div>
+            <div
+                class="range-slider__progress"
+                :style="`left: ${handleOffset1}px ;width: ${handleOffset2 - handleOffset1}px;`"
+            ></div>
             <div class="range-slider__handles">
                 <!-- totalMax для всего текущего расчета maxValue только при ограничении значения -->
                 <UISliderInputHandle
@@ -89,7 +97,7 @@
             height: 2px;
             background-color: #e4e4e4;
         }
-        &__progress{
+        &__progress {
             background-color: #62ee46;
             position: absolute;
             left: 0;

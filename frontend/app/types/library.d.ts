@@ -36,7 +36,7 @@ declare global {
         type: number | null
     }
 
-     interface IEditorBook {
+    interface IEditorBook {
         title: string
         shortDescription: string
         description: string

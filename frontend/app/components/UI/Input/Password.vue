@@ -13,21 +13,17 @@
 
 <template>
     <div class="ui-input-password">
-        <UIInputBase 
-            :type="type" 
-            :placeholder="placeholder" 
+        <UIInputBase
+            :type="type"
+            :placeholder="placeholder"
             :error-text="errorText"
             :style-variant="styleVariant"
             v-model="modelValue"
         />
-        <button 
-            class="ui-input-password__toggle" 
-            type="button"
-            @click="toggleSecret"
-        >
-            <NuxtIcon 
-                class="ui-input-password__icon" 
-                name="eye" 
+        <button class="ui-input-password__toggle" type="button" @click="toggleSecret">
+            <NuxtIcon
+                class="ui-input-password__icon"
+                name="eye"
                 :class="{
                     'ui-input-password__icon--active': type === 'text',
                 }"

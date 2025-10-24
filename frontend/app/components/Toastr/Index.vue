@@ -7,12 +7,8 @@
     <Transition name="toastr">
         <div class="toastr" v-if="isShowed">
             <slot></slot>
-            <UIButton 
-                class="toastr__button" 
-                color-variant="empty-red"
-                @click="toastrStore.closeToastr"
-            >
-                {{ `Закрыть (${(Math.round(toastrStore.timer / 1000))})` }}
+            <UIButton class="toastr__button" color-variant="empty-red" @click="toastrStore.closeToastr">
+                {{ `Закрыть (${Math.round(toastrStore.timer / 1000)})` }}
             </UIButton>
         </div>
     </Transition>

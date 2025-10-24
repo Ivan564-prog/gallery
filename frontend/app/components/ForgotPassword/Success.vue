@@ -16,14 +16,24 @@
     <ModalInfo v-model="isOpened">
         <div class="reset-password-modal">
             <h3 class="reset-password-modal h1">Проверьте почту</h3>
-            <p class="reset-password-modal__text p1">Мы отправили письмо с ссылкой для восстановления. <br> Перейдите по ней, чтобы создать новый пароль.</p>
-            <p class="reset-password-modal__subtext p2">*Если письмо не пришло в течение нескольких минут, проверьте <br> папку «Спам» или «Промоакции».</p>
-            <UIButton 
+            <p class="reset-password-modal__text p1">
+                Мы отправили письмо с ссылкой для восстановления.
+                <br />
+                Перейдите по ней, чтобы создать новый пароль.
+            </p>
+            <p class="reset-password-modal__subtext p2">
+                *Если письмо не пришло в течение нескольких минут, проверьте
+                <br />
+                папку «Спам» или «Промоакции».
+            </p>
+            <UIButton
                 class="reset-password-modal__button"
                 color-variant="empty-black"
                 width-mode="full"
                 @click="closeModal"
-            >Хорошо</UIButton>
+            >
+                Хорошо
+            </UIButton>
         </div>
     </ModalInfo>
 </template>

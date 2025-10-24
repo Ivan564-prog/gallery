@@ -32,7 +32,7 @@
         ref="map"
         :settings="{
             location: {
-                center: coordinates[0]?.coords as LngLat || [55.755864, 37.617698],
+                center: (coordinates[0]?.coords as LngLat) || [55.755864, 37.617698],
                 zoom: 9,
             },
         }"

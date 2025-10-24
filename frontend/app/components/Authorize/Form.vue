@@ -10,11 +10,7 @@
         errorInfo.value = {}
         isLoading.value = true
         try {
-            await request(
-                '/api/v1/user/authorize/', 
-                'POST', 
-                params
-            )
+            await request('/api/v1/user/authorize/', 'POST', params)
             navigateTo('/')
         } catch (error) {
             errorInfo.value = (error as IHttpError<IAuthorizeErrors>).data
@@ -27,30 +23,28 @@
     <form class="authorize-form" @submit.prevent="authorization">
         <UILoader v-if="isLoading" class="authorize-form__loader" />
         <h2 class="authorize-form__title h1">Авторизация</h2>
-        <p class="authorize-form__text p2">Для входа необходимо ввести адрес <br> электронной почты и пароль</p>
+        <p class="authorize-form__text p2">
+            Для входа необходимо ввести адрес
+            <br />
+            электронной почты и пароль
+        </p>
         <div class="authorize-form__fields">
-            <UIInput 
-                class="authorize-form__input" 
+            <UIInput
+                class="authorize-form__input"
                 placeholder="Почта"
                 :error-text="errorInfo.email && errorInfo.email[0]"
                 v-model="params.email"
             />
-            <UIInput 
-                class="authorize-form__input" 
-                type="password" 
+            <UIInput
+                class="authorize-form__input"
+                type="password"
                 placeholder="Пароль"
                 :error-text="errorInfo.password && errorInfo.password[0]"
                 v-model="params.password"
             />
         </div>
-        <UILink 
-           class="authorize-form__link p2"
-           to="/forgot-password"
-        >Забыли пароль?</UILink>
-        <UIButton 
-            class="authorize-form__button"
-            width-mode="full"
-        >Войти</UIButton>
+        <UILink class="authorize-form__link p2" to="/forgot-password">Забыли пароль?</UILink>
+        <UIButton class="authorize-form__button" width-mode="full">Войти</UIButton>
     </form>
 </template>
 

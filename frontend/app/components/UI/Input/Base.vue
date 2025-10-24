@@ -1,8 +1,8 @@
 <script lang="ts" setup>
     const modelValue = defineModel<string | number>()
     const input = defineModel<HTMLInputElement>('input')
-    const { 
-        type = 'text', 
+    const {
+        type = 'text',
         readonly = false,
         styleVariant = 'default',
     } = defineProps<{
@@ -15,7 +15,7 @@
 </script>
 
 <template>
-    <label 
+    <label
         class="ui-input"
         :class="{
             [`ui-input--variant-${styleVariant}`]: true,
@@ -73,12 +73,12 @@
             }
         }
         &--error {
-            border-color: var(--color)
+            border-color: var(--color);
         }
         &--readonly {
             pointer-events: none;
             #{$this}__value {
-                color: var(--gray-02)
+                color: var(--gray-02);
             }
         }
         &__value {

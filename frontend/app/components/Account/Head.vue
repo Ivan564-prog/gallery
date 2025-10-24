@@ -24,18 +24,13 @@
 
     const logout = async () => {
         try {
-            await confirmStore.openConfirmModal(
-                'Подтверждение', 
-                'Вы действительно хотите выйти из аккаунта?'
-            )
+            await confirmStore.openConfirmModal('Подтверждение', 'Вы действительно хотите выйти из аккаунта?')
             await request('/api/v1/user/logout/', 'POST')
             navigateTo('/login')
         } catch {
             return
         }
     }
-
-
 </script>
 
 <template>
@@ -47,14 +42,16 @@
                 </template>
                 <template v-else>
                     <button
-                        v-for="tab in tabList" 
+                        v-for="tab in tabList"
                         class="account-head__tab h3"
                         :key="tab.id"
                         :class="{
                             'account-head__tab--active': currentTab === tab.id,
                         }"
                         @click="currentTab = tab.id"
-                    >{{ tab.title }}</button>
+                    >
+                        {{ tab.title }}
+                    </button>
                 </template>
             </div>
         </div>
@@ -100,7 +97,7 @@
                 color: var(--color);
             }
             &:before {
-                content: "";
+                content: '';
                 position: absolute;
                 left: -100%;
                 bottom: 0;

@@ -5,25 +5,21 @@
             return {
                 inWishlist: true,
             }
-        else 
+        else
             return {
                 bookType: bookType.value,
             }
     })
-    
-    
+
     const { data: bookList, refresh } = await useRequest<IBook[]>(
-        '/api/v1/library/book/', 
-        'GET', 
-        requestParams
-    )     
+        '/api/v1/library/book/',
+        'GET',
+        requestParams,
+    )
     const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
 
     const addNewBook = (book: IBook) => {
-        bookList.value = [
-            book,
-            ...bookList.value,
-        ]
+        bookList.value = [book, ...bookList.value]
     }
 
     const removeBook = (book: IBook) => {
@@ -32,44 +28,32 @@
 
     const toggleWishlist = (bookId: number, status: boolean) => {
         bookList.value = bookList.value.map(book => {
-                return book.id === bookId 
+            return book.id === bookId
                 ? {
-                    ...book,
-                    onWishlist: status,
-                }
+                      ...book,
+                      onWishlist: status,
+                  }
                 : book
         })
     }
 
-    watch(() => requestParams.value, async () => {
-        await refresh()
-    })
+    watch(
+        () => requestParams.value,
+        async () => {
+            await refresh()
+        },
+    )
 </script>
 
 <template>
     <section class="library">
-        <LibraryHead 
-            class="library__head" 
-            :type-list="typeList"
-            v-model="bookType" 
-        />
-        <LibraryList 
-            v-if="bookList?.length"
-            :book-list="bookList" 
-        />
+        <LibraryHead class="library__head" :type-list="typeList" v-model="bookType" />
+        <LibraryList v-if="bookList?.length" :book-list="bookList" />
         <UIEmptyBanner v-else />
         <Teleport to="body">
-            <LibraryDetail 
-                @toggle-wishlist="toggleWishlist"
-            />
-            <LibraryBookCreator 
-                :type-list="typeList"
-                @add-new-book="addNewBook"
-            />
-            <LibraryBookEditor 
-                :type-list="typeList"
-                @remove-book="removeBook"
-            />
+            <LibraryDetail @toggle-wishlist="toggleWishlist" />
+            <LibraryBookCreator :type-list="typeList" @add-new-book="addNewBook" />
+            <LibraryBookEditor :type-list="typeList" @remove-book="removeBook" />
         </Teleport>
     </section>
 </template>

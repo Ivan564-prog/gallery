@@ -1,12 +1,7 @@
-<script lang="ts" setup>
-    
-</script>
+<script lang="ts" setup></script>
 
 <template>
-    <section class="diary">
-    </section>
+    <section class="diary"></section>
 </template>
 
-<style lang="scss" scoped>
-    
-</style>
+<style lang="scss" scoped></style>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    const modelValue = defineModel<IDioceseExtend>({ required: true })    
+    const modelValue = defineModel<IDioceseExtend>({ required: true })
     const toastrStore = useToastrStore()
     const inviteParams = reactive({
         diocese: modelValue.value.id,
@@ -9,14 +9,17 @@
     const sendInvite = async () => {
         try {
             const response = await request<IInviteResponse>('/api/v1/user/invite/', 'POST', inviteParams)
-            if (response.status === 'created')
-                modelValue.value.invite = response.invite!
-            else 
-                modelValue.value.admin = {
-                    id: response.user?.id!,
-                    image: response.user?.image || null,
-                    email: response.user?.email!,
-                }
+            modelValue.value = {
+                ...modelValue.value,
+                ...(response.status === 'created'
+                    ? { invite: response.invite! }
+                    : {
+                          id: response.user?.id!,
+                          image: response.user?.image || null,
+                          email: response.user?.email!,
+                      }),
+            }
+            toastrStore.showSuccess(response.message)
         } catch {
             toastrStore.showError('Ошибка приглашения')
         }
@@ -24,10 +27,23 @@
 
     const removeInvite = async () => {
         try {
-            const response = await request<IInviteResponse>(`/api/v1/user/invite/${modelValue.value.invite?.id}`, 'DELETE')
-            modelValue.value.invite = null
+            await request<IInviteResponse>(`/api/v1/user/invite/${modelValue.value.invite?.id}/`, 'DELETE')
+            modelValue.value = {
+                ...modelValue.value,
+                invite: null,
+            }
+            toastrStore.showSuccess('Приглашение успешно удалено')
         } catch {
             toastrStore.showError('Приглашение не найдено')
+        }
+    }
+
+    const removeAdmin = async () => {
+        try {
+            await request<IInviteResponse>(`/api/v1/user/${modelValue.value.invite?.id}/`, 'DELETE')
+            toastrStore.showSuccess('Пользователь успешно удален')
+        } catch {
+            toastrStore.showError('Не удалось удалить пользователя')
         }
     }
 </script>
@@ -40,15 +56,15 @@
         </div>
         <div v-if="modelValue.invite" class="diocese-item__panel">
             <p class="diocese-item__email p2 p2--bold">{{ modelValue.invite.email }}</p>
-            <UIButton 
-                class="diocese-item__button" 
-                color-variant="empty-black" 
-                @click="removeInvite"
-            >Приглашен</UIButton>
+            <UIButton class="diocese-item__button" color-variant="empty-black" @click="removeInvite">
+                Приглашен
+            </UIButton>
         </div>
         <div v-else-if="modelValue.admin" class="diocese-item__panel">
             <p class="diocese-item__email p2 p2--bold">{{ modelValue.admin.email }}</p>
-            <UIButton class="diocese-item__button" color-variant="gray">Удалить</UIButton>
+            <UIButton class="diocese-item__button" color-variant="gray" @click="removeAdmin">
+                Удалить
+            </UIButton>
         </div>
         <form v-else class="diocese-item__panel" @submit.prevent="sendInvite">
             <UIInput class="diocese-item__input" placeholder="Почта" v-model="inviteParams.email" />

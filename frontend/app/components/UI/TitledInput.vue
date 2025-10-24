@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-    const {
-        variant = 'center',
-    } = defineProps<{
+    const { variant = 'center' } = defineProps<{
         icon: string
         text: string
         variant?: 'center' | 'flex-start'
@@ -10,20 +8,22 @@
 </script>
 
 <template>
-    <div 
-        class="titled-input" 
+    <div
+        class="titled-input"
         :style="{
             'align-items': variant,
         }"
     >
         <div class="titled-input__content">
             <NuxtIcon class="titled-input__content-icon" :name="icon" />
-            <span 
+            <span
                 class="titled-input__content-text p2"
                 :class="{
                     'titled-input__content-text--error': errorText,
                 }"
-            >{{ text }}</span>
+            >
+                {{ text }}
+            </span>
         </div>
         <div class="titled-input__field">
             <slot></slot>

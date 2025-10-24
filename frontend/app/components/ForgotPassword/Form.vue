@@ -10,11 +10,7 @@
         errorInfo.value = {}
         isLoading.value = true
         try {
-            await request(
-                '/api/v1/user/send_reset_password/', 
-                'POST', 
-                params
-            )
+            await request('/api/v1/user/send_reset_password/', 'POST', params)
             modalStore.openedModal = 'forgot-password-success'
         } catch (error) {
             errorInfo.value = (error as IHttpError<IForgotPasswordErrors>).data
@@ -27,19 +23,20 @@
     <form class="authorize-form" @submit.prevent="authorization">
         <UILoader v-if="isLoading" class="authorize-form__loader" />
         <h2 class="authorize-form__title h1">Забыли пароль?</h2>
-        <p class="authorize-form__text p2">Введите адрес электронной почты, с которым <br> вы регистрировались.</p>
+        <p class="authorize-form__text p2">
+            Введите адрес электронной почты, с которым
+            <br />
+            вы регистрировались.
+        </p>
         <div class="authorize-form__fields">
-            <UIInput 
-                class="authorize-form__input" 
+            <UIInput
+                class="authorize-form__input"
                 placeholder="Почта"
                 :error-text="errorInfo.email && errorInfo.email[0]"
                 v-model="params.email"
             />
         </div>
-        <UIButton 
-            class="authorize-form__button"
-            width-mode="full"
-        >Отправить письмо</UIButton>
+        <UIButton class="authorize-form__button" width-mode="full">Отправить письмо</UIButton>
     </form>
 </template>
 

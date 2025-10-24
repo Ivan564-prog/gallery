@@ -2,10 +2,10 @@
     const modelValue = defineModel<string | number>()
     const text = ref<string>('')
     const isOpened = ref<boolean>(false)
-    const { 
-        readonly = true, 
-        items, 
-        empty 
+    const {
+        readonly = true,
+        items,
+        empty,
     } = defineProps<{
         items: {
             [key: string | number]: string
@@ -21,8 +21,7 @@
         modelValue.value = key
         isOpened.value = false
     }
-    if (modelValue.value)
-        select(modelValue.value)
+    if (modelValue.value) select(modelValue.value)
 
     if (!empty && !modelValue.value) {
         modelValue.value = Object.keys(items)[0]
@@ -69,17 +68,15 @@
                 >
                     <span class="ui-select-item__text p2">—</span>
                 </div>
-                <div 
-                    v-for="itemKey in filteredItemKeys" 
-                    class="ui-select-item" 
+                <div
+                    v-for="itemKey in filteredItemKeys"
+                    class="ui-select-item"
                     :class="{
-                        'ui-select-item--active': itemKey === modelValue
+                        'ui-select-item--active': itemKey === modelValue,
                     }"
                     @click="select(itemKey)"
                 >
-                    <span
-                        class="ui-select-item__text p2" 
-                    >{{ items[itemKey] }}</span>
+                    <span class="ui-select-item__text p2">{{ items[itemKey] }}</span>
                 </div>
             </div>
         </div>

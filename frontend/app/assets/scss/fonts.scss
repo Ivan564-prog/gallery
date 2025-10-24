@@ -1,6 +1,7 @@
 @font-face {
     font-family: 'Golos Text';
-    src: url('/fonts/Golos/GolosText-Medium.woff2') format('woff2'),
+    src:
+        url('/fonts/Golos/GolosText-Medium.woff2') format('woff2'),
         url('/fonts/Golos/GolosText-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
@@ -9,10 +10,10 @@
 
 @font-face {
     font-family: 'Golos Text';
-    src: url('/fonts/Golos/GolosText-Regular.woff2') format('woff2'),
+    src:
+        url('/fonts/Golos/GolosText-Regular.woff2') format('woff2'),
         url('/fonts/Golos/GolosText-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
-

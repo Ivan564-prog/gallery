@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-    const { 
-        to, 
+    const {
+        to,
         widthMode = 'auto',
         colorVariant = 'default',
         fontSize = 'default',
@@ -19,19 +19,16 @@
 </script>
 
 <template>
-    <component 
-        class="ui-button" 
-        :is="tag" 
-        :to="to" 
+    <component
+        class="ui-button"
+        :is="tag"
+        :to="to"
         :class="`
             ui-button--width-${widthMode} 
             ui-button--colorVariant-${colorVariant} 
         `"
     >
-        <span 
-            class="ui-button__text"
-            :class="`ui-button__text--size-${fontSize}`"
-        >
+        <span class="ui-button__text" :class="`ui-button__text--size-${fontSize}`">
             <slot></slot>
         </span>
     </component>

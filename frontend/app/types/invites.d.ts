@@ -21,6 +21,7 @@ declare global {
 
     interface IInviteResponse {
         status: 'created' | 'updated'
+        message: string
         invite?: IDioceseInvite
         user?: IUser
     }

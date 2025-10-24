@@ -30,14 +30,14 @@ declare global {
     }
 
     interface IStats {
-        newNotification: number 
-        newBooks: number 
-        newWishlist: number 
+        newNotification: number
+        newBooks: number
+        newWishlist: number
         diariesReports: number | null
     }
 
     interface IDiocese {
-        id: number,
-        title: string,
+        id: number
+        title: string
     }
 }

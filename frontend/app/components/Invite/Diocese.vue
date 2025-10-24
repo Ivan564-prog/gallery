@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-    // const { data: dioceseAccountList, status } = await useRequest<IDioceseExtend[]>('/api/v1/local_hierarchy/diocese/account/')
-
     const { data: dioceseAccountList, status } = useAsyncData(
         'diocese-accounts',
-        () => request<IDioceseExtend[]>('/api/v1/local_hierarchy/diocese/account/')
+        () => request<IDioceseExtend[]>('/api/v1/local_hierarchy/diocese/account/'),
+        {
+            deep: true,
+        },
     )
 </script>
 
@@ -12,15 +13,14 @@
         <template v-if="status === 'success'">
             <WidgetSearch class="invite-diocese__search" />
             <div v-if="dioceseAccountList?.length" class="invite-diocese__list">
-                 <InviteDioceseItem 
-                    v-for="account, index in dioceseAccountList"
+                <InviteDioceseItem
+                    v-for="(account, index) in dioceseAccountList"
                     :key="account.id"
                     v-model="dioceseAccountList[index]"
-                 />   
+                />
             </div>
         </template>
-        <!-- -if="status === 'pending'" -->
-        <UILoader v-else class="invite-diocese__loader" />
+        <UILoader v-else-if="status === 'pending'" class="invite-diocese__loader" />
     </div>
 </template>
 

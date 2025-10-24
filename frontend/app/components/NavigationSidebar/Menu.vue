@@ -5,31 +5,49 @@
     const menuList = computed(() => {
         if (userStore.userData?.role == 'root')
             return [
-                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0, },
-                { id: 2, name: 'Отчёты', icon: 'report', link: '/reports', count: 0, },
-                { id: 3, name: 'Библиотека', icon: 'library', link: '/library', count: statsStore.stats?.newBooks, },
-                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0, },
-                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0, },
+                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0 },
+                { id: 2, name: 'Отчёты', icon: 'report', link: '/reports', count: 0 },
+                {
+                    id: 3,
+                    name: 'Библиотека',
+                    icon: 'library',
+                    link: '/library',
+                    count: statsStore.stats?.newBooks,
+                },
+                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0 },
+                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0 },
             ]
         else if (userStore.userData?.role == 'missionary')
             return [
-                { id: 1, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0, },
-                { id: 2, name: 'Библиотека', icon: 'library', link: '/library', count: statsStore.stats?.newBooks, },
+                { id: 1, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0 },
+                {
+                    id: 2,
+                    name: 'Библиотека',
+                    icon: 'library',
+                    link: '/library',
+                    count: statsStore.stats?.newBooks,
+                },
             ]
-        else 
+        else
             return [
-                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0, },
-                { id: 2, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0, },
-                { id: 3, name: 'Библиотека', icon: 'library', link: '/library', count: statsStore.stats?.newBooks, },
-                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0, },
-                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0, },
+                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0 },
+                { id: 2, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0 },
+                {
+                    id: 3,
+                    name: 'Библиотека',
+                    icon: 'library',
+                    link: '/library',
+                    count: statsStore.stats?.newBooks,
+                },
+                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0 },
+                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0 },
             ]
     })
 </script>
 
 <template>
     <nav class="navigation-menu">
-        <UILink 
+        <UILink
             v-for="item in menuList"
             class="navigation-menu__item menu-item"
             :key="item.id"
@@ -38,7 +56,7 @@
                 'menu-item--active': route.path === item.link,
             }"
         >
-            <NuxtIcon class="menu-item__icon" :name="item.icon"/>
+            <NuxtIcon class="menu-item__icon" :name="item.icon" />
             <span class="menu-item__title p2">{{ item.name }}</span>
             <p v-if="item.count" class="menu-item__count p4">{{ item.count }}</p>
         </UILink>
@@ -69,7 +87,7 @@
             padding: 9px 0 6px;
         }
         &::before {
-            content: "";
+            content: '';
             position: absolute;
             left: 0;
             top: 0;

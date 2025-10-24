@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-    const {
-        content,
-    } = defineProps<{
+    const { content } = defineProps<{
         content: IBook
     }>()
     const toastrStore = useToastrStore()
@@ -17,13 +15,16 @@
                 bookId: content.id,
             })
         } catch {
-            toastrStore.showError("Ошибка добавление в избранное")
+            toastrStore.showError('Ошибка добавление в избранное')
         }
     }
 
-    watch(() => content.onWishlist, newValue => {
-        inWishlist.value = newValue
-    })
+    watch(
+        () => content.onWishlist,
+        newValue => {
+            inWishlist.value = newValue
+        },
+    )
 
     const openWindow = (modalName: string) => {
         modalStore.optionalData = {
@@ -35,45 +36,33 @@
 
 <template>
     <div class="library-card">
-        <button 
-            class="library-card__link" 
-            @click="openWindow('book-detail')"
-        ></button>
-        <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">черновик</p>
+        <button class="library-card__link" @click="openWindow('book-detail')"></button>
+        <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">
+            черновик
+        </p>
         <p v-else-if="content.isNew" class="library-card__banner library-card__banner--new p3">новинка</p>
         <div class="library-card__panel">
-            <button 
+            <button
                 v-if="content.status === 'draft'"
-                class="library-card__button" 
+                class="library-card__button"
                 @click="openWindow('book-editor')"
             >
-                <NuxtIcon 
-                    class="library-card__button-icon" 
-                    name="pencil" 
-                />
+                <NuxtIcon class="library-card__button-icon" name="pencil" />
             </button>
             <button class="library-card__button" @click="toggleWishlist">
-                <NuxtIcon 
-                    class="library-card__button-icon" 
-                    :name="inWishlist ? 'favorite-2' : 'favorite'" 
+                <NuxtIcon
+                    class="library-card__button-icon"
+                    :name="inWishlist ? 'favorite-2' : 'favorite'"
                     :class="{
                         'library-card__button-icon--active': inWishlist,
                     }"
                 />
             </button>
-            <a 
-                download
-                class="library-card__button" 
-                :href="content.file || ''"
-            >
+            <a download class="library-card__button" :href="content.file || ''">
                 <NuxtIcon class="library-card__button-icon" name="download" />
             </a>
         </div>
-        <UIImage 
-            class="library-card__image"
-            :src="content.image" 
-            :alt="content.title"
-        />
+        <UIImage class="library-card__image" :src="content.image" :alt="content.title" />
         <p class="library-card__title p2 p2--bold">{{ content.title }}</p>
         <p class="library-card__short-description p3">{{ content.shortDescription }}</p>
     </div>
@@ -150,7 +139,7 @@
             }
         }
         &__short-description {
-            opacity: .6;
+            opacity: 0.6;
         }
     }
 </style>

@@ -6,7 +6,7 @@
         if (!editorElement.value || !content.value) return
         editorElement.value.innerHTML = value
     }
-    
+
     const addBold = () => {
         document.execCommand('bold', false)
     }
@@ -20,22 +20,22 @@
     }
 
     const addStrike = () => {
-        document.execCommand('strikethrough', false);
+        document.execCommand('strikethrough', false)
     }
 
     const addList = () => {
-        document.execCommand('insertUnorderedList', false);
+        document.execCommand('insertUnorderedList', false)
     }
 
     const addNumericList = () => {
-        document.execCommand('insertOrderedList', false);
+        document.execCommand('insertOrderedList', false)
     }
 
     const addLeft = () => {
         document.execCommand('styleWithCSS', false)
         document.execCommand('justifyLeft', false)
     }
-    
+
     const addCenter = () => {
         document.execCommand('styleWithCSS', false)
         document.execCommand('justifyCenter', false)
@@ -49,68 +49,36 @@
 <template>
     <div class="text-editor">
         <div class="text-editor__panel editor-panel">
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addBold"
-            >
+            <button class="editor-panel__button" type="button" @click="addBold">
                 <NuxtIcon class="editor-panel__button-icon" name="bold" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addItalic"
-            >
+            <button class="editor-panel__button" type="button" @click="addItalic">
                 <NuxtIcon class="editor-panel__button-icon" name="italic" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addUnderline"
-            >
+            <button class="editor-panel__button" type="button" @click="addUnderline">
                 <NuxtIcon class="editor-panel__button-icon" name="strike" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addStrike"
-            >
+            <button class="editor-panel__button" type="button" @click="addStrike">
                 <NuxtIcon class="editor-panel__button-icon" name="line" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addNumericList"
-            >
+            <button class="editor-panel__button" type="button" @click="addNumericList">
                 <NuxtIcon class="editor-panel__button-icon" name="number-list" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addList"
-            >
+            <button class="editor-panel__button" type="button" @click="addList">
                 <NuxtIcon class="editor-panel__button-icon" name="list" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addLeft"
-            >
+            <button class="editor-panel__button" type="button" @click="addLeft">
                 <NuxtIcon class="editor-panel__button-icon" name="left" />
             </button>
-            <button 
-                class="editor-panel__button" 
-                type="button" 
-                @click="addCenter"
-            >
+            <button class="editor-panel__button" type="button" @click="addCenter">
                 <NuxtIcon class="editor-panel__button-icon" name="center" />
             </button>
         </div>
-        <div 
+        <div
             contenteditable
-            class="text-editor__field text-content" 
+            class="text-editor__field text-content"
             ref="editorElement"
-            @input="(event: Event) => content = (event.target as HTMLDivElement).innerHTML"
+            @input="(event: Event) => (content = (event.target as HTMLDivElement).innerHTML)"
         ></div>
     </div>
 </template>
