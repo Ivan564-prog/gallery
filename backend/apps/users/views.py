@@ -101,7 +101,7 @@ class UserViewSet(ViewSet):
         invites = models.Invite.objects.filter(code=request.GET.get('code'))
         return Response({
             'success': invites.exists() and timezone.now() < invites.get().deadline,
-            'role': invites.get().role,
+            'role': invites.exists() and invites.get().role,
         })
         
     @action(methods=['POST'], detail=False)
