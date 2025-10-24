@@ -66,7 +66,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSerializerValidator, serializers.ModelSerializer):
-    status = serializers.ReadOnlyField()
+    role = serializers.ReadOnlyField()
     region = serializers.ReadOnlyField()
     country = serializers.ReadOnlyField()
     diocese = DioceseSerializer(read_only=True)
