@@ -133,6 +133,7 @@ class BaseRegisterSerializer(UserPasswordSerializer, serializers.ModelSerializer
 class RegisterAdminSerializer(BaseRegisterSerializer):
     
     class Meta:
+        model = models.User
         fields = (
             'code',
             'password1',

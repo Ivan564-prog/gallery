@@ -24,6 +24,7 @@ class AdminInDioceseInline(admin.StackedInline):
     verbose_name = 'Администратор в'
     verbose_name_plural = verbose_name
 
+
 class ChiefInDioceseInline(admin.StackedInline):
     model = Diocese
     fk_name = 'chief'

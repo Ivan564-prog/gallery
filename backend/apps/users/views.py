@@ -15,6 +15,11 @@ class UserViewSet(ViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     username_field = models.User.USERNAME_FIELD
+    ROLE_MAP = {
+            'chief': 'missionary',
+            'admin': 'chief',
+            'root': 'admin',
+    }
 
     def list(self, request):
         """Отображение инормации о текущем пользователе"""
@@ -44,25 +49,21 @@ class UserViewSet(ViewSet):
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
-        invite = models.Invite.objects.get(code=request.data.get('code'))
-        serializer = getattr(serializers, f'Register{invite.role.capitalize()}Serializer')(data=request.data, context={"request": request})
+        serializer = getattr(serializers, f'Register{self.ROLE_MAP[request.user.status].capitalize()}Serializer')(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
-        invite.set_fields(object)
+        models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
         return Response(self.serializer_class(object, context={'request': request}).data)
     
     @action(methods=['POST'], detail=False, url_path='invite')
     def send_invite(self, request):
         """
             Отправка приглашения пользователя
+            Если пользователь деактивирован, то пользователь активируется и устанавливается на приглашенную роль
             Если пользователь миссионер, а приглашение на должность выше, то пользователь изменяет свой статус
-            Старый аккаунт администрации или 
+            Если пользователь миссионер, а приглашение так же на миссионера - ошибка
+            Если пользователь старший миссионер, администрация или главный админ - ошибка
         """
-        role_map = {
-            'chief': 'missionary',
-            'admin': 'chief',
-            'root': 'admin',
-        }
         email = request.data.get('email')
         diocese = Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese
         try:
@@ -74,7 +75,7 @@ class UserViewSet(ViewSet):
                 invite_by=request.user,
                 email=request.data.get('email'),
                 diocese=diocese,
-                role=role_map[request.user.status],
+                role=self.ROLE_MAP[request.user.status],
             )
             invite.send(request)
             return Response({
@@ -83,7 +84,7 @@ class UserViewSet(ViewSet):
                 'invite': serializers.InviteSerializer(invite, context={'request': request}).data,
             }, status=201)
         else:
-            success, message = diocese.set_role(user, role_map[request.user.status])
+            success, message = diocese.set_role(user, self.ROLE_MAP[request.user.status])
             if success:
                 return Response(
                     {
@@ -98,6 +99,7 @@ class UserViewSet(ViewSet):
     
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
+        """Проверка кода регистрации"""
         invites = models.Invite.objects.filter(code=request.GET.get('code'))
         return Response({
             'success': invites.exists() and timezone.now() < invites.get().deadline,
@@ -106,6 +108,7 @@ class UserViewSet(ViewSet):
         
     @action(methods=['POST'], detail=False)
     def authorize(self, request):
+        """Авторизация"""
         serializers.AuthorizeSerializer(data=request.data).is_valid(raise_exception=True)
         user = authenticate(**request.data)
         login(self.request, user)
@@ -113,17 +116,20 @@ class UserViewSet(ViewSet):
     
     @action(methods=['POST'], detail=False)
     def logout(self, request):
+        """Выход из аккаунта"""
         logout(request)
         return Response()
     
     @action(methods=['POST'], detail=False)
     def send_reset_password(self, request):
+        """Отправка письма с ссылкой для изменения пароля"""
         serializers.AuthorizeSerializer(data=request.data, partial=True).is_valid(raise_exception=True)
         models.User.objects.get(**request.data).send_reset_link(request)   
         return Response({'success': True})
     
     @action(methods=['GET'], detail=False)
     def check_reset(self, request):
+        """Проверка кода изменения пароля"""
         data = request.GET
         id = data.get('id', None)
         code = data.get('code', None)
@@ -133,6 +139,7 @@ class UserViewSet(ViewSet):
 
     @action(methods=['POST'], detail=False)
     def reset_password(self, request):
+        """Изменение пароля по коду"""
         data = request.data
         id = data.get('id', None)
         code = data.get('code', None)
@@ -144,6 +151,7 @@ class UserViewSet(ViewSet):
     
     @action(methods=['DELETE'], detail=False, url_path='invite/(?P<invite_id>[^/.]+)')
     def disable_invite(self, request, invite_id):
+        """Деактивация приглашения"""
         try:
             invite = request.user.get_invites().get(id=invite_id)
         except:
@@ -154,6 +162,7 @@ class UserViewSet(ViewSet):
 
     @action(methods=['GET'], detail=False, url_path='dioces_users')
     def get_diocese_users(self, request):
+        """Получение текущий, приглашенных и переводящийхся пользователей епархии(епархии в которой пользователь главный миссионер)"""
         user = request.user
         return Response({
             'transfers': serializers.TransferSerializer(user.get_transfers(), many=True, context={"request": request}).data,
@@ -163,6 +172,7 @@ class UserViewSet(ViewSet):
     
     @action(methods=['PATCH'], detail=False, url_path='transfer_management/(?P<transfer_id>[^/.]+)')
     def transfer_management(self, request, transfer_id):
+        """Управление трансферами(принятие/отклонение)"""
         actions = [
             'accept',
             'close',
