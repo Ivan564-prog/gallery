@@ -64,7 +64,7 @@ class Invite(models.Model):
             'mails/invite.html',
             {
                 'request': request,
-                'link': f'{request.scheme}://{request.get_host()}/registration-{self.role}?code={self.code}',
+                'link': f'{request.scheme}://{request.get_host()}/registration?code={self.code}',
                 'role': self.get_role_display(),
                 'diocese': self.diocese.title,
             }

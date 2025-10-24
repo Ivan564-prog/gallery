@@ -44,10 +44,11 @@ class UserViewSet(ViewSet):
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
-        serializer = serializers.RegisterSerializer(data=request.data, context={"request": request})
+        invite = models.Invite.objects.get(code=request.data.get('code'))
+        serializer = getattr(serializers, f'Register{invite.role.capitalize()}Serializer')(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         object = serializer.save()
-        models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
+        invite.set_fields(object)
         return Response(self.serializer_class(object, context={'request': request}).data)
     
     @action(methods=['POST'], detail=False, url_path='invite')

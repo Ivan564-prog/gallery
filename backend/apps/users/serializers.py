@@ -102,42 +102,25 @@ class UserSerializer(UserPasswordSerializer, PhoneSerializerValidator, EmailSeri
             setattr(instance, key, validated_data.get(key, getattr(instance, key)))
         instance.save()
         return instance
+    
 
-
-class RegisterSerializer(UserSerializer):
+class BaseRegisterSerializer(UserPasswordSerializer, serializers.ModelSerializer):
     code = serializers.CharField(required=True)
-    name = serializers.CharField(required=True)
-    surname = serializers.CharField(required=True)
-    patronymic = serializers.CharField(required=True)
-    date_of_birth = serializers.DateField(format='%d.%m.%Y', required=True, error_messages={'invalid': 'Пожалуйста, введите дату в формате ДД:ММ:ГГГГ'})
-    city = serializers.CharField(required=True)
-    phone = serializers.CharField(required=True)
 
     class Meta:
         model = models.User
-        fields = (
-            'name',
-            'surname',
-            'patronymic',
-            'date_of_birth',
-            'city',
-            'phone',
-            'password1',
-            'password2',
-            'code',
-        )
+        fields = '__all__'
 
     def validate_code(self, code):
-        invites = models.Invite.objects.filter(is_active=True, code=code)
-        if not models.Invite.objects.filter(code=code).exists() or timezone.now() > invites.get().deadline:
+        try:
+            self.invite = models.Invite.objects.get(is_active=True, code=code, deadline__gt=timezone.now())
+        except:
             raise serializers.ValidationError("Код не существует или срок его действия закончился")
-        self.invite = invites.get()
+        return code
 
     def create(self, validated_data):
         del validated_data['code']
-        validated_data['email'] = self.invite.email
-        validated_data[models.User.USERNAME_FIELD] = validated_data[models.User.USERNAME_FIELD].lower()
-        models.User.objects.filter(**{'is_active': False, models.User.USERNAME_FIELD: validated_data[models.User.USERNAME_FIELD]}).delete()
+        validated_data['email'] = self.invite.email.lower()
         password = validated_data['password1']
         del validated_data['password1']
         del validated_data['password2']
@@ -145,6 +128,58 @@ class RegisterSerializer(UserSerializer):
         obj.set_password(password)
         obj.save()
         return obj
+
+
+class RegisterAdminSerializer(BaseRegisterSerializer):
+    
+    class Meta:
+        fields = (
+            'code',
+            'password1',
+            'password2',
+        )
+
+
+# class RegisterSerializer(UserSerializer):
+#     name = serializers.CharField(required=True)
+#     surname = serializers.CharField(required=True)
+#     patronymic = serializers.CharField(required=True)
+#     date_of_birth = serializers.DateField(format='%d.%m.%Y', required=True, error_messages={'invalid': 'Пожалуйста, введите дату в формате ДД:ММ:ГГГГ'})
+#     city = serializers.CharField(required=True)
+#     phone = serializers.CharField(required=True)
+
+#     class Meta:
+#         model = models.User
+#         fields = (
+#             'name',
+#             'surname',
+#             'patronymic',
+#             'date_of_birth',
+#             'city',
+#             'phone',
+#             'password1',
+#             'password2',
+#             'code',
+#         )
+
+#     def validate_code(self, code):
+#         invites = models.Invite.objects.filter(is_active=True, code=code)
+#         if not models.Invite.objects.filter(code=code).exists() or timezone.now() > invites.get().deadline:
+#             raise serializers.ValidationError("Код не существует или срок его действия закончился")
+#         self.invite = invites.get()
+
+#     def create(self, validated_data):
+#         del validated_data['code']
+#         validated_data['email'] = self.invite.email
+#         validated_data[models.User.USERNAME_FIELD] = validated_data[models.User.USERNAME_FIELD].lower()
+#         models.User.objects.filter(**{'is_active': False, models.User.USERNAME_FIELD: validated_data[models.User.USERNAME_FIELD]}).delete()
+#         password = validated_data['password1']
+#         del validated_data['password1']
+#         del validated_data['password2']
+#         obj = models.User.objects.create(**validated_data)
+#         obj.set_password(password)
+#         obj.save()
+#         return obj
 
 
 class TransferSerializer(serializers.ModelSerializer):
