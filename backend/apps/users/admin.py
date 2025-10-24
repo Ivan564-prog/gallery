@@ -34,6 +34,8 @@ class UserAdmin(admin.ModelAdmin):
             'phone',
             'image',
             'diocese',
+            'chief_in',
+            'admin_in',
             'new_password',)
         if request.user.is_authenticated and request.user.task_permission:
             default_fields[0].append('task_permission')
