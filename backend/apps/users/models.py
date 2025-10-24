@@ -192,6 +192,16 @@ class User(
             return self.chief_in
         elif hasattr(self, 'admin_in'):
             return self.admin_in
+        
+    def reset_manage_role(self):
+        if hasattr(self, 'chief_in'):
+            diocese = self.chief_in
+        elif hasattr(self, 'admin_in'):
+            diocese = self.admin_in
+        if diocese:
+            diocese.chief = None
+            diocese.save()
+
 
     def get_current_report(self):
         related_diocese = self.get_related_diocese()
