@@ -3,7 +3,6 @@ from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from rest_framework.status import HTTP_404_NOT_FOUND
 from django.contrib.auth import authenticate, login, logout
 from apps.local_hierarchy.models import Diocese
 # from apps.local_hierarchy.serializers import InviteSerializer
@@ -23,10 +22,10 @@ class UserViewSet(ViewSet):
 
     def list(self, request):
         """Отображение инормации о текущем пользователе"""
-        if request.user.is_authenticated and request.user.is_active:
-            return Response(
-                self.serializer_class(request.user, context={'request': request}).data)
-        return Response()
+        if not request.user.is_authenticated or not request.user.is_active:
+            return Response(status=403)
+        return Response(
+            self.serializer_class(request.user, context={'request': request}).data)
     
     def patch(self, request):
         """Изменение информации о текущем пользователе"""
@@ -41,9 +40,7 @@ class UserViewSet(ViewSet):
             object = request.user.get_related_users().get(pk=pk)
         except:
             return Response(status=404)
-        object.is_active = False
-        object.reset_manage_role()
-        object.save()
+        object.deactivate()
         return Response(status=204)
     
     @action(methods=['POST'], detail=False)
@@ -134,7 +131,7 @@ class UserViewSet(ViewSet):
         id = data.get('id', None)
         code = data.get('code', None)
         if not models.User.objects.filter(id=id, reset_code__isnull=False, reset_code=code).exists():
-            return Response(status=HTTP_404_NOT_FOUND)
+            return Response(status=404)
         return Response() 
 
     @action(methods=['POST'], detail=False)

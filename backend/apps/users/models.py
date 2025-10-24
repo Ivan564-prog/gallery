@@ -161,6 +161,19 @@ class User(
 
     def __str__(self):
         return self.email
+    
+    def get_invited_role(self):
+        return {
+            'chief': 'missionary',
+            'admin': 'chief',
+            'root': 'admin',
+            'missionary': None
+        }[self.status]
+    
+    def deactivate(self):
+        object.is_active = False
+        object.reset_manage_role()
+        object.save()
 
     def get_book_wishlist(self):
         return self.book_wishlist.get_or_create(user=self)[0]
@@ -179,7 +192,7 @@ class User(
         if self.status == 'admin':
             return User.objects.filter(pk=getattr(self.get_related_diocese(), 'chief', None), is_active=True)
         if self.status == 'chief':
-            return self.get_related_diocese().users.filter(is_active=True)
+            return self.get_related_diocese().users.filter(is_active=True, admin_in__isnull=True)
         if self.status == 'root':
             return User.obects.filter(is_active=True)
     
