@@ -14,7 +14,7 @@ export const useConfirmStore = defineStore('confirm', () => {
 
         return new Promise((resolve, reject) => {
             resolvePromise.value = resolve
-            rejectPromise.value = reject            
+            rejectPromise.value = reject
         })
     }
 

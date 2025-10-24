@@ -10,8 +10,7 @@
     }
 
     watch(opened, newValue => {
-        if (!newValue)
-            modalStore.optionalData = {}
+        if (!newValue) modalStore.optionalData = {}
     })
 
     onMounted(() => {

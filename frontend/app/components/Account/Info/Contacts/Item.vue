@@ -1,9 +1,6 @@
 <script lang="ts" setup>
     const value = defineModel<string>({ required: true })
-    const {
-        readonly = false,
-        type = 'text',
-    } = defineProps<{
+    const { readonly = false, type = 'text' } = defineProps<{
         title?: string
         readonly?: boolean
         placeholder?: string
@@ -15,14 +12,14 @@
 <template>
     <div class="contact-item">
         <p class="contact-item__title p3">{{ title }}</p>
-        <UIInput 
-            class="contact-item__field" 
+        <UIInput
+            class="contact-item__field"
             style-variant="minimal"
             :readonly="readonly"
             :placeholder="placeholder"
             :type="type"
             :error-text="errorText"
-            v-model="value" 
+            v-model="value"
         />
     </div>
 </template>

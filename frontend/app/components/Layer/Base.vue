@@ -6,7 +6,7 @@
     <div class="page-wrapper">
         <NavigationSidebar class="page-wrapper__navigation-sidebar" />
         <div class="page-wrapper__content">
-            <Header class="page-wrapper__header" />
+            <HeaderBase class="page-wrapper__header" />
             <main class="main">
                 <slot></slot>
             </main>

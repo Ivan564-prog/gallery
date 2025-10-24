@@ -1,13 +1,9 @@
 <script lang="ts" setup>
     const route = useRoute()
     const isActualLink = ref<boolean>()
-    
+
     const setActualLink = async () => {
-        const resetPasswordStatus = await request<boolean>(
-            '/api/v1/user/check_reset/', 
-            'GET', 
-            route.query
-        )
+        const resetPasswordStatus = await request<boolean>('/api/v1/user/check_reset/', 'GET', route.query)
         isActualLink.value = resetPasswordStatus
     }
     setActualLink()
@@ -15,13 +11,10 @@
 
 <template>
     <section class="reset-password">
-        <ResetPasswordForm 
-            v-if="isActualLink" 
-            class="reset-password__form" 
-        />
-        <UIEmptyBanner 
-            v-else="isActualLink === false" 
-            title="Не удалось подтвердить активацию. Проверьте, что ссылка верна и не устарела." 
+        <ResetPasswordForm v-if="isActualLink" class="reset-password__form" />
+        <UIEmptyBanner
+            v-else="isActualLink === false"
+            title="Не удалось подтвердить активацию. Проверьте, что ссылка верна и не устарела."
         />
         <Teleport to="body">
             <ResetPasswordSuccess />

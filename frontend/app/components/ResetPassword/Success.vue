@@ -16,13 +16,17 @@
     <ModalInfo v-model="isOpened">
         <div class="reset-password-modal">
             <h3 class="reset-password-modal h1">Пароль успешно обновлён</h3>
-            <p class="reset-password-modal__text p1">Теперь вы можете войти в свой аккаунт с новым паролем.</p>
-            <UIButton 
+            <p class="reset-password-modal__text p1">
+                Теперь вы можете войти в свой аккаунт с новым паролем.
+            </p>
+            <UIButton
                 class="reset-password-modal__button"
                 color-variant="empty-black"
                 width-mode="full"
                 @click="closeModal"
-            >Войти в аккаунт</UIButton>
+            >
+                Войти в аккаунт
+            </UIButton>
         </div>
     </ModalInfo>
 </template>

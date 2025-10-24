@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-    const {
-        title = 'Ничего нет'
-    } = defineProps<{
+    const { title = 'Ничего нет' } = defineProps<{
         title?: string
     }>()
 </script>

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
     const MODAL_NAME = 'book-editor'
-    const {
-        typeList,
-    } = defineProps<{
-        typeList: IBookType[],
+    const { typeList } = defineProps<{
+        typeList: IBookType[]
     }>()
     const toastrStore = useToastrStore()
     const modalStore = useModalStore()
@@ -13,8 +11,8 @@
     })
     const bookData = ref<IBookDetail>()
     const emits = defineEmits<{
-        (event:'edit-book', book: IBook): void
-        (event:'remove-book', book: IBook): void
+        (event: 'edit-book', book: IBook): void
+        (event: 'remove-book', book: IBook): void
     }>()
 
     const params = reactive<IEditorBook>({
@@ -37,10 +35,8 @@
         params.description = bookData.value.description || ''
         params.type = bookData.value.type.id
 
-        if (bookData.value.image)
-            visualImage.value = bookData.value.image
-        if (bookData.value.file)
-            visualFile.value = bookData.value.file
+        if (bookData.value.image) visualImage.value = bookData.value.image
+        if (bookData.value.file) visualFile.value = bookData.value.file
     }
 
     const formattedTypeList = computed(() => {
@@ -56,35 +52,27 @@
 
         const formData = new FormData()
         errorsInfo.value = {}
-        
+
         formData.append('title', params.title)
         formData.append('status', status)
-        if (params.image && params.image[0]) 
-            formData.append('image', params.image[0])
-        else if (!params.image?.length) 
-            formData.append('image', new File([], ''))
+        if (params.image && params.image[0]) formData.append('image', params.image[0])
+        else if (!params.image?.length) formData.append('image', new File([], ''))
 
-        if (params.file && params.file[0]) 
-            formData.append('file', params.file[0])
-        else if (!params.file?.length) 
-            formData.append('file', new File([], ''))
+        if (params.file && params.file[0]) formData.append('file', params.file[0])
+        else if (!params.file?.length) formData.append('file', new File([], ''))
 
-        if (params.description) 
-            formData.append('description', params.description)
-        if (params.shortDescription) 
-            formData.append('shortDescription', params.shortDescription)
-        if (params.type) 
-            formData.append('type', String(params.type))
+        if (params.description) formData.append('description', params.description)
+        if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
+        if (params.type) formData.append('type', String(params.type))
 
         try {
             const editedBook = await request<IBook>(
-                `/api/v1/library/book/${modalStore.optionalData.bookId}/`, 
-                'PATCH', 
-                formData
+                `/api/v1/library/book/${modalStore.optionalData.bookId}/`,
+                'PATCH',
+                formData,
             )
-
         } catch {
-            toastrStore.showError("Ошибка редактирования публикации")
+            toastrStore.showError('Ошибка редактирования публикации')
         }
     }
 
@@ -92,27 +80,25 @@
         if (!bookData.value) return
 
         try {
-            await request<IBook>(
-                `/api/v1/library/book/${modalStore.optionalData.bookId}/`, 
-                'DELETE', 
-            )
+            await request<IBook>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`, 'DELETE')
             emits('remove-book', bookData.value)
             opened.value = false
-            toastrStore.showSuccess("Публикация успешно удалена")
+            toastrStore.showSuccess('Публикация успешно удалена')
         } catch {
-            toastrStore.showError("Ошибка удаления публикации")
+            toastrStore.showError('Ошибка удаления публикации')
         }
     }
 
     watch(opened, newValue => {
-        if (!newValue)
-            bookData.value = undefined
+        if (!newValue) bookData.value = undefined
     })
 
-    watch(() => modalStore.optionalData.bookId, async () => {
-        if (modalStore.optionalData.bookId)
-            await setBookData()
-    })
+    watch(
+        () => modalStore.optionalData.bookId,
+        async () => {
+            if (modalStore.optionalData.bookId) await setBookData()
+        },
+    )
 </script>
 
 <template>
@@ -122,31 +108,27 @@
         </template>
         <template v-slot:main>
             <form v-if="bookData" class="book-creator-form">
-                <UIInput 
-                    placeholder="Введите название заголовка" 
-                    style-variant="big" 
+                <UIInput
+                    placeholder="Введите название заголовка"
+                    style-variant="big"
                     v-model="bookData.title"
                 />
                 <div class="book-creator-form__top">
-                    <UITitledInput 
-                        class="book-creator-form__item"
-                        icon="star-2"
-                        text="Тип публикации"
-                    >
-                        <UISelect 
+                    <UITitledInput class="book-creator-form__item" icon="star-2" text="Тип публикации">
+                        <UISelect
                             empty
                             placeholder="Выберите"
                             :items="formattedTypeList"
                             v-model="params.type"
                         />
                     </UITitledInput>
-                    <UITitledInput 
+                    <UITitledInput
                         class="book-creator-form__item book-creator-form__item--file"
                         icon="clip"
                         text="Прикрепить"
                     >
-                        <UIFileInput 
-                            description="Файл" 
+                        <UIFileInput
+                            description="Файл"
                             formates="application"
                             :max-files="1"
                             v-model="params.file"
@@ -154,42 +136,44 @@
                         />
                     </UITitledInput>
                     <div class="book-creator-form__photo">
-                        <UITitledInput 
+                        <UITitledInput
                             class="book-creator-form__item"
                             icon="image"
                             text="Главное изображений"
                         >
-                        <span class="book-creator-form__description p3">(необходимо добавить 1 фото)</span>
-                    </UITitledInput>
-                    <UIFileInput 
-                        formates="image"
-                        :max-files="1"
-                        v-model="params.image"
-                        v-model:visual="visualImage"
-                    />
+                            <span class="book-creator-form__description p3">
+                                (необходимо добавить 1 фото)
+                            </span>
+                        </UITitledInput>
+                        <UIFileInput
+                            formates="image"
+                            :max-files="1"
+                            v-model="params.image"
+                            v-model:visual="visualImage"
+                        />
                     </div>
                 </div>
                 <div class="book-creator-form__bottom">
-                    <UITitledInput 
+                    <UITitledInput
                         class="book-creator-form__item"
                         icon="menu"
                         text="Краткое описание"
                         variant="flex-start"
                     >
-                        <UITextarea 
-                            placeholder="Напишите краткое описание" 
-                            v-model="params.shortDescription" 
+                        <UITextarea
+                            placeholder="Напишите краткое описание"
+                            v-model="params.shortDescription"
                         />
                     </UITitledInput>
-                    <UITitledInput 
+                    <UITitledInput
                         class="book-creator-form__item"
                         icon="menu"
                         text="Описание"
                         variant="flex-start"
                     >
-                        <WidgetTextEditor 
-                            class="book-creator-form__text-editor" 
-                            v-model="params.description" 
+                        <WidgetTextEditor
+                            class="book-creator-form__text-editor"
+                            v-model="params.description"
                         />
                     </UITitledInput>
                 </div>
@@ -197,24 +181,30 @@
         </template>
         <template v-slot:footer>
             <div class="book-creator-footer">
-                <UIButton 
+                <UIButton
                     class="book-creator-footer__button"
                     font-size="big"
                     from="creatorBook"
                     @click="editBook('published')"
-                >Добавить публикацию</UIButton>
-                <UIButton 
-                    class="book-creator-footer__button" 
+                >
+                    Добавить публикацию
+                </UIButton>
+                <UIButton
+                    class="book-creator-footer__button"
                     color-variant="gray"
                     font-size="big"
                     from="creatorBook"
                     @click="editBook('draft')"
-                >Сохранить черновик</UIButton>
-                <button 
+                >
+                    Сохранить черновик
+                </UIButton>
+                <button
                     class="book-creator-footer__remove-button p1 p1--bold"
                     from="creatorBook"
                     @click="removeBook"
-                >Удалить</button>
+                >
+                    Удалить
+                </button>
             </div>
         </template>
     </ModalBase>

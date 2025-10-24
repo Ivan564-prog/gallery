@@ -1,18 +1,13 @@
 <script lang="ts" setup>
     const modelValue = defineModel<number>()
-    const {
-        totalMin,
-        maxValue,
-        step,
-        baseOffset
-    } = defineProps<{
-        totalMin: number,
-        maxValue: number,
-        step: number,
-        baseOffset: number,
+    const { totalMin, maxValue, step, baseOffset } = defineProps<{
+        totalMin: number
+        maxValue: number
+        step: number
+        baseOffset: number
     }>()
     const emits = defineEmits<{
-        (event:'updateValue'): void
+        (event: 'updateValue'): void
     }>()
     const isDragged = ref<boolean>()
     const handleElement = ref<HTMLDivElement>()
@@ -33,12 +28,11 @@
         if (!isDragged.value) return
 
         const trueOffset = event.clientX - totalMin
-        const roundedOffset = trueOffset - (trueOffset % step) + Math.round(trueOffset % step / step) * step
+        const roundedOffset = trueOffset - (trueOffset % step) + Math.round((trueOffset % step) / step) * step
         let limitedOffset = 0
         if (!baseOffset) {
             limitedOffset = Math.max(baseOffset, Math.min(maxValue, roundedOffset))
-        }
-        else {
+        } else {
             limitedOffset = Math.max(baseOffset, Math.min(maxValue - baseOffset, roundedOffset))
         }
         modelValue.value = Math.round(limitedOffset)

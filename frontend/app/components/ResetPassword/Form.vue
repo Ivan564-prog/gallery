@@ -13,19 +13,14 @@
         errorInfo.value = {}
         isLoading.value = true
         try {
-            await request(
-                '/api/v1/user/reset_password/', 
-                'POST', 
-                {
-                    ...route.query,
-                    ...params,
-                }
-            )
+            await request('/api/v1/user/reset_password/', 'POST', {
+                ...route.query,
+                ...params,
+            })
             modalStore.openedModal = 'reset-password-success'
         } catch (error) {
             const errorMessage = (error as IHttpError<IResetPasswordErrors>).data.nonFieldErrors
-            if (errorMessage?.length)
-                toastrStore.showError(errorMessage[0]!)
+            if (errorMessage?.length) toastrStore.showError(errorMessage[0]!)
         }
         isLoading.value = false
     }
@@ -37,23 +32,20 @@
         <h2 class="authorize-form__title h1">Придумайте новый пароль</h2>
         <p class="authorize-form__text p2">Введите новый пароль и повторите его для подтверждения.</p>
         <div class="authorize-form__fields">
-            <UIInput 
-                class="authorize-form__input" 
-                type="password" 
+            <UIInput
+                class="authorize-form__input"
+                type="password"
                 placeholder="Пароль"
                 v-model="params.password"
             />
-            <UIInput 
-                class="authorize-form__input" 
-                type="password" 
+            <UIInput
+                class="authorize-form__input"
+                type="password"
                 placeholder="Повторите пароль"
                 v-model="params.password2"
             />
         </div>
-        <UIButton 
-            class="authorize-form__button"
-            width-mode="full"
-        >Сохранить пароль</UIButton>
+        <UIButton class="authorize-form__button" width-mode="full">Сохранить пароль</UIButton>
     </form>
 </template>
 

@@ -5,8 +5,7 @@
     const newAvatar = ref<File>()
     const toastrStore = useToastrStore()
 
-    const isImg = (file: File) => 
-        window.FileReader && file.type.includes('image')
+    const isImg = (file: File) => window.FileReader && file.type.includes('image')
 
     const getURLfromFile = (file: File) => URL.createObjectURL(file)
 
@@ -20,11 +19,7 @@
         formData.append('image', file)
 
         try {
-            await request(
-                '/api/v1/user/',
-                'PATCH',
-                formData
-            )
+            await request('/api/v1/user/', 'PATCH', formData)
             toastrStore.showSuccess('Аватарка успешно обновлена')
         } catch {
             toastrStore.showError('Ошибка обновления аватарки')
@@ -36,17 +31,17 @@
 <template>
     <label class="avatar">
         <div class="avatar__wrapper">
-            <UIImage 
-                v-if="avatar || newAvatar" 
-                class="avatar__image" 
-                :src="(newAvatar && getURLfromFile(newAvatar)) || avatar" 
+            <UIImage
+                v-if="avatar || newAvatar"
+                class="avatar__image"
+                :src="(newAvatar && getURLfromFile(newAvatar)) || avatar"
             />
             <div v-else class="avatar__field">
                 <p class="avatar__text p3">Добавить фото</p>
             </div>
         </div>
         <p v-if="avatar || newAvatar" class="avatar__edit avatar__text p3">Изменить</p>
-        <input class="avatar__input" type="file" @change="setNewAvatar">
+        <input class="avatar__input" type="file" @change="setNewAvatar" />
     </label>
 </template>
 

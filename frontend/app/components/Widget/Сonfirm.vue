@@ -14,17 +14,17 @@
             <p v-if="confirmStore.titleWindow" class="confirm__title h2">{{ confirmStore.titleWindow }}</p>
             <p v-if="confirmStore.textWindow" class="confirm__text p2">{{ confirmStore.textWindow }}</p>
             <div class="confirm__panel">
-                <UIButton 
-                    class="confirm__button" 
-                    width-mode="full"
-                    @click="confirmStore.confirm"
-                >Да</UIButton>
-                <UIButton 
-                    class="confirm__button" 
+                <UIButton class="confirm__button" width-mode="full" @click="confirmStore.confirm">
+                    Да
+                </UIButton>
+                <UIButton
+                    class="confirm__button"
                     width-mode="full"
                     color-variant="gray"
                     @click="confirmStore.cancel"
-                >Нет</UIButton>
+                >
+                    Нет
+                </UIButton>
             </div>
         </div>
     </ModalInfo>

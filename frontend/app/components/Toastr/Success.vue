@@ -10,7 +10,6 @@
 <template>
     <Toastr v-model="opened">
         <div class="toastr-success">
-            <NuxtIcon class="toastr-success__icon" name="mark" />
             <p class="toastr-success__text p3">
                 {{ toastrStore.toastrMessage }}
             </p>

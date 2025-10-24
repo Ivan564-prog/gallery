@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     defineProps<{
-        typeList: IBookType[],
+        typeList: IBookType[]
     }>()
     const userStore = useUserStore()
     const bookType = defineModel<number>()
@@ -11,8 +11,8 @@
         <div class="library-head__filters">
             <label class="library-head__filter library-filter">
                 <span class="library-filter__text p2 p2--bold">Все материалы</span>
-                <input 
-                    class="library-filter__radio" 
+                <input
+                    class="library-filter__radio"
                     name="library-type"
                     type="radio"
                     :value="undefined"
@@ -22,22 +22,18 @@
             <label class="library-head__filter library-filter">
                 <span class="library-filter__text p2 p2--bold">Сохраненные</span>
                 <NuxtIcon class="library-filter__icon" name="favorite-2" />
-                <input 
-                    class="library-filter__radio" 
+                <input
+                    class="library-filter__radio"
                     name="library-type"
                     type="radio"
                     :value="-1"
                     v-model="bookType"
                 />
             </label>
-            <label 
-                v-for="type in typeList"
-                class="library-head__filter library-filter"
-                :key="type.id"
-            >
+            <label v-for="type in typeList" class="library-head__filter library-filter" :key="type.id">
                 <span class="library-filter__text p2 p2--bold">{{ type.title }}</span>
-                <input 
-                    class="library-filter__radio" 
+                <input
+                    class="library-filter__radio"
                     name="library-type"
                     type="radio"
                     :value="type.id"
@@ -46,10 +42,7 @@
             </label>
         </div>
         <!-- TODO ДОБАВИТЬ КОГДА ЗАКОНЧУ v-if="userStore.userData?.role === 'root'" -->
-        <UIButton 
-            class="library-head__button"
-            to="#book-creator"
-        >Добавить публикацию</UIButton>
+        <UIButton class="library-head__button" to="#book-creator">Добавить публикацию</UIButton>
     </div>
 </template>
 
@@ -113,6 +106,5 @@
         &__radio {
             display: none;
         }
-
     }
 </style>

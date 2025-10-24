@@ -19,7 +19,9 @@
 
     const setDetailInfo = async () => {
         if (modalStore.optionalData.bookId)
-            detailInfo.value = await request<IBookDetail>(`/api/v1/library/book/${modalStore.optionalData.bookId}/`)
+            detailInfo.value = await request<IBookDetail>(
+                `/api/v1/library/book/${modalStore.optionalData.bookId}/`,
+            )
     }
 
     const toggleWishlist = async () => {
@@ -29,14 +31,16 @@
             })
             emits('toggle-wishlist', detailInfo.value!.id, inWishlist.value)
         } catch {
-            toastrStore.showError("Ошибка добавление в избранное")
+            toastrStore.showError('Ошибка добавление в избранное')
         }
     }
 
-    watch(() => modalStore.optionalData.bookId, newValue => {        
-        if (modalStore.optionalData.bookId)
-            setDetailInfo()
-    })
+    watch(
+        () => modalStore.optionalData.bookId,
+        newValue => {
+            if (modalStore.optionalData.bookId) setDetailInfo()
+        },
+    )
 </script>
 
 <template>
@@ -45,15 +49,14 @@
             <div class="book-detail-head">
                 <div class="book-detail-head__content">
                     <h2 class="book-detail-head__title h2">{{ detailInfo?.title }}</h2>
-                    <p class="book-detail-head__info p2">{{ `${formattedDate || 'Черновик'} / ${detailInfo?.type.title}` }}</p>
+                    <p class="book-detail-head__info p2">
+                        {{ `${formattedDate || 'Черновик'} / ${detailInfo?.type.title}` }}
+                    </p>
                 </div>
-                <button 
-                    class="book-detail-head__button"
-                    @click="toggleWishlist"
-                >
-                    <NuxtIcon 
-                        class="book-detail-head__button-icon" 
-                        :name="inWishlist ? 'favorite-2' : 'favorite'" 
+                <button class="book-detail-head__button" @click="toggleWishlist">
+                    <NuxtIcon
+                        class="book-detail-head__button-icon"
+                        :name="inWishlist ? 'favorite-2' : 'favorite'"
                     />
                 </button>
             </div>
@@ -62,8 +65,11 @@
             <div class="book-detail-main">
                 <div class="book-detail-main__top">
                     <div class="book-detail-main__content">
-                        <div class="book-detail-main__text text-content" v-html="detailInfo?.description"></div>
-                        <UIButton 
+                        <div
+                            class="book-detail-main__text text-content"
+                            v-html="detailInfo?.description"
+                        ></div>
+                        <UIButton
                             download
                             class="book-detail-main__button"
                             color-variant="empty-red"
@@ -71,10 +77,13 @@
                         >
                             Скачать pdf
                         </UIButton>
-                        <p class="book-detail-main__text p2">Дорогие читатели, если вы хотите задать вопросы о книге или получить ее в бумажном виде — пишите нам на почту</p>
+                        <p class="book-detail-main__text p2">
+                            Дорогие читатели, если вы хотите задать вопросы о книге или получить ее в бумажном
+                            виде — пишите нам на почту
+                        </p>
                     </div>
-                    <UIImage 
-                        class="book-detail-main__image" 
+                    <UIImage
+                        class="book-detail-main__image"
                         :src="detailInfo?.image"
                         :alt="detailInfo?.title"
                     />
@@ -82,11 +91,7 @@
                 <div v-if="detailInfo?.similar.length" class="book-detail-main__similar">
                     <h3 class="book-detail-main__similar-title h3">Похожие материалы:</h3>
                     <div class="book-detail-main__similar-list">
-                        <LibraryCard 
-                            v-for="book in detailInfo?.similar"
-                            :key="book.id"
-                            :content="book"
-                        />
+                        <LibraryCard v-for="book in detailInfo?.similar" :key="book.id" :content="book" />
                     </div>
                 </div>
             </div>

@@ -14,6 +14,6 @@ declare global {
         phone: string | null
         diocese: IDiocese | null
         country: string | null
-        region: string | null 
+        region: string | null
     }
 }

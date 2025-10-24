@@ -1,6 +1,7 @@
 .text-content {
     @include p2;
-    p, div {
+    p,
+    div {
         @include p2;
         margin-bottom: 1em;
     }

@@ -6,11 +6,7 @@
 
 <template>
     <div class="book-list">
-        <LibraryCard 
-            v-for="card in bookList"
-            :key="card.id"
-            :content="card"
-        />
+        <LibraryCard v-for="card in bookList" :key="card.id" :content="card" />
     </div>
 </template>
 

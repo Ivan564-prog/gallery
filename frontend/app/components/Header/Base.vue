@@ -1,6 +1,5 @@
 <script lang="ts" setup>
     const settingsStore = useRootSettingsStore()
-    
 </script>
 
 <template>
@@ -16,7 +15,7 @@
 </template>
 
 <style lang="scss" scoped>
-   .header {
+    .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -36,5 +35,5 @@
             height: 50px;
             color: var(--black);
         }
-   }
+    }
 </style>

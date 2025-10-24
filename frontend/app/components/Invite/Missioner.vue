@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-    <section class="diary"></section>
+    <div class=""></div>
 </template>
 
 <style lang="scss" scoped></style>

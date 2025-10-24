@@ -2,14 +2,13 @@ type TMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE'
 
 export const getAPIUrl = () => {
     const runtimeConfig = useRuntimeConfig()
-    return `${useRequestURL().protocol}//${!import.meta.dev && runtimeConfig.public.host || 'django:8000'}`
+    return `${useRequestURL().protocol}//${(!import.meta.dev && runtimeConfig.public.host) || 'django:8000'}`
 }
 let csrf: string
 
 export const useRequest = async <T>(url: string, method?: TMethod, body?: TRequestBody) => {
     url = getAPIUrl() + url
-    if (!csrf && method != 'GET') 
-        csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
+    if (!csrf && method != 'GET') csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     const response = await useFetch(url, {
         method,
         [method == 'GET' ? 'params' : 'body']: body,
@@ -29,14 +28,9 @@ export const useRequest = async <T>(url: string, method?: TMethod, body?: TReque
     }
 }
 
-export const request = async <T> (
-    url: string,
-    method?: TMethod,
-    body?: TRequestBody,
-) => {
+export const request = async <T>(url: string, method?: TMethod, body?: TRequestBody) => {
     url = getAPIUrl() + url
-    if (!csrf && method != 'GET')
-        csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
+    if (!csrf && method != 'GET') csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     try {
         const response = await $fetch<T>(url, {
             method,
@@ -48,7 +42,6 @@ export const request = async <T> (
             },
         })
         return response
-
     } catch (error: any) {
         throw createError(error)
     }

@@ -26,71 +26,44 @@
             })
         }
     }
-
 </script>
 
 <template>
     <form class="user-contacts" @submit.prevent="setUserData">
         <div class="user-contacts__fields">
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Имя" 
-                v-model="params.name" 
-            />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Фамилия" 
-                v-model="params.surname" 
-            />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Отчество" 
-                v-model="params.patronymic" 
-            />
-            <AccountInfoContactsItem 
+            <AccountInfoContactsItem placeholder="Введите" title="Имя" v-model="params.name" />
+            <AccountInfoContactsItem placeholder="Введите" title="Фамилия" v-model="params.surname" />
+            <AccountInfoContactsItem placeholder="Введите" title="Отчество" v-model="params.patronymic" />
+            <AccountInfoContactsItem
                 readonly
                 title="Дата рождения"
-                :model-value="userStore.userData?.dateOfBirth" 
+                :model-value="userStore.userData?.dateOfBirth"
             />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Страна" 
-                v-model="params.country" 
-            />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
+            <AccountInfoContactsItem placeholder="Введите" title="Страна" v-model="params.country" />
+            <AccountInfoContactsItem
+                placeholder="Введите"
                 title="Федеральный округ"
-                v-model="params.region" 
+                v-model="params.region"
             />
-            <AccountInfoContactsItem 
+            <AccountInfoContactsItem
                 readonly
-                placeholder="Введите" 
-                title="Епархия" 
-                :model-value="userStore.userData?.diocese?.title" 
+                placeholder="Введите"
+                title="Епархия"
+                :model-value="userStore.userData?.diocese?.title"
             />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Город проживания"
-                v-model="params.city" 
-            />
-            <AccountInfoContactsItem 
-                placeholder="Введите" 
-                title="Телефон" 
+            <AccountInfoContactsItem placeholder="Введите" title="Город проживания" v-model="params.city" />
+            <AccountInfoContactsItem
+                placeholder="Введите"
+                title="Телефон"
                 type="tel"
                 :error-text="errorInfo.phone && errorInfo.phone[0]"
-                v-model="params.phone" 
+                v-model="params.phone"
             />
-            <AccountInfoContactsItem 
-                readonly
-                title="Почта" 
-                :model-value="userStore.userData?.email" 
-            />
+            <AccountInfoContactsItem readonly title="Почта" :model-value="userStore.userData?.email" />
         </div>
-        <UIButton 
-            class="user-contacts__button"
-            size="small"
-            color-variant="gray"
-        >Сохранить изменения</UIButton>
+        <UIButton class="user-contacts__button" size="small" color-variant="gray">
+            Сохранить изменения
+        </UIButton>
     </form>
 </template>
 
