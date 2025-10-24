@@ -56,8 +56,8 @@ class Diocese(models.Model):
         verbose_name='Название')
     admin = models.OneToOneField(
         'users.User', verbose_name='Администрация', on_delete=models.SET_NULL, related_name="admin_in", null=True, blank=True)
-    chief_missionary = models.OneToOneField(
-        'users.User', verbose_name='Главный миссионер', on_delete=models.SET_NULL, related_name="chief_in", null=True, blank=True)
+    chief = models.OneToOneField(
+        'users.User', verbose_name='Ответственный за ЕМО', on_delete=models.SET_NULL, related_name="chief_in", null=True, blank=True)
     
     class Meta:
         verbose_name = 'Епархия'
@@ -65,3 +65,35 @@ class Diocese(models.Model):
         
     def __str__(self):
         return self.title
+    
+    def _set_role(self, user, role):
+        user.is_active = True
+        user.diocese = self
+        user.save()
+        if role in ['chief', 'admin']:
+            setattr(self, role, user)
+            self.save()
+    
+    def set_role(self, user, role):
+        roles = [
+            'missionary',
+            'chief',
+            'admin',
+        ]
+        if role not in roles:
+            return [False, 'Такая роль отсутствует']
+        if role in ['chief', 'admin'] and getattr(self, role):
+            return [False, 'Епархия уже имеет пользователя с этой ролью']
+        if not user.is_active:
+            self._set_role(user, role)
+            return [True, 'Пользователь восстановлен и роль установлена']
+        else:
+            if user.status in ['chief', 'admin', 'root']:
+                return [False, 'Пользователь уже имеет управляющую роль']
+            elif user.status == 'missionary' and role == 'missionary':
+                return [False, 'Пользователь уже является миссионером']
+            else:
+                self._set_role(user, role)
+                return [True, 'Пользователю установлена новая роль']
+                
+            
