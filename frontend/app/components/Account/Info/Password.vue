@@ -4,7 +4,7 @@
         password1: '',
         password2: '',
     })
-    const errorInfo = ref<IResetPasswordErrors & IUserErrors>({})
+    const errorInfo = ref<IPasswordErrors & IUserErrors>({})
 
     const setPassword = async () => {
         errorInfo.value = {}
@@ -13,7 +13,7 @@
             toastrStore.showSuccess('Пароль успешно обновлен')
             Object.keys(params).forEach(key => ((params as any)[key] = ''))
         } catch (error) {
-            const errorMessage = (error as IHttpError<IResetPasswordErrors>).data.nonFieldErrors
+            const errorMessage = (error as IHttpError<IPasswordErrors>).data.nonFieldErrors
             if (errorMessage?.length) toastrStore.showError(errorMessage[0]!)
             errorInfo.value = (error as IHttpError<IUserErrors>).data
         }

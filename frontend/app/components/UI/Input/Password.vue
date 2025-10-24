@@ -20,7 +20,12 @@
             :style-variant="styleVariant"
             v-model="modelValue"
         />
-        <button class="ui-input-password__toggle" type="button" @click="toggleSecret">
+        <button 
+            class="ui-input-password__toggle" 
+            type="button" 
+            tabindex="-1"
+            @click="toggleSecret"
+        >
             <NuxtIcon
                 class="ui-input-password__icon"
                 name="eye"

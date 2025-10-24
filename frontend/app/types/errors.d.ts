@@ -14,7 +14,7 @@ declare global {
         email?: string[]
     }
 
-    interface IResetPasswordErrors {
+    interface IPasswordErrors {
         nonFieldErrors?: string[]
     }
 

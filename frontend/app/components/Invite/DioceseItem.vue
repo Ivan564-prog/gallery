@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     const modelValue = defineModel<IDioceseExtend>({ required: true })
     const toastrStore = useToastrStore()
+    const confirmStore = useConfirmStore()
     const inviteParams = reactive({
         diocese: modelValue.value.id,
         email: '',
@@ -14,18 +15,26 @@
                 ...(response.status === 'created'
                     ? { invite: response.invite! }
                     : {
-                          id: response.user?.id!,
-                          image: response.user?.image || null,
-                          email: response.user?.email!,
+                            admin: {
+                                id: response.user?.id!,
+                                image: response.user?.image || null,
+                                email: response.user?.email!,
+                            }
                       }),
             }
             toastrStore.showSuccess(response.message)
-        } catch {
-            toastrStore.showError('Ошибка приглашения')
+        } catch (error) {
+            toastrStore.showError((error as IErrorRequest<IInviteResponse>).data.message)
         }
     }
 
     const removeInvite = async () => {
+        try {
+            await confirmStore.openConfirmModal('Подтверждение', 'Вы действительно хотите удалить приглашение')
+        } catch {
+            return
+        }
+
         try {
             await request<IInviteResponse>(`/api/v1/user/invite/${modelValue.value.invite?.id}/`, 'DELETE')
             modelValue.value = {
@@ -40,7 +49,14 @@
 
     const removeAdmin = async () => {
         try {
-            await request<IInviteResponse>(`/api/v1/user/${modelValue.value.invite?.id}/`, 'DELETE')
+            await confirmStore.openConfirmModal('Подтверждение', 'Вы действительно хотите заблокировать пользователя')
+        } catch {
+            return
+        }
+
+        try {
+            await request<IInviteResponse>(`/api/v1/user/${modelValue.value.admin?.id}/`, 'DELETE')
+            modelValue.value.admin = null
             toastrStore.showSuccess('Пользователь успешно удален')
         } catch {
             toastrStore.showError('Не удалось удалить пользователя')

@@ -2,35 +2,44 @@
 
 <template>
     <div class="authorize-layer">
-        <div class="authorize-layer__head">
-            <UILink class="authorize-layer__logo" to="/login">
-                <NuxtIcon class="authorize-layer__logo" name="logo" />
-            </UILink>
-        </div>
+        <UILink class="authorize-layer__logo" to="/login">
+            <NuxtIcon class="authorize-layer__logo-icon" name="logo" />
+        </UILink>
         <div class="authorize-layer__wrapper">
             <slot></slot>
         </div>
+        <ToastrError />
+        <ToastrSuccess />
     </div>
 </template>
 
 <style lang="scss" scoped>
     .authorize-layer {
-        overflow: auto;
+        position: relative;
         height: 100dvh;
-        padding-bottom: clampFluid(20);
+        overflow: auto;
         &__head {
+            position: absolute;
+            top: 0;
+            left: 0;
             padding: clampFluid(20) clampFluid(40);
             @include tablet {
                 padding: 14px 20px;
             }
         }
         &__logo {
+            position: absolute;
+            top: clampFluid(20);
+            left: clampFluid(40);
             width: clampFluid(80);
             height: auto;
             aspect-ratio: 1;
             @include tablet {
                 width: 50px;
             }
+        }
+        &__wrapper {
+            padding-bottom: clampFluid(20);
         }
     }
 </style>

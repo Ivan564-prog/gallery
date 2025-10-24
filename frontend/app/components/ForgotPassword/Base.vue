@@ -17,7 +17,7 @@
     .reset-password {
         padding: 0 clampFluid(20, 60);
         &__back-link {
-            margin-top: clampFluid(61);
+            margin-top: clampFluid(140);
         }
         &__form {
             width: 100%;

@@ -14,7 +14,7 @@
             max-width: clampFluid(600);
             margin: clampFluid(124) auto 0;
             @include tablet {
-                margin: 40px auto 0;
+                margin: 80px auto 0;
             }
         }
     }

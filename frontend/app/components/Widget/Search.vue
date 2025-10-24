@@ -1,12 +1,19 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+    const modelValue = defineModel<string>()
+    const searchQuery = ref<string>('')
 
+    const search = () => {
+        modelValue.value = searchQuery.value
+    }
+</script>
+    
 <template>
-    <div class="search">
-        <UIInput class="search__input" placeholder="Поиск" />
+    <form class="search" @submit.prevent="search">
+        <UIInput class="search__input" placeholder="Поиск" v-model="searchQuery" />
         <button class="search__button">
             <NuxtIcon class="search__button-icon" name="loupe" />
         </button>
-    </div>
+    </form>
 </template>
 
 <style lang="scss" scoped>
