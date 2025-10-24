@@ -30,7 +30,7 @@ class UserViewSet(ViewSet):
         serializer.save()
         return Response(serializer.data)
     
-    def destroy(self, pk, *args, **kwargs):
+    def destroy(self, request, pk=None):
         """Деактивация роли пользователя"""
         try:
             object = models.User.objects.get(pk=pk, is_active=True)
