@@ -53,7 +53,11 @@ class UserViewSet(ViewSet):
         }
         email = request.data.get('email')
         diocese = Diocese.objects.get(pk=request.data.get('diocese')) if request.user.status == 'root' else request.user.diocese
-        if not User.objects.filter(email=email).exists():
+        try:
+            user = User.objects.get(email=email)
+        except:
+            user = None
+        if user is None:
             invite = models.Invite.objects.create(
                 invite_by=request.user,
                 email=request.data.get('email'),
@@ -63,30 +67,22 @@ class UserViewSet(ViewSet):
             invite.send(request)
             return Response({
                 'status': 'created',
+                'message': 'Приглашение успешно отправлено',
                 'invite': serializers.InviteSerializer(invite, context={'request': request}).data,
             }, status=201)
-        elif User.objects.filter(email=email).get().status == 'missionary' and role_map[request.user.status] in ['chief', 'admin']:
-            user = User.objects.filter(email=email).get()
-            user.diocese = diocese
-            user.save()
-            if role_map[request.user.status] == 'chief':
-                if diocese.chief is None:
-                    diocese.chief = user
-                    diocese.save()
-                else:
-                    return Response({'message': 'Епархия уже имеет ответственного за ЕМО'}, status=400)
-            else:
-                if diocese.admin is None:
-                    diocese.admin = user
-                    diocese.save()
-                else:
-                    return Response({'message': 'Епархия уже имеет аккаунт администрации'}, status=400)
-            return Response({
-                'status': 'updated',
-                'user':  serializers.UserListSerializer(user, context={'request': request}).data,
-            })
         else:
-            return Response({'email': 'Такой пользователь уже существует'}, status=400)
+            success, message = diocese.set_role(user, role_map[request.user.status])
+            if success:
+                return Response(
+                    {
+                        'status': 'updated',
+                        'message': message,
+                        'user':  serializers.UserListSerializer(User.objects.get(email=email), context={'request': request}).data,
+                    },
+                    status=200,
+                )
+            else:
+                return Response({'message': message}, status=400)
     
     @action(methods=['GET'], detail=False)
     def check_register(self, request):
@@ -141,7 +137,6 @@ class UserViewSet(ViewSet):
         invite.save()
         return Response(status=204)
 
-    
     @action(methods=['GET'], detail=False, url_path='dioces_users')
     def get_diocese_users(self, request):
         user = request.user
