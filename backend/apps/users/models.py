@@ -51,13 +51,13 @@ class Invite(models.Model):
     def set_fields(self, user):
         self.is_active = False
         self.save()
-        if self.role == 'admin':
-            user.name = self.diocese.title
-        user.diocese = self.diocese
         if self.role == 'chief':
-            user.chief_in = self.diocese
+            self.diocese.chief = user
+            self.diocese.save()
         elif self.role == 'admin':
-            user.admin_in = self.diocese
+            self.diocese.admin = user
+            self.diocese.save()
+            user.name = self.diocese.title
         user.save()
     
     def send(self, request):
@@ -80,7 +80,8 @@ class Invite(models.Model):
             self.save()
 
     def save(self, *args, **kwargs):
-        self.set_code(save=False)
+        if not self.code:
+            self.set_code(save=False)
         return super().save(*args, **kwargs)
 
 
