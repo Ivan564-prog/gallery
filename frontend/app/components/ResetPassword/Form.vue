@@ -7,7 +7,7 @@
         password: '',
         password2: '',
     })
-    const errorInfo = ref<IResetPasswordErrors>({})
+    const errorInfo = ref<IPasswordErrors>({})
 
     const authorization = async () => {
         errorInfo.value = {}
@@ -19,7 +19,7 @@
             })
             modalStore.openedModal = 'reset-password-success'
         } catch (error) {
-            const errorMessage = (error as IHttpError<IResetPasswordErrors>).data.nonFieldErrors
+            const errorMessage = (error as IHttpError<IPasswordErrors>).data.nonFieldErrors
             if (errorMessage?.length) toastrStore.showError(errorMessage[0]!)
         }
         isLoading.value = false

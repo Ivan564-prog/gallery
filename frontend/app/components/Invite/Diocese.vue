@@ -1,17 +1,28 @@
 <script lang="ts" setup>
-    const { data: dioceseAccountList, status } = useAsyncData(
+    const query = ref<string>('')
+    const { data: dioceseAccountList, status, refresh } = useAsyncData(
         'diocese-accounts',
-        () => request<IDioceseExtend[]>('/api/v1/local_hierarchy/diocese/account/'),
+        () => request<IDioceseExtend[]>(
+                '/api/v1/local_hierarchy/diocese/account/',
+                'GET',
+                {
+                    query: query.value,
+                }
+            ),
         {
             deep: true,
         },
     )
+
+    watch(query, async () => {
+        await refresh()
+    })
 </script>
 
 <template>
     <div class="invite-diocese">
+        <WidgetSearch class="invite-diocese__search" v-model="query" />
         <template v-if="status === 'success'">
-            <WidgetSearch class="invite-diocese__search" />
             <div v-if="dioceseAccountList?.length" class="invite-diocese__list">
                 <InviteDioceseItem
                     v-for="(account, index) in dioceseAccountList"
@@ -31,14 +42,12 @@
         flex-direction: column;
         &__search {
             width: clampFluid(500);
-        }
-        &__list {
-            margin-top: clampFluid(30);
+            margin-bottom: clampFluid(30);
         }
         &__loader {
             position: absolute;
             inset: 0;
-            top: clampFluid(50);
+            top: clampFluid(100);
         }
     }
 </style>

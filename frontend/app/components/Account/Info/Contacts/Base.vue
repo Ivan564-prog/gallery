@@ -4,7 +4,8 @@
 
 <template>
     <div class="account-contacts">
-        <AccountInfoContactsUser />
+        <AccountInfoContactsDiocese v-if="userStore.userData?.role === 'admin'" />
+        <AccountInfoContactsUser v-else />
     </div>
 </template>
 
