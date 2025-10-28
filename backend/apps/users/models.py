@@ -184,23 +184,20 @@ class User(
             return self.invites.filter(is_active=True)
         else:
             related_diocese = self.get_related_diocese()
-            if related_diocese:
+            if related_diocese and self.role == 'chief':
                 return related_diocese.filter(is_active=True).order_by('-deadline')
             
-    def get_related_users(self):
+    def get_related_users(self, editable=True):
         if not self.is_active or self.role == 'missionary':
             return User.objects.none()
-        if self.role == 'admin':
+        if self.role == 'admin' and editable:
             return User.objects.filter(pk=getattr(self.get_related_diocese(), 'chief', None), is_active=True)
+        if self.role == 'admin' and not editable:
+            return self.get_related_diocese().users.filter(is_active=True, admin_in__isnull=True).order_bby('admin_in')
         if self.role == 'chief':
-            return self.get_related_diocese().users.filter(is_active=True, admin_in__isnull=True)
+            return self.get_related_diocese().users.filter(is_active=True, admin_in__isnull=True, chief_in__isnull=True)
         if self.role == 'root':
             return User.obects.filter(is_active=True)
-    
-    def get_invite_users(self):
-        related_diocese = self.get_related_diocese()
-        if related_diocese:
-            return related_diocese.users.filter(is_active=True)
         
     def get_transfers(self):
         related_diocese = self.get_related_diocese()

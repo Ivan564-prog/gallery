@@ -34,15 +34,6 @@ class UserViewSet(ViewSet):
         serializer.save()
         return Response(serializer.data)
     
-    def destroy(self, request, pk=None):
-        """Деактивация роли пользователя"""
-        try:
-            object = request.user.get_related_users().get(pk=pk)
-        except:
-            return Response(status=404)
-        object.deactivate()
-        return Response(status=204)
-    
     @action(methods=['POST'], detail=False)
     def register(self, request):
         """Регистрация"""
@@ -56,6 +47,8 @@ class UserViewSet(ViewSet):
         object = serializer.save()
         models.Invite.objects.get(code=request.data.get('code')).set_fields(object)
         return Response(self.serializer_class(object, context={'request': request}).data)
+    
+    @action(method=['GET'], )
     
     @action(methods=['POST'], detail=False, url_path='invite')
     def send_invite(self, request):
@@ -162,15 +155,25 @@ class UserViewSet(ViewSet):
         invite.save()
         return Response(status=204)
 
-    @action(methods=['GET'], detail=False, url_path='dioces_users')
-    def get_diocese_users(self, request):
+    @action(methods=['GET'], detail=False, url_path='related_user')
+    def get_related_users(self, request):
         """Получение текущий, приглашенных и переводящийхся пользователей епархии(епархии в которой пользователь главный миссионер)"""
         user = request.user
         return Response({
             'transfers': serializers.TransferSerializer(user.get_transfers(), many=True, context={"request": request}).data,
             'invites': serializers.InviteSerializer(user.get_invites(), many=True).data,
-            'users': serializers.UserListSerializer(user.get_invite_users(), many=True, context={'request': request}).data,
+            'users': serializers.UserListSerializer(user.get_related_users(), many=True, context={'request': request}).data,
         })
+    
+    @action(methods=['DELETE'], detail=False, url_path='related_user/(?P<pk>[^/.]+)')
+    def destroy_related_user(self, request, pk=None):
+        """Деактивация роли пользователя"""
+        try:
+            object = request.user.get_related_users(editable=True).get(pk=pk)
+        except:
+            return Response(status=404)
+        object.deactivate()
+        return Response(status=204)
     
     @action(methods=['PATCH'], detail=False, url_path='transfer_management/(?P<transfer_id>[^/.]+)')
     def transfer_management(self, request, transfer_id):
