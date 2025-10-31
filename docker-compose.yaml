@@ -1,3 +1,4 @@
+version: '3.8'
 services:
 
   postgres:
@@ -12,7 +13,7 @@ services:
       - 5432:5432
     volumes: 
       - postgres_db:/var/lib/postgresql/data
-  django:
+  spring:
       build:
         context: ./
         dockerfile: ./dockerfiles/dev/backend.Dockerfile
@@ -26,8 +27,8 @@ services:
       # user: ${UID:-1000}:${GID:-1000}
       networks:
         - internal
-      # ports:
-        # - 8000:8000
+      ports:
+        - 8000:8000
       volumes:
         - ./backend:/app
       depends_on:
@@ -44,7 +45,7 @@ services:
       context: ./
       dockerfile: ./dockerfiles/dev/frontend.Dockerfile
     environment:
-      HOST: 'http://django:8000'
+      HOST: 'http://spring:8000'
     user: ${UID:-1000}:node
     volumes:
       - ./frontend:/app
@@ -53,7 +54,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - django
+      - spring
 
   nginx:
     image: git.docker-sandbox.place-start.ru/placestart/nginx:1.21.6-alpine
@@ -67,7 +68,7 @@ services:
       - ./backend/static:/app/static
     depends_on:
       - nuxt
-      - django
+      - spring
 
 networks:
   internal:
