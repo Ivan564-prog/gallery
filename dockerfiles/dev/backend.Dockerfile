@@ -1,4 +1,4 @@
-FROM maven:3.8.6-openjdk-17 AS builder
+FROM infotechsoft/maven:3.8.6-openjdk-17 
 
 WORKDIR /app
 
@@ -6,16 +6,18 @@ COPY ./backend/pom.xml .
 
 COPY ./backend/src ./src
 
-RUN mvn dependency:go-offline
+#RUN mvn dependency:go-offline
 
-RUN mvn package -DskipTests
+#RUN mvn package -DskipTests
 
-FROM openjdk:17-slim
+#FROM openjdk:17-slim
 
-WORKDIR /app
+#WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+#COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# ENTRYPOINT ["yes"]
+#ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["mvn", "spring-boot:run"]
