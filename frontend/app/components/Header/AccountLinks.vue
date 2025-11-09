@@ -1,41 +1,10 @@
 <script lang="ts" setup>
     const userStore = useUserStore()
-    const statsStore = useStatsStore()
-    const socialList = computed(() => {
-        if (userStore.userData?.role == 'root')
-            return [
-                { id: 1, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist },
-                { id: 2, icon: 'bell', link: '/notifications', count: statsStore.stats?.newNotification },
-            ]
-        else if (userStore.userData?.role == 'missionary')
-            return [
-                { id: 1, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist },
-                { id: 2, icon: 'bell', link: '/notifications', count: 1 },
-            ]
-        else
-            return [
-                { id: 1, icon: 'star', link: '/report', count: statsStore.stats?.diariesReports },
-                { id: 2, icon: 'hearth', link: '/favorites', count: statsStore.stats?.newWishlist },
-                { id: 3, icon: 'bell', link: '/notifications', count: statsStore.stats?.newNotification },
-            ]
-    })
 </script>
 
 <template>
     <nav class="account-links">
-        <UIButton v-if="userStore.userData?.role == 'missionary'" class="account-links__add-post-button">
-            Новая запись
-        </UIButton>
         <div class="account-links__list">
-            <UILink
-                v-for="item in socialList"
-                class="account-links__item account-link"
-                :key="item.id"
-                :to="item.link"
-            >
-                <NuxtIcon class="account-link__icon" :name="item.icon" />
-                <p v-if="item.count" class="account-link__count p4">{{ item.count }}</p>
-            </UILink>
             <UILink class="account-link account-link--personal-account" to="/">
                 <UIImage class="account-link__image" :src="userStore.userData?.image" />
             </UILink>

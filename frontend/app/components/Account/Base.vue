@@ -1,5 +1,6 @@
 <script lang="ts" setup>
     const currentTab = ref<number>(1)
+    const { data } = await useRequest('')
 </script>
 
 <template>

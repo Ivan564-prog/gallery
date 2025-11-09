@@ -1,48 +1,13 @@
 <script lang="ts" setup>
-    const userStore = useUserStore()
-    const statsStore = useStatsStore()
     const route = useRoute()
-    const menuList = computed(() => {
-        if (userStore.userData?.role == 'root')
-            return [
-                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0 },
-                { id: 2, name: 'Отчёты', icon: 'report', link: '/reports', count: 0 },
-                {
-                    id: 3,
-                    name: 'Библиотека',
-                    icon: 'library',
-                    link: '/library',
-                    count: statsStore.stats?.newBooks,
-                },
-                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0 },
-                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0 },
-            ]
-        else if (userStore.userData?.role == 'missionary')
-            return [
-                { id: 1, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0 },
-                {
-                    id: 2,
-                    name: 'Библиотека',
-                    icon: 'library',
-                    link: '/library',
-                    count: statsStore.stats?.newBooks,
-                },
-            ]
-        else
-            return [
-                { id: 1, name: 'Дневники', icon: 'diary', link: '/diary', count: 0 },
-                { id: 2, name: 'Мой дневник', icon: 'my-diary', link: '/my-diary', count: 0 },
-                {
-                    id: 3,
-                    name: 'Библиотека',
-                    icon: 'library',
-                    link: '/library',
-                    count: statsStore.stats?.newBooks,
-                },
-                { id: 4, name: 'Документы', icon: 'document', link: '/documents', count: 0 },
-                { id: 5, name: 'Статистика', icon: 'stat', link: '/stat', count: 0 },
-            ]
-    })
+    const menuList = computed(() => [
+            {
+                id: 1,
+                name: 'Библиотека',
+                icon: 'library',
+                link: '/library',
+            },
+        ])
 </script>
 
 <template>

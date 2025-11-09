@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.gallery.pictures.repository.User;
+import com.gallery.pictures.repository.UserRepository;
 
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public List<User> getUserList() {
-        return List.of(
-            new User(1L, "Иван", "test@inbox.ru", "admin"),
-            new User(2L, "Антон", "test2@inbox.ru", "client"),
-            new User(3L, "Петя", "test3@inbox.ru", "client")
-        );
+        return this.userRepository.findAll();
     }
 }

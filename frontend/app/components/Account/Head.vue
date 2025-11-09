@@ -37,22 +37,7 @@
     <div class="account-head">
         <div class="account-head__tabs">
             <div class="account-head__tabs-list">
-                <template v-if="userStore.userData?.role === 'missionary'">
-                    <h3 class="account-head__title h3">Данные пользователя</h3>
-                </template>
-                <template v-else>
-                    <button
-                        v-for="tab in tabList"
-                        class="account-head__tab h3"
-                        :key="tab.id"
-                        :class="{
-                            'account-head__tab--active': currentTab === tab.id,
-                        }"
-                        @click="currentTab = tab.id"
-                    >
-                        {{ tab.title }}
-                    </button>
-                </template>
+                <h3 class="account-head__title h3">Данные пользователя</h3>
             </div>
         </div>
         <button class="account-head__logout-button logout-button" @click="logout">
