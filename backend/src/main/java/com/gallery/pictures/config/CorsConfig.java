@@ -11,9 +11,11 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")  // ваш фронтенд
+                .allowedOrigins("http://localhost")  // ваш фронтенд
+                .allowedOrigins("http://localhost/")  // ваш фронтенд
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .maxAge(3600);  // кэширование preflight-запросов на 1 час
+                .maxAge(3600);
     }
-}
+}   

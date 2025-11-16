@@ -3,7 +3,7 @@
 <template>
     <aside class="navigation-sidebar">
         <UILink class="navigation-sidebar__logo mobile-hidden" to="/">
-            <NuxtIcon class="navigation-sidebar__logo-icon" name="logo" />
+            <NuxtIcon filled class="navigation-sidebar__logo-icon" name="logo" />
         </UILink>
         <NavigationSidebarMenu class="navigation-sidebar__menu" />
     </aside>

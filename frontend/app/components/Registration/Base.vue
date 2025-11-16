@@ -1,25 +1,14 @@
 <script lang="ts" setup>
-    const route = useRoute()
-    const { data: registrationStatus } = await useRequest<IRegistrationStatus>('/api/v1/user/check_register/', 'GET', {
-        code: route.query.code,
-    })
 </script>
 
 <template>
     <div class="registration">
         <div class="registration__info">
-            <template v-if="registrationStatus.success">
-                <h2 class="registration__info-title h1">Добро пожаловать!</h2>
-                <p class="registration__info-text p2">Вы получили приглашение присоединиться <br> к миссионерскому отделу</p>
-            </template>
-            <template v-else>
-                <h2 class="registration__info-title h1">Ошибка!</h2>
-                <p class="registration__info-text p2">Проверьте, что ссылка верна и не устарела.</p>
-            </template>
+            <h2 class="registration__info-title h1">Добро пожаловать!</h2>
+            <p class="registration__info-text p2">В музей изобразительных искусств</p>
         </div>
-        <div v-if="registrationStatus.success" class="registration__wrapper">
-            <RegistrationDioceseForm v-if="registrationStatus.role === 'admin'" class="registration__form" />
-            <RegistrationUserForm v-else />
+        <div class="registration__wrapper">
+            <RegistrationUserForm class="registration__form" />
         </div>
     </div>
 </template>
@@ -32,16 +21,20 @@
         height: calc(100dvh - clampFluid(20));
         @include tablet {
             grid-template-columns: 1fr;
+            gap: 40px;
         }
         &__info {
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             gap: clampFluid(16);
             text-align: center;
-            padding: clampFluid(122) clampFluid(40);
+            padding: clampFluid(240) clampFluid(40);
+            @include tablet {
+                padding: 90px 20px;
+            }
             &:before {
                 content: '';
                 position: absolute;

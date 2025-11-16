@@ -8,12 +8,10 @@ let csrf: string
 
 export const useRequest = async <T>(url: string, method?: TMethod, body?: TRequestBody) => {
     url = getAPIUrl() + url
-    // if (!csrf && method != 'GET') csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     const response = await useFetch(url, {
         method,
         [method == 'GET' ? 'params' : 'body']: body,
         headers: {
-            // 'X-CSRFToken': csrf,
             ...useRequestHeaders(['cookie']),
         },
         credentials: 'include',
@@ -30,14 +28,12 @@ export const useRequest = async <T>(url: string, method?: TMethod, body?: TReque
 
 export const request = async <T>(url: string, method?: TMethod, body?: TRequestBody) => {
     url = getAPIUrl() + url
-    // if (!csrf && method != 'GET') csrf = await $fetch<string>(`${getAPIUrl()}/api/v1/csrf_generate/`)
     try {
         const response = await $fetch<T>(url, {
             method,
             credentials: 'include',
             [method == 'GET' ? 'params' : 'body']: body,
             headers: {
-                // 'X-CSRFToken': csrf,
                 ...useRequestHeaders(['cookie']),
             },
         })

@@ -6,7 +6,7 @@
     <header class="header">
         <div class="header__content">
             <UILink class="header__logo desktop-hidden" to="/">
-                <NuxtIcon class="header__logo-icon" name="logo" />
+                <NuxtIcon filled class="header__logo-icon" name="logo" />
             </UILink>
             <h1 class="header__title h1 mobile-hidden">{{ settingsStore.pageTitle }}</h1>
         </div>

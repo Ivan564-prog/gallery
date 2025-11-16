@@ -23,6 +23,9 @@ public class User {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
+    public User() {
+    }
+
     // Конструктор
     public User(Long id, String name, String email, String role, String password) {
         this.id = id;
@@ -43,9 +46,9 @@ public class User {
         return role;
     }
 
-    // public String getPassword() {
-    //     return password;
-    // }
+    public String getPassword() {
+        return password;
+    }
 
     public void setId(Long id) {
         this.id = id;

@@ -16,7 +16,6 @@
     .politic-confirm {
         display: flex;
         align-items: center;
-        gap: clampFluid(16);
         &__text {
             color: var(--gray-03);
         }

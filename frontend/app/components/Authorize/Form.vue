@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     const isLoading = ref<boolean>(false)
     const params = reactive({
-        email: '',
+        name: '',
         password: '',
     })
     const errorInfo = ref<IAuthorizeErrors>({})
@@ -31,19 +31,17 @@
         <div class="authorize-form__fields">
             <UIInput
                 class="authorize-form__input"
-                placeholder="Почта"
-                :error-text="errorInfo.email && errorInfo.email[0]"
-                v-model="params.email"
+                placeholder="Имя"
+                v-model="params.name"
             />
             <UIInput
                 class="authorize-form__input"
                 type="password"
                 placeholder="Пароль"
-                :error-text="errorInfo.password && errorInfo.password[0]"
                 v-model="params.password"
             />
         </div>
-        <UILink class="authorize-form__link p2" to="/forgot-password">Забыли пароль?</UILink>
+        <UILink class="authorize-form__link p2" to="/registration">Регистрация</UILink>
         <UIButton class="authorize-form__button" width-mode="full">Войти</UIButton>
     </form>
 </template>

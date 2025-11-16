@@ -3,7 +3,7 @@
 <template>
     <div class="authorize-layer">
         <UILink class="authorize-layer__logo" to="/login">
-            <NuxtIcon class="authorize-layer__logo-icon" name="logo" />
+            <NuxtIcon filled class="authorize-layer__logo-icon" name="logo" />
         </UILink>
         <div class="authorize-layer__wrapper">
             <slot></slot>
@@ -29,6 +29,7 @@
         }
         &__logo {
             position: absolute;
+            z-index: 2;
             top: clampFluid(20);
             left: clampFluid(40);
             width: clampFluid(80);

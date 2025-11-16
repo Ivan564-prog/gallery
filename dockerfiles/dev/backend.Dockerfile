@@ -8,10 +8,13 @@ COPY ./backend/src ./src
 
 EXPOSE 8080
 
-ENTRYPOINT [ \
-    "mvn", \
-    "spring-boot:run", \
-    "-Dspring.output.ansi.enabled=always", \
-    "-Dlogging.level.root=DEBUG", \
-    "-Dlogging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n" \
-]
+# RUN mvn package -DskipTests
+
+# FROM eclipse-temurin:17-jre-alpine
+
+# WORKDIR /app
+
+# COPY --from=builder /app/target/*.jar /app/app.jar
+
+# ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["mvn", "spring-boot:run", "-X"]
