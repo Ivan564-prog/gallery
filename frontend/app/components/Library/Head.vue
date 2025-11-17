@@ -8,41 +8,11 @@
 
 <template>
     <div class="library-head">
-        <div class="library-head__filters">
-            <label class="library-head__filter library-filter">
-                <span class="library-filter__text p2 p2--bold">Все материалы</span>
-                <input
-                    class="library-filter__radio"
-                    name="library-type"
-                    type="radio"
-                    :value="undefined"
-                    v-model="bookType"
-                />
-            </label>
-            <label class="library-head__filter library-filter">
-                <span class="library-filter__text p2 p2--bold">Сохраненные</span>
-                <NuxtIcon class="library-filter__icon" name="favorite-2" />
-                <input
-                    class="library-filter__radio"
-                    name="library-type"
-                    type="radio"
-                    :value="-1"
-                    v-model="bookType"
-                />
-            </label>
-            <label v-for="type in typeList" class="library-head__filter library-filter" :key="type.id">
-                <span class="library-filter__text p2 p2--bold">{{ type.title }}</span>
-                <input
-                    class="library-filter__radio"
-                    name="library-type"
-                    type="radio"
-                    :value="type.id"
-                    v-model="bookType"
-                />
-            </label>
-        </div>
-        <!-- TODO ДОБАВИТЬ КОГДА ЗАКОНЧУ v-if="userStore.userData?.role === 'root'" -->
-        <UIButton class="library-head__button" to="#book-creator">Добавить публикацию</UIButton>
+        <UIButton
+            v-if="userStore.userData?.role === 'admin'"
+            class="library-head__button"
+            to="#book-creator"
+        >Добавить картину</UIButton>
     </div>
 </template>
 
@@ -50,7 +20,7 @@
     .library-head {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: end;
         &__filters {
             display: flex;
             align-items: center;

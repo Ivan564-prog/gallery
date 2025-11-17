@@ -13,7 +13,6 @@ declare global {
         title: string
         shortDescription: string | null
         image: string
-        isNew: boolean
         onWishlist: boolean
         file: string | null
         status: TBookStatus
@@ -21,9 +20,6 @@ declare global {
 
     interface IBookDetail extends IBook {
         description: string | null
-        file: string | null
-        type: IBookType
-        similar: IBook[]
         publishedAt: string
     }
 
@@ -32,17 +28,6 @@ declare global {
         shortDescription: string
         description: string | null
         image: File[]
-        file: File[]
-        type: number | null
-    }
-
-    interface IEditorBook {
-        title: string
-        shortDescription: string
-        description: string
-        image?: File[]
-        file?: File[]
-        type: number | null
     }
 
     interface ICreateBookErrors {

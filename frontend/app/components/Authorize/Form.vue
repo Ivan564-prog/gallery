@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+    const userID = useCookie('user-id')
+    const toastrStore = useToastrStore()
+    const userStore = useUserStore()
     const isLoading = ref<boolean>(false)
     const params = reactive({
         name: '',
@@ -10,10 +13,11 @@
         errorInfo.value = {}
         isLoading.value = true
         try {
-            await request('/api/v1/user/authorize/', 'POST', params)
+            userStore.userData = await request<IUser>('/api/v1/user/authorize/', 'POST', params)
+            userID.value = userStore.userData.id.toString()
             navigateTo('/')
         } catch (error) {
-            errorInfo.value = (error as IHttpError<IAuthorizeErrors>).data
+            toastrStore.showError('Не верный логин или пароль')
         }
         isLoading.value = false
     }

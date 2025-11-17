@@ -11,12 +11,12 @@
             }
     })
 
-    const { data: bookList, refresh } = await useRequest<IBook[]>(
-        '/api/v1/library/book/',
-        'GET',
-        requestParams,
-    )
-    const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
+    // const { data: bookList, refresh } = await useRequest<IBook[]>(
+    //     '/api/v1/library/book/',
+    //     'GET',
+    //     requestParams,
+    // )
+    // const { data: typeList } = await useRequest<IBookType[]>('/api/v1/library/book_type/')
 
     const addNewBook = (book: IBook) => {
         bookList.value = [book, ...bookList.value]
@@ -48,12 +48,11 @@
 <template>
     <section class="library">
         <LibraryHead class="library__head" :type-list="typeList" v-model="bookType" />
-        <LibraryList v-if="bookList?.length" :book-list="bookList" />
-        <UIEmptyBanner v-else />
+<!--        <LibraryList v-if="bookList?.length" :book-list="bookList" />-->
+<!--        <UIEmptyBanner v-else />-->
         <Teleport to="body">
             <LibraryDetail @toggle-wishlist="toggleWishlist" />
-            <LibraryBookCreator :type-list="typeList" @add-new-book="addNewBook" />
-            <LibraryBookEditor :type-list="typeList" @remove-book="removeBook" />
+            <LibraryBookCreator @add-new-book="addNewBook" />
         </Teleport>
     </section>
 </template>

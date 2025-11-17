@@ -1,6 +1,9 @@
 <script lang="ts" setup>
     const PAGE_TITLE = 'Авторизация'
     setPageTitle(PAGE_TITLE)
+    definePageMeta({
+        public: true,
+    })
 </script>
 
 <template>

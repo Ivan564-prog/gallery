@@ -22,8 +22,7 @@
     "nuxt-icons": "^4.0.0",
     "pinia": "^3.0.3",
     "vue": "^3.5.20",
-    "vue-router": "^4.5.1",
-    "vue-yandex-maps": "^2.2.1"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "prettier": "3.6.2",

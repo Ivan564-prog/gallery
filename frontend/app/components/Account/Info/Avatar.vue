@@ -1,48 +1,14 @@
-<script lang="ts" setup>
-    defineProps<{
-        avatar: string | null
-    }>()
-    const newAvatar = ref<File>()
-    const toastrStore = useToastrStore()
-
-    const isImg = (file: File) => window.FileReader && file.type.includes('image')
-
-    const getURLfromFile = (file: File) => URL.createObjectURL(file)
-
-    const setNewAvatar = async (event: Event) => {
-        const input = <HTMLInputElement>event.target
-        const file = input.files && input.files[0]
-        if (!file || !isImg(file)) return
-        newAvatar.value = file
-
-        const formData = new FormData()
-        formData.append('image', file)
-
-        try {
-            await request('/api/v1/user/', 'PATCH', formData)
-            toastrStore.showSuccess('Аватарка успешно обновлена')
-        } catch {
-            toastrStore.showError('Ошибка обновления аватарки')
-            newAvatar.value = undefined
-        }
-    }
-</script>
+<script lang="ts" setup></script>
 
 <template>
-    <label class="avatar">
+    <div class="avatar">
         <div class="avatar__wrapper">
             <UIImage
-                v-if="avatar || newAvatar"
                 class="avatar__image"
-                :src="(newAvatar && getURLfromFile(newAvatar)) || avatar"
+                src="/images/avatar.png"
             />
-            <div v-else class="avatar__field">
-                <p class="avatar__text p3">Добавить фото</p>
-            </div>
         </div>
-        <p v-if="avatar || newAvatar" class="avatar__edit avatar__text p3">Изменить</p>
-        <input class="avatar__input" type="file" @change="setNewAvatar" />
-    </label>
+    </div>
 </template>
 
 <style lang="scss" scoped>

@@ -1,8 +1,5 @@
 <script lang="ts" setup>
     const MODAL_NAME = 'book-creator'
-    const { typeList } = defineProps<{
-        typeList: IBookType[]
-    }>()
     const modalStore = useModalStore()
     const toastrStore = useToastrStore()
     const opened = computed({
@@ -19,8 +16,6 @@
         shortDescription: '',
         description: '',
         image: [],
-        file: [],
-        type: null,
     })
     const errorsInfo = ref<ICreateBookErrors>({})
 
@@ -32,17 +27,14 @@
         return typeObject
     })
 
-    const createBook = async (status: TBookStatus) => {
+    const createBook = async () => {
         const formData = new FormData()
         errorsInfo.value = {}
 
         formData.append('title', params.title)
-        formData.append('status', status)
         if (params.image[0]) formData.append('image', params.image[0])
-        if (params.file[0]) formData.append('file', params.file[0])
         if (params.description) formData.append('description', params.description)
         if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
-        if (params.type) formData.append('type', String(params.type))
 
         try {
             const newBook = await request<IBook>('/api/v1/library/book/', 'POST', formData)
@@ -73,33 +65,6 @@
                     v-model="params.title"
                 />
                 <div class="book-creator-form__top">
-                    <UITitledInput
-                        class="book-creator-form__item"
-                        icon="star-2"
-                        text="Тип публикации"
-                        :error-text="errorsInfo.type && errorsInfo.type[0]"
-                    >
-                        <UISelect
-                            empty
-                            placeholder="Выберите"
-                            :items="formattedTypeList"
-                            :error-text="errorsInfo.type && errorsInfo.type[0]"
-                            v-model="params.type"
-                        />
-                    </UITitledInput>
-                    <UITitledInput
-                        class="book-creator-form__item book-creator-form__item--file"
-                        icon="clip"
-                        text="Прикрепить"
-                    >
-                        <UIFileInput
-                            description="Файл"
-                            formates="application"
-                            :error-text="errorsInfo.file && errorsInfo.file[0]"
-                            :max-files="1"
-                            v-model="params.file"
-                        />
-                    </UITitledInput>
                     <div class="book-creator-form__photo">
                         <UITitledInput
                             class="book-creator-form__item"
@@ -150,17 +115,9 @@
                 <UIButton
                     class="book-creator-footer__button"
                     font-size="big"
-                    @click="createBook('published')"
+                    @click="createBook"
                 >
                     Добавить публикацию
-                </UIButton>
-                <UIButton
-                    class="book-creator-footer__button"
-                    color-variant="gray"
-                    font-size="big"
-                    @click="createBook('draft')"
-                >
-                    Сохранить черновик
                 </UIButton>
             </div>
         </template>

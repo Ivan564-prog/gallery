@@ -6,7 +6,7 @@
     <nav class="account-links">
         <div class="account-links__list">
             <UILink class="account-link account-link--personal-account" to="/">
-                <UIImage class="account-link__image" :src="userStore.userData?.image" />
+                <UIImage class="account-link__image" src="/images/avatar.png" />
             </UILink>
         </div>
     </nav>

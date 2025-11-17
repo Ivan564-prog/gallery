@@ -1,22 +1,16 @@
 <script lang="ts" setup>
+    const userID = useCookie('user-id')
     const userStore = useUserStore()
     const toastrStore = useToastrStore()
     const params = reactive({
         name: userStore.userData?.name,
-        surname: userStore.userData?.surname,
-        patronymic: userStore.userData?.patronymic,
-        city: userStore.userData?.city,
-        phone: userStore.userData?.phone || '',
-        diocese: userStore.userData?.diocese,
-        country: userStore.userData?.country,
-        region: userStore.userData?.region,
     })
     const errorInfo = ref<IUserErrors>({})
 
     const setUserData = async () => {
         errorInfo.value = {}
         try {
-            userStore.userData = await request<IUser>('/api/v1/user/', 'PATCH', params)
+            userStore.userData = await request<IUser>(`/api/v1/user/${userID.value}/`, 'PATCH', params)
             toastrStore.showSuccess('Данные пользователя успешно обновлены')
         } catch (error) {
             errorInfo.value = (error as IErrorRequest<IUserErrors>).data

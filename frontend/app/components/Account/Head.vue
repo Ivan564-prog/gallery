@@ -1,31 +1,17 @@
 <script lang="ts" setup>
-    const currentTab = defineModel<number>({ required: true })
+    const userID = useCookie('user-id')
     const confirmStore = useConfirmStore()
     const userStore = useUserStore()
-    const tabList = computed(() => {
-        switch (userStore.userData?.role) {
-            case 'chief':
-                return [
-                    { id: 1, title: 'Мои данные' },
-                    { id: 2, title: 'Приглашенные пользователи' },
-                ]
-            case 'root':
-                return [
-                    { id: 1, title: 'Мои данные' },
-                    { id: 2, title: 'Приглашенные администрации' },
-                ]
-            default:
-                return [
-                    { id: 1, title: 'Мои данные' },
-                    { id: 2, title: 'Активные пользователи' },
-                ]
-        }
-    })
+    const tabList = computed(() => [
+        { id: 1, title: 'Мои данные' },
+        { id: 2, title: 'Активные пользователи' },
+    ])
 
     const logout = async () => {
         try {
             await confirmStore.openConfirmModal('Подтверждение', 'Вы действительно хотите выйти из аккаунта?')
-            await request('/api/v1/user/logout/', 'POST')
+            userID.value = undefined
+            userStore.userData = null
             navigateTo('/login')
         } catch {
             return

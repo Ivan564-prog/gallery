@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+    const userID = useCookie('user-id')
     const toastrStore = useToastrStore()
     const params = reactive({
         password1: '',
@@ -8,8 +9,16 @@
 
     const setPassword = async () => {
         errorInfo.value = {}
+
+        if (params.password1 !== params.password2) {
+            toastrStore.showError('Пароли не совпадают')
+            return
+        }
+
         try {
-            await request<IUser>('/api/v1/user/', 'PATCH', params)
+            await request<IUser>(`/api/v1/user/${userID.value}/`, 'PATCH', {
+                password: params.password1,
+            })
             toastrStore.showSuccess('Пароль успешно обновлен')
             Object.keys(params).forEach(key => ((params as any)[key] = ''))
         } catch (error) {

@@ -7,8 +7,8 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@nuxtjs/seo',
         'nuxt-icons',
-        'vue-yandex-maps/nuxt',
     ],
+    ssr: false,
     css: [
         '~/assets/scss/reset.scss',
         '~/assets/scss/utils.scss',
@@ -24,16 +24,13 @@ export default defineNuxtConfig({
             },
         },
     },
-    yandexMaps: {
-        apikey: '22fbcff0-4420-4a20-81bc-789cab1db7aa',
-    },
     image: {
         domains: [<string>process.env.HOST],
         format: ['webp'],
     },
     site: {
         url: 'https://' + process.env.HOST,
-        name: 'Миссионерский портал',
+        name: 'Музей изобразительных искусств',
     },
     sitemap: {
         sources: [

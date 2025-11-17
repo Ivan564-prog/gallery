@@ -11,9 +11,6 @@ export const useRequest = async <T>(url: string, method?: TMethod, body?: TReque
     const response = await useFetch(url, {
         method,
         [method == 'GET' ? 'params' : 'body']: body,
-        headers: {
-            ...useRequestHeaders(['cookie']),
-        },
         credentials: 'include',
     })
 
@@ -33,9 +30,6 @@ export const request = async <T>(url: string, method?: TMethod, body?: TRequestB
             method,
             credentials: 'include',
             [method == 'GET' ? 'params' : 'body']: body,
-            headers: {
-                ...useRequestHeaders(['cookie']),
-            },
         })
         return response
     } catch (error: any) {
