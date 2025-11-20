@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-    const bookType = ref<number | undefined>(undefined)
+    const params = reactive({
+        query: ''
+    })
 
     const { data: bookList, refresh } = await useRequest<IBook[]>(
         '/api/v1/picture/',
         'GET',
+        params,
     )
 
     const addNewBook = (book: IBook) => {
@@ -34,11 +37,15 @@
                 : book
         })
     }
+
+    watch(() => params.query, async () => {
+        await refresh()
+    })
 </script>
 
 <template>
     <section class="library">
-        <LibraryHead class="library__head" v-model="bookType" />
+        <LibraryHead class="library__head" v-model="params.query" />
         <LibraryList
             v-if="bookList?.length"
             :book-list="bookList"

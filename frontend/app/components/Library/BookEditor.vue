@@ -36,14 +36,13 @@
         if (bookData.value.file) visualFile.value = bookData.value.file
     }
 
-    const editBook = async (status: TBookStatus) => {
+    const editBook = async () => {
         if (!bookData.value) return
 
         const formData = new FormData()
         errorsInfo.value = {}
 
         formData.append('title', params.title)
-        formData.append('status', status)
         if (params.image && params.image[0]) formData.append('image', params.image[0])
         else if (!params.image?.length) formData.append('image', new File([], ''))
 
@@ -58,6 +57,7 @@
                 formData,
             )
             emits('edit-book', editedBook)
+            opened.value = false
         } catch {
             toastrStore.showError('Ошибка редактирования публикации')
         }
@@ -151,7 +151,7 @@
                     class="book-creator-footer__button"
                     font-size="big"
                     from="creatorBook"
-                    @click="editBook('published')"
+                    @click="editBook"
                 >
                     Сохранить
                 </UIButton>

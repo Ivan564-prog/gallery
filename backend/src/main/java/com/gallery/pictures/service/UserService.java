@@ -35,14 +35,6 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException("Пользователя с id: " + id + " нет"));
     }
 
-    public List<User> getOthers(Long id) {
-        return this.userRepository
-            .findAll()
-            .stream()
-            .filter(user -> !user.getId().equals(id))
-            .collect(Collectors.toList());
-    }
-
     public User create(User user) {
         return userRepository.save(user);
     }

@@ -27,8 +27,14 @@ public class PictureService {
         this.pictureRepository = pictureRepository;
     }
 
-    public List<Picture> getAllPictures() {
-        return pictureRepository.findAll().stream()
+    public List<Picture> getAllPictures(String query) {
+        List<Picture> pictures;
+        if (query != null && !query.trim().isEmpty()) {
+            pictures = pictureRepository.findByTitleContainingIgnoreCase(query.trim());
+        } else {
+            pictures = pictureRepository.findAll();
+        }
+        return pictures.stream()
                 .map(this::enrichWithFullUrl)
                 .collect(Collectors.toList());
     }

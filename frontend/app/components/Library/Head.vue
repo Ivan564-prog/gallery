@@ -3,11 +3,12 @@
         typeList: IBookType[]
     }>()
     const userStore = useUserStore()
-    const bookType = defineModel<number>()
+    const query = defineModel<string>()
 </script>
 
 <template>
     <div class="library-head">
+        <WidgetSearch class="library-head__search" v-model="query" />
         <UIButton
             v-if="userStore.userData?.role === 'admin'"
             class="library-head__button"
@@ -20,12 +21,16 @@
     .library-head {
         display: flex;
         align-items: center;
-        justify-content: end;
-        &__filters {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: clampFluid(14);
+        justify-content: space-between;
+        @include tablet {
+            flex-direction: column;
+            align-items: baseline;
+            gap: 20px;
+        }
+        &__search {
+            @include tablet {
+                width: 100%;
+            }
         }
         &__button {
             @include tablet {

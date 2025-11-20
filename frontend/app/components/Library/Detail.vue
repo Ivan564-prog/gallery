@@ -1,6 +1,5 @@
 <script lang="ts" setup>
     const MODAL_NAME = 'book-detail'
-    const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const detailInfo = ref<IBookDetail>()
     const opened = computed({
@@ -41,17 +40,13 @@
                             v-html="detailInfo?.description"
                         ></div>
                         <UIButton
-                            download
                             class="book-detail-main__button"
                             color-variant="empty-red"
-                            :to="detailInfo?.file"
+                            target="_blank"
+                            :to="detailInfo?.image"
                         >
-                            Скачать pdf
+                            Скачать
                         </UIButton>
-                        <p class="book-detail-main__text p2">
-                            Дорогие читатели, если вы хотите задать вопросы о книге или получить ее в бумажном
-                            виде — пишите нам на почту
-                        </p>
                     </div>
                     <UIImage
                         class="book-detail-main__image"

@@ -23,8 +23,8 @@ public class PictureController {
     }
     
     @GetMapping
-    public List<Picture> getAllPictures() {
-        return pictureService.getAllPictures();
+    public List<Picture> getAllPictures(@RequestParam(required = false) String query) {
+        return pictureService.getAllPictures(query);
     }
 
     @GetMapping(path="/{id}/")
