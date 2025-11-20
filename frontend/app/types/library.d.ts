@@ -36,4 +36,11 @@ declare global {
         image?: string[]
         type?: string[]
     }
+
+    interface IEditorBook {
+        title: string
+        shortDescription: string
+        description: string
+        image?: File[]
+    }
 }

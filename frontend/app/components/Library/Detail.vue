@@ -3,36 +3,16 @@
     const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const detailInfo = ref<IBookDetail>()
-    const emits = defineEmits<{
-        (event: 'toggle-wishlist', bookId: number, status: boolean): void
-    }>()
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
-    })
-    const inWishlist = ref<boolean | undefined>(detailInfo.value?.onWishlist)
-    const formattedDate = computed(() => {
-        if (!detailInfo.value?.publishedAt) return
-        const date = new Date(detailInfo.value?.publishedAt)
-        return `${date.getDay()} ${monthByNum(date.getMonth())} ${date.getFullYear()}`
     })
 
     const setDetailInfo = async () => {
         if (modalStore.optionalData.bookId)
             detailInfo.value = await request<IBookDetail>(
-                `/api/v1/library/book/${modalStore.optionalData.bookId}/`,
+                `/api/v1/picture/${modalStore.optionalData.bookId}/`,
             )
-    }
-
-    const toggleWishlist = async () => {
-        try {
-            inWishlist.value = await request<boolean>('/api/v1/wishlist/book/', 'POST', {
-                bookId: detailInfo.value!.id,
-            })
-            emits('toggle-wishlist', detailInfo.value!.id, inWishlist.value)
-        } catch {
-            toastrStore.showError('Ошибка добавление в избранное')
-        }
     }
 
     watch(
@@ -49,16 +29,7 @@
             <div class="book-detail-head">
                 <div class="book-detail-head__content">
                     <h2 class="book-detail-head__title h2">{{ detailInfo?.title }}</h2>
-                    <p class="book-detail-head__info p2">
-                        {{ `${formattedDate || 'Черновик'} / ${detailInfo?.type.title}` }}
-                    </p>
                 </div>
-                <button class="book-detail-head__button" @click="toggleWishlist">
-                    <NuxtIcon
-                        class="book-detail-head__button-icon"
-                        :name="inWishlist ? 'favorite-2' : 'favorite'"
-                    />
-                </button>
             </div>
         </template>
         <template v-slot:main>
@@ -87,12 +58,6 @@
                         :src="detailInfo?.image"
                         :alt="detailInfo?.title"
                     />
-                </div>
-                <div v-if="detailInfo?.similar.length" class="book-detail-main__similar">
-                    <h3 class="book-detail-main__similar-title h3">Похожие материалы:</h3>
-                    <div class="book-detail-main__similar-list">
-                        <LibraryCard v-for="book in detailInfo?.similar" :key="book.id" :content="book" />
-                    </div>
                 </div>
             </div>
         </template>

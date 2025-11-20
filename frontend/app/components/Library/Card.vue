@@ -4,18 +4,20 @@
     }>()
     const toastrStore = useToastrStore()
     const modalStore = useModalStore()
+    const userStore = useUserStore()
     const emits = defineEmits<{
         (event: 'open-modal', id: number): void
+        (event: 'remove-book', book: IBook): void
     }>()
     const inWishlist = ref<boolean>(content.onWishlist)
 
-    const toggleWishlist = async () => {
+    const removeBook = async () => {
         try {
-            inWishlist.value = await request<boolean>('/api/v1/wishlist/book/', 'POST', {
-                bookId: content.id,
-            })
+            const deletedBook = await request<IBook>(`/api/v1/picture/${content.id}/`, 'DELETE')
+            emits('remove-book', content)
+            toastrStore.showSuccess('Публикация успешно удалена')
         } catch {
-            toastrStore.showError('Ошибка добавление в избранное')
+            toastrStore.showError('Ошибка удаления публикации')
         }
     }
 
@@ -37,30 +39,17 @@
 <template>
     <div class="library-card">
         <button class="library-card__link" @click="openWindow('book-detail')"></button>
-        <p v-if="content.status === 'draft'" class="library-card__banner library-card__banner--draft p3">
-            черновик
-        </p>
-        <p v-else-if="content.isNew" class="library-card__banner library-card__banner--new p3">новинка</p>
         <div class="library-card__panel">
+            <a download class="library-card__button" target="_blank" :href="content.image || ''">
+                <NuxtIcon class="library-card__button-icon" name="download" />
+            </a>
             <button
-                v-if="content.status === 'draft'"
+                v-if="userStore.userData.role === 'admin'"
                 class="library-card__button"
                 @click="openWindow('book-editor')"
             >
                 <NuxtIcon class="library-card__button-icon" name="pencil" />
             </button>
-            <button class="library-card__button" @click="toggleWishlist">
-                <NuxtIcon
-                    class="library-card__button-icon"
-                    :name="inWishlist ? 'favorite-2' : 'favorite'"
-                    :class="{
-                        'library-card__button-icon--active': inWishlist,
-                    }"
-                />
-            </button>
-            <a download class="library-card__button" :href="content.file || ''">
-                <NuxtIcon class="library-card__button-icon" name="download" />
-            </a>
         </div>
         <UIImage class="library-card__image" :src="content.image" :alt="content.title" />
         <p class="library-card__title p2 p2--bold">{{ content.title }}</p>

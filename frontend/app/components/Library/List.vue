@@ -2,11 +2,22 @@
     defineProps<{
         bookList: IBook[]
     }>()
+    const emits = defineEmits<{
+        (event: 'remove-book', book: IBook): void
+    }>()
+    const removeBook = (book: IBook) => {
+        emits('remove-book', book)
+    }
+
 </script>
 
 <template>
     <div class="book-list">
-        <LibraryCard v-for="card in bookList" :key="card.id" :content="card" />
+        <LibraryCard
+            v-for="card in bookList"
+            :key="card.id" :content="card"
+            @remove-book="removeBook"
+        />
     </div>
 </template>
 

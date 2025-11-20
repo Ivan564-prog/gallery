@@ -2,10 +2,6 @@
     const userID = useCookie('user-id')
     const confirmStore = useConfirmStore()
     const userStore = useUserStore()
-    const tabList = computed(() => [
-        { id: 1, title: 'Мои данные' },
-        { id: 2, title: 'Активные пользователи' },
-    ])
 
     const logout = async () => {
         try {

@@ -1,63 +1,103 @@
 <script lang="ts" setup>
-    const MODAL_NAME = 'book-creator'
-    const modalStore = useModalStore()
+    const MODAL_NAME = 'book-editor'
+    const { typeList } = defineProps<{
+        typeList: IBookType[]
+    }>()
     const toastrStore = useToastrStore()
+    const modalStore = useModalStore()
     const opened = computed({
         set: (value: boolean) => (modalStore.openedModal = value ? MODAL_NAME : null),
         get: () => modalStore.openedModal == MODAL_NAME,
     })
+    const bookData = ref<IBookDetail>()
     const emits = defineEmits<{
-        (event: 'add-new-book', book: IBook): void
+        (event: 'edit-book', book: IBook): void
+        (event: 'remove-book', book: IBook): void
     }>()
-    const modalElement = ref<HTMLElement>()
 
-    const params = reactive<ICreateBook>({
+    const params = reactive<IEditorBook>({
         title: '',
         shortDescription: '',
         description: '',
-        image: [],
+        image: undefined,
     })
+    const visualImage = ref<string>()
+    const visualFile = ref<string>()
     const errorsInfo = ref<ICreateBookErrors>({})
 
-    const formattedTypeList = computed(() => {
-        let typeObject: TRequestBody = {}
-        typeList.forEach(type => {
-            typeObject[type.id] = type.title
-        })
-        return typeObject
-    })
+    const setBookData = async () => {
+        bookData.value = await request<IBookDetail>(`/api/v1/picture/${modalStore.optionalData.bookId}/`)
 
-    const createBook = async () => {
+        params.title = bookData.value.title
+        params.shortDescription = bookData.value.shortDescription || ''
+        params.description = bookData.value.description || ''
+
+        if (bookData.value.image) visualImage.value = bookData.value.image
+        if (bookData.value.file) visualFile.value = bookData.value.file
+    }
+
+    const editBook = async (status: TBookStatus) => {
+        if (!bookData.value) return
+
         const formData = new FormData()
         errorsInfo.value = {}
 
         formData.append('title', params.title)
-        if (params.image[0]) formData.append('image', params.image[0])
+        formData.append('status', status)
+        if (params.image && params.image[0]) formData.append('image', params.image[0])
+        else if (!params.image?.length) formData.append('image', new File([], ''))
+
+
         if (params.description) formData.append('description', params.description)
         if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
 
         try {
-            const newBook = await request<IBook>('/api/v1/picture/', 'POST', formData)
-            emits('add-new-book', newBook)
-            opened.value = false
-            toastrStore.showSuccess('Публикация успешно создана')
-        } catch (error) {
-            toastrStore.showError('Ошибка создания публикации')
+            const editedBook = await request<IBook>(
+                `/api/v1/picture/${modalStore.optionalData.bookId}/`,
+                'PATCH',
+                formData,
+            )
+            emits('edit-book', editedBook)
+        } catch {
+            toastrStore.showError('Ошибка редактирования публикации')
         }
     }
+
+    const removeBook = async () => {
+        if (!bookData.value) return
+
+        try {
+            const removedBook = await request<IBook>(`/api/v1/picture/${modalStore.optionalData.bookId}/`, 'DELETE')
+            emits('remove-book', removedBook)
+            opened.value = false
+            toastrStore.showSuccess('Публикация успешно удалена')
+        } catch {
+            toastrStore.showError('Ошибка удаления публикации')
+        }
+    }
+
+    watch(opened, newValue => {
+        if (!newValue) bookData.value = undefined
+    })
+
+    watch(
+        () => modalStore.optionalData.bookId,
+        async () => {
+            if (modalStore.optionalData.bookId) await setBookData()
+        },
+    )
 </script>
 
 <template>
     <ModalBase v-model="opened">
         <template v-slot:head>
-            <h2 class="book-creator-title h2">Новая публикация</h2>
+            <h2 class="book-creator-title h2">Редактирование публикации</h2>
         </template>
         <template v-slot:main>
-            <form class="book-creator-form">
+            <form v-if="bookData" class="book-creator-form">
                 <UIInput
                     placeholder="Введите название заголовка"
                     style-variant="big"
-                    :error-text="errorsInfo.title && errorsInfo.title[0]"
                     v-model="params.title"
                 />
                 <div class="book-creator-form__top">
@@ -66,7 +106,6 @@
                             class="book-creator-form__item"
                             icon="image"
                             text="Главное изображений"
-                            :error-text="errorsInfo.image && errorsInfo.image[0]"
                         >
                             <span class="book-creator-form__description p3">
                                 (необходимо добавить 1 фото)
@@ -75,8 +114,8 @@
                         <UIFileInput
                             formates="image"
                             :max-files="1"
-                            :error-text="errorsInfo.image && errorsInfo.image[0]"
                             v-model="params.image"
+                            v-model:visual="visualImage"
                         />
                     </div>
                 </div>
@@ -88,7 +127,7 @@
                         variant="flex-start"
                     >
                         <UITextarea
-                            placeholder="Напишите краткое описание "
+                            placeholder="Напишите краткое описание"
                             v-model="params.shortDescription"
                         />
                     </UITitledInput>
@@ -111,10 +150,18 @@
                 <UIButton
                     class="book-creator-footer__button"
                     font-size="big"
-                    @click="createBook"
+                    from="creatorBook"
+                    @click="editBook('published')"
                 >
-                    Добавить публикацию
+                    Сохранить
                 </UIButton>
+                <button
+                    class="book-creator-footer__remove-button p1 p1--bold"
+                    from="creatorBook"
+                    @click="removeBook"
+                >
+                    Удалить
+                </button>
             </div>
         </template>
     </ModalBase>
@@ -165,6 +212,14 @@
         &__button {
             @include tablet {
                 width: 100%;
+            }
+        }
+        &__remove-button {
+            padding: 0 clampFluid(30);
+            height: clampFluid(59);
+            transition: $tr;
+            @include hover {
+                color: var(--color);
             }
         }
     }
