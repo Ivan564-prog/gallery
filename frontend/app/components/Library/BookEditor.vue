@@ -1,8 +1,5 @@
 <script lang="ts" setup>
     const MODAL_NAME = 'book-editor'
-    const { typeList } = defineProps<{
-        typeList: IBookType[]
-    }>()
     const toastrStore = useToastrStore()
     const modalStore = useModalStore()
     const opened = computed({
@@ -22,7 +19,6 @@
         image: undefined,
     })
     const visualImage = ref<string>()
-    const visualFile = ref<string>()
     const errorsInfo = ref<ICreateBookErrors>({})
 
     const setBookData = async () => {
@@ -33,7 +29,6 @@
         params.description = bookData.value.description || ''
 
         if (bookData.value.image) visualImage.value = bookData.value.image
-        if (bookData.value.file) visualFile.value = bookData.value.file
     }
 
     const editBook = async () => {
@@ -43,12 +38,20 @@
         errorsInfo.value = {}
 
         formData.append('title', params.title)
-        if (params.image && params.image[0]) formData.append('image', params.image[0])
-        else if (!params.image?.length) formData.append('image', new File([], ''))
+        if (params.image && params.image[0]) 
+            formData.append('image', params.image[0])
+        else if (!params.image?.length) 
+            return toastrStore.showError('Заполните изображение')
 
 
-        if (params.description) formData.append('description', params.description)
-        if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
+        if (params.description) 
+            formData.append('description', params.description)
+        else 
+            return toastrStore.showError('Заполните описание')
+        if (params.shortDescription) 
+            formData.append('shortDescription', params.shortDescription)
+        else 
+            return toastrStore.showError('Заполните короткое описание')
 
         try {
             const editedBook = await request<IBook>(

@@ -3,6 +3,7 @@ package com.gallery.pictures.controller;
 import com.gallery.pictures.repository.Picture;
 import com.gallery.pictures.repository.PictureRequest;
 import com.gallery.pictures.repository.User;
+import com.gallery.pictures.repository.ValidationErrors;
 import com.gallery.pictures.service.PictureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +34,28 @@ public class PictureController {
     }
 
     @PostMapping
-    public ResponseEntity<Picture> create(
+    public ResponseEntity<?> create(
             @RequestParam("title") String title,
             @RequestParam(value = "shortDescription", required = false) String shortDescription,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("image") MultipartFile image) {
         
         try {
+            ValidationErrors validationErrors = new ValidationErrors();
+            boolean hasErrors = false;
+            
             if (title == null || title.trim().isEmpty()) {
-                return ResponseEntity.badRequest().build();
+                validationErrors.addError("title", "Это поле обязательно для заполнения");
+                hasErrors = true;
             }
             
             if (image == null || image.isEmpty()) {
-                return ResponseEntity.badRequest().build();
+                validationErrors.addError("image", "Необходимо добавить изображение");
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                return ResponseEntity.badRequest().body(validationErrors.getErrors());
             }
             
             PictureRequest request = new PictureRequest();

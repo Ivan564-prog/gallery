@@ -17,7 +17,7 @@
 <style lang="scss" scoped>
     .toastr {
         position: fixed;
-        z-index: 5;
+        z-index: 15;
         width: clampFluid(450);
         height: auto;
         aspect-ratio: 450 / 90;

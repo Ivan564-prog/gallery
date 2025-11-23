@@ -19,22 +19,26 @@
     })
     const errorsInfo = ref<ICreateBookErrors>({})
 
-    const formattedTypeList = computed(() => {
-        let typeObject: TRequestBody = {}
-        typeList.forEach(type => {
-            typeObject[type.id] = type.title
-        })
-        return typeObject
-    })
-
     const createBook = async () => {
         const formData = new FormData()
         errorsInfo.value = {}
 
-        formData.append('title', params.title)
-        if (params.image[0]) formData.append('image', params.image[0])
-        if (params.description) formData.append('description', params.description)
-        if (params.shortDescription) formData.append('shortDescription', params.shortDescription)
+        if (params.title) 
+            formData.append('title', params.title)
+        else 
+            return toastrStore.showError('Заполните заголовок')
+        if (params.image[0]) 
+            formData.append('image', params.image[0])
+        else 
+            return toastrStore.showError('Заполните изображение')
+        if (params.description) 
+            formData.append('description', params.description)
+        else 
+            return toastrStore.showError('Заполните описание')
+        if (params.shortDescription) 
+            formData.append('shortDescription', params.shortDescription)
+        else 
+            return toastrStore.showError('Заполните короткое описание')
 
         try {
             const newBook = await request<IBook>('/api/v1/picture/', 'POST', formData)

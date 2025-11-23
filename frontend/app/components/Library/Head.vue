@@ -22,18 +22,18 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        @include tablet {
+        @include mobile {
             flex-direction: column;
             align-items: baseline;
             gap: 20px;
         }
         &__search {
-            @include tablet {
+            @include mobile {
                 width: 100%;
             }
         }
         &__button {
-            @include tablet {
+            @include mobile {
                 position: fixed;
                 z-index: 5;
                 bottom: 70px;

@@ -28,9 +28,7 @@
         <UILoader v-if="isLoading" class="authorize-form__loader" />
         <h2 class="authorize-form__title h1">Авторизация</h2>
         <p class="authorize-form__text p2">
-            Для входа необходимо ввести адрес
-            <br />
-            электронной почты и пароль
+            Для входа необходимо ввести логин и пароль
         </p>
         <div class="authorize-form__fields">
             <UIInput

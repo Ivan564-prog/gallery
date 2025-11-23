@@ -33,6 +33,13 @@ export const request = async <T>(url: string, method?: TMethod, body?: TRequestB
         })
         return response
     } catch (error: any) {
-        throw createError(error)
+        // Сохраняем данные ошибки перед оберткой в createError
+        const errorWithData = error
+        if (error.data) {
+            errorWithData.data = error.data
+        } else if (error.response?._data) {
+            errorWithData.data = error.response._data
+        }
+        throw createError(errorWithData)
     }
 }
